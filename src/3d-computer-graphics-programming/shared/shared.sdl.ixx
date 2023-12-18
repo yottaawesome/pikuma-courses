@@ -2,9 +2,9 @@ module;
 
 #include <SDL2/SDL.h>
 
-export module sdl;
+export module shared.sdl;
 
-export namespace SDL
+export namespace sdl
 {
 	using 
 		::SDL_Init,
@@ -13,7 +13,15 @@ export namespace SDL
 		::SDL_PollEvent,
 		::SDL_SetRenderDrawColor,
 		::SDL_RenderClear,
-		::SDL_RenderPresent
+		::SDL_RenderPresent,
+		::SDL_DestroyWindow,
+		::SDL_DestroyRenderer,
+		::SDL_GetError
+		;
+
+	using
+		::SDL_Window,
+		::SDL_Renderer
 		;
 
 }

@@ -6,8 +6,7 @@
 //#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 
-import std;
-import util;
+import shared;
 
 bool is_running = false;
 util::sdl_window_unique_ptr window;
