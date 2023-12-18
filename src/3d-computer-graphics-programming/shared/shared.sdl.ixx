@@ -6,6 +6,10 @@ export module shared.sdl;
 
 export namespace sdl
 {
+	constexpr auto sdl_init_everything = SDL_INIT_EVERYTHING;
+	constexpr auto sdl_windowpos_centered = SDL_WINDOWPOS_CENTERED;
+	using ::SDL_WindowFlags;
+
 	using 
 		::SDL_Init,
 		::SDL_CreateWindow,
@@ -21,7 +25,9 @@ export namespace sdl
 
 	using
 		::SDL_Window,
-		::SDL_Renderer
+		::SDL_Renderer,
+		::SDL_Event,
+		::SDL_EventType,
+		::SDL_KeyCode
 		;
-
 }
