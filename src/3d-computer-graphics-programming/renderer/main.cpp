@@ -6,6 +6,7 @@
 // the define is not required.
 
 import shared;
+import util;
 
 constexpr auto window_width = 800;
 constexpr auto window_height = 600;
@@ -60,10 +61,10 @@ void setup()
 
 void process_input()
 {
-    sdl::SDL_Event event;
-    sdl::SDL_PollEvent(&event);
+    sdl::SDL_Event eventInfo;
+    sdl::SDL_PollEvent(&eventInfo);
 
-    switch (event.type)
+    switch (eventInfo.type)
     {
         case sdl::SDL_EventType::SDL_QUIT:
         {
@@ -73,7 +74,7 @@ void process_input()
 
         case sdl::SDL_EventType::SDL_KEYDOWN:
         {
-            if (event.key.keysym.sym == sdl::SDL_KeyCode::SDLK_ESCAPE)
+            if (eventInfo.key.keysym.sym == sdl::SDL_KeyCode::SDLK_ESCAPE)
                 is_running = false;
         }
         break;

@@ -1,4 +1,4 @@
-export module shared.util;
+export module util;
 import std;
 import shared.sdl;
 
