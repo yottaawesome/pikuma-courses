@@ -1,13 +1,17 @@
 // We don't need to explicitly link to the sdl2 libs as vcpkg takes care of this for us.
 // If using subsystem:console, define this to avoid undefined symbol linker errors.
+//#define SDL_MAIN_HANDLED
 // See https://stackoverflow.com/a/50087608/7448661.
 // With subsystem:windows, you need to use WinMain() and not regular main(), but 
 // the define is not required.
-//#define SDL_MAIN_HANDLED
 
 import shared;
 
+constexpr auto window_width = 800;
+constexpr auto window_height = 600;
+
 bool is_running = false;
+auto color_buffer = std::vector<uint32_t>(window_width * window_height);
 util::sdl_window_unique_ptr window;
 util::sdl_renderer_unique_ptr renderer;
 
@@ -26,8 +30,8 @@ bool initialize_window()
             nullptr,
             sdl::sdl_windowpos_centered,
             sdl::sdl_windowpos_centered,
-            800,
-            600,
+            window_width,
+            window_height,
             sdl::SDL_WindowFlags::SDL_WINDOW_BORDERLESS
         )
     );

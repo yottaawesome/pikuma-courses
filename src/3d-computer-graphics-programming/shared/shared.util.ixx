@@ -4,6 +4,20 @@ import shared.sdl;
 
 export namespace util
 {
+    consteval bool IsDebug() noexcept
+    {
+#ifdef _DEBUG
+        return true;
+#else
+        return false;
+#endif // _DEBUG
+    }
+
+    consteval bool IsRelease() noexcept
+    {
+        return not IsDebug();
+    }
+
     void print_last_error(const std::source_location location = std::source_location::current())
     {
         std::cerr << std::format(
