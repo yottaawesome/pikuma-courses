@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sdl.ixx" />
     <ClCompile Include="util.ixx" />
   </ItemGroup>
   <ItemGroup>
