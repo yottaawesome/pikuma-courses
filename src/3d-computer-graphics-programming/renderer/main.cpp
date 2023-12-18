@@ -4,7 +4,8 @@ import std;
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 
-// Alternative way of solving the above linker issue with subsystem:windows
+// Alternative way of solving the above linker issue with subsystem:windows.
+// Note that it requires setting the library dirs to where vcpkg has built them.
 //#ifdef _DEBUG // we get undefined symbol linker errors otherwise
 //#pragma comment(lib, "SDL2d.lib")
 //#pragma comment(lib, "sdl2maind.lib")
