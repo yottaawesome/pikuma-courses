@@ -10,7 +10,7 @@ export namespace sdl
 	constexpr auto sdl_windowpos_centered = SDL_WINDOWPOS_CENTERED;
 	using ::SDL_WindowFlags;
 
-	using 
+	using
 		::SDL_Init,
 		::SDL_CreateWindow,
 		::SDL_CreateRenderer,
@@ -20,7 +20,8 @@ export namespace sdl
 		::SDL_RenderPresent,
 		::SDL_DestroyWindow,
 		::SDL_DestroyRenderer,
-		::SDL_GetError
+		::SDL_GetError,
+		::SDL_Quit
 		;
 
 	using

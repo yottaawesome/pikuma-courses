@@ -40,4 +40,36 @@ export namespace util
         void operator()(sdl::SDL_Renderer* renderer) { sdl::SDL_DestroyRenderer(renderer); }
     };
     using sdl_renderer_unique_ptr = std::unique_ptr<sdl::SDL_Renderer, sdl_renderer_deleter>;
+
+    class sdl_context final
+    {
+        public:
+            ~sdl_context()
+            {
+                if (init_successful)
+                    sdl::SDL_Quit();
+            }
+
+            sdl_context() = default;
+
+            sdl_context(int flags) 
+                : init_successful{ sdl::SDL_Init(sdl::sdl_init_everything) == 0 }
+            {
+                sdl::SDL_Init(sdl::sdl_init_everything);
+            }
+
+        public:
+            operator bool() const noexcept
+            {
+                return init_successful;
+            }
+
+            bool successful() const noexcept
+            {
+                return init_successful;
+            }
+
+        private:
+            bool init_successful = false;
+    };
 }

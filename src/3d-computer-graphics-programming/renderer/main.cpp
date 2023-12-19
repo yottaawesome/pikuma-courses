@@ -11,14 +11,38 @@ import util;
 constexpr auto window_width = 800;
 constexpr auto window_height = 600;
 
+struct color_buffer
+{
+    uint32_t& operator[](uint64_t index)
+    {
+        return buffer[index];
+    }
+
+    template<bool VZeroIndexed>
+    void set(uint64_t row, uint64_t column, uint32_t value)
+    {
+        if constexpr (VZeroIndexed)
+            buffer[(row)*window_width + column] = value;
+        else
+            buffer[(row - 1) * window_width + column - 1] = value;
+    }
+
+    // Each byte in uint32_t is one element of the pixel colour
+    // 0x{alpha}{red}{green}{blue}
+    // 0xFFFFFFFF
+    std::vector<uint32_t> buffer = std::vector<uint32_t>(window_width * window_height);
+};
+
+color_buffer main_buffer{};
 bool is_running = false;
-auto color_buffer = std::vector<uint32_t>(window_width * window_height);
+util::sdl_context context;
 util::sdl_window_unique_ptr window;
 util::sdl_renderer_unique_ptr renderer;
 
 bool initialize_window()
 {
-    if (sdl::SDL_Init(sdl::sdl_init_everything))
+    context = util::sdl_context(sdl::sdl_init_everything);
+    if (not context.successful())
     {
         util::print_last_error();
         return false;
@@ -86,6 +110,11 @@ void update()
 
 }
 
+void teardown()
+{
+
+}
+
 void render()
 {
     sdl::SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
@@ -106,6 +135,8 @@ int WinMain(int argc, char* argv[])
         update();
         render();
     }
+
+    teardown();
 
     return 0;
 }
