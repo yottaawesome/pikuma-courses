@@ -86,20 +86,20 @@ void setup()
     );
 }
 
-void draw_grid(const int32_t step = 10)
+void draw_grid(const int32_t step, const uint32_t color)
 {
     for (uint32_t column = 0; column < window_width; column++)
     {
         for (uint32_t row = 0; row < window_height; row++)
         {
             if (row == 0)
-                app.main_buffer.set(row, column, 0xffc0c0c0);
+                app.main_buffer.set(row, column, color);
             else if (column == 0)
-                app.main_buffer.set(row, column, 0xffc0c0c0);
+                app.main_buffer.set(row, column, color);
             else if (std::div(row + 1ui32, step).rem == 0)
-                app.main_buffer.set(row, column, 0xffc0c0c0);
+                app.main_buffer.set(row, column, color);
             else if (std::div(column + 1ui32, step).rem == 0)
-                app.main_buffer.set(row, column, 0xffc0c0c0);
+                app.main_buffer.set(row, column, color);
         }
     }
 }
@@ -158,7 +158,7 @@ void render()
     sdl::SDL_SetRenderDrawColor(app.renderer.get(), 255, 0, 0, 255);
     sdl::SDL_RenderClear(app.renderer.get());
 
-    draw_grid();
+    draw_grid(10, 0xffc0c0c0);
 
     render_color_buffer();
 
