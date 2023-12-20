@@ -108,6 +108,24 @@ void process_input()
     }
 }
 
+void draw_grid()
+{
+    for (uint32_t column = 0; column < window_width; column++)
+    {
+        for (uint32_t row = 0; row < window_height; row++)
+        {
+            if (row == 0)
+                app.main_buffer.set(row, column, 0x00000000);
+            else if (column == 0)
+                app.main_buffer.set(row, column, 0x00000000);
+            else if ((row + 1) % 10 == 0)
+                app.main_buffer.set(row, column, 0x00000000);
+            else if ((column + 1) % 10 == 0)
+                app.main_buffer.set(row, column, 0x00000000);
+        }
+    }
+}
+
 void render_color_buffer()
 {
     sdl::SDL_UpdateTexture(
@@ -139,6 +157,8 @@ void render()
 {
     sdl::SDL_SetRenderDrawColor(app.renderer.get(), 255, 0, 0, 255);
     sdl::SDL_RenderClear(app.renderer.get());
+
+    draw_grid();
 
     render_color_buffer();
 
