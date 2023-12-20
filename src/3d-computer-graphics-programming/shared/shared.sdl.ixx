@@ -8,8 +8,7 @@ export namespace sdl
 {
 	constexpr auto sdl_init_everything = SDL_INIT_EVERYTHING;
 	constexpr auto sdl_windowpos_centered = SDL_WINDOWPOS_CENTERED;
-	using ::SDL_WindowFlags;
-
+	
 	using
 		::SDL_Init,
 		::SDL_CreateWindow,
@@ -17,18 +16,26 @@ export namespace sdl
 		::SDL_PollEvent,
 		::SDL_SetRenderDrawColor,
 		::SDL_RenderClear,
+		::SDL_RenderCopy,
 		::SDL_RenderPresent,
 		::SDL_DestroyWindow,
 		::SDL_DestroyRenderer,
 		::SDL_GetError,
-		::SDL_Quit
+		::SDL_Quit,
+		::SDL_CreateTexture,
+		::SDL_DestroyTexture,
+		::SDL_UpdateTexture
 		;
 
 	using
 		::SDL_Window,
 		::SDL_Renderer,
+		::SDL_Texture,
 		::SDL_Event,
 		::SDL_EventType,
-		::SDL_KeyCode
+		::SDL_KeyCode,
+		::SDL_WindowFlags,
+		::SDL_PixelFormatEnum,
+		::SDL_TextureAccess
 		;
 }

@@ -41,6 +41,15 @@ export namespace util
     };
     using sdl_renderer_unique_ptr = std::unique_ptr<sdl::SDL_Renderer, sdl_renderer_deleter>;
 
+    struct sdl_texture_deleter
+    {
+        void operator()(sdl::SDL_Texture* p) 
+        {
+            sdl::SDL_DestroyTexture(p);
+        }
+    };
+    using sdl_texture_unique_ptr = std::unique_ptr<sdl::SDL_Texture, sdl_texture_deleter>;
+
     class sdl_context final
     {
         public:
