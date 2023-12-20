@@ -9,24 +9,32 @@ import shared;
 import util;
 import renderer;
 
-constexpr auto window_width = 800;
-constexpr auto window_height = 600;
+uint32_t window_width = 800;
+uint32_t window_height = 600;
 
-main_app app{ 
-    .main_buffer { 
-        window_width, 
-        window_height
-    } 
-};
+main_app app{};
 
 bool initialize_window()
 {
-    app.context = util::sdl_context(sdl::sdl_init_everything);
-    if (not app.context.successful())
+    app.context = std::make_unique<util::sdl_context>(sdl::sdl_init_everything);
+    if (not app.context->successful())
     {
         util::print_last_error();
         return false;
     }
+
+    sdl::SDL_DisplayMode mode;
+    // https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
+    if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
+    {
+        util::print_last_error();
+        return false;
+    }
+
+    window_width = mode.w;
+    window_height = mode.h;
+
+    app.main_buffer = {window_width, window_height};
 
     // Create a window
     // https://wiki.libsdl.org/SDL2/SDL_CreateWindow
@@ -54,6 +62,9 @@ bool initialize_window()
         util::print_last_error();
         return false;
     }
+
+    if (sdl::SDL_SetWindowFullscreen(app.window.get(), sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN))
+        return false;
 
     return true;
 }

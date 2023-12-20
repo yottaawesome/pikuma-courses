@@ -24,7 +24,10 @@ export namespace sdl
 		::SDL_Quit,
 		::SDL_CreateTexture,
 		::SDL_DestroyTexture,
-		::SDL_UpdateTexture
+		::SDL_UpdateTexture,
+		::SDL_GetCurrentDisplayMode,
+		::SDL_GetDisplayMode,
+		::SDL_SetWindowFullscreen
 		;
 
 	using
@@ -36,6 +39,7 @@ export namespace sdl
 		::SDL_KeyCode,
 		::SDL_WindowFlags,
 		::SDL_PixelFormatEnum,
-		::SDL_TextureAccess
+		::SDL_TextureAccess,
+		::SDL_DisplayMode
 		;
 }

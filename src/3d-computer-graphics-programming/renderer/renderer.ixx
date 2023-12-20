@@ -69,10 +69,18 @@ export
 
     struct main_app
     {
+        main_app() = default;
+        main_app(const main_app&) = delete;
+        main_app& operator=(const main_app&) = delete;
+        main_app(main_app&&) = default;
+        main_app& operator=(main_app&&) = default;
+
+        operator bool() const noexcept { return is_running; }
+
         bool is_running = false;
 
         // The SDL context for our application
-        util::sdl_context context;
+        std::unique_ptr<util::sdl_context> context;
         // The main window
         util::sdl_window_unique_ptr window;
         // The main renderer that works with our window
@@ -82,6 +90,5 @@ export
         color_buffer main_buffer{};
         // We copy the color buffer to this
         util::sdl_texture_unique_ptr color_buffer_texture;
-        operator bool() const noexcept { return is_running; }
     };
 }

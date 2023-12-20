@@ -1,6 +1,7 @@
 export module util;
 import std;
 import shared.sdl;
+import shared.win32;
 
 export namespace util
 {
@@ -20,13 +21,14 @@ export namespace util
 
     void print_last_error(const std::source_location location = std::source_location::current())
     {
-        std::cerr << std::format(
+        std::string err = std::format(
             "SDL failed [{}] at {}:{}:{}\n",
             sdl::SDL_GetError(),
             location.file_name(),
             location.function_name(),
             location.line()
         );
+        win32::OutputDebugStringA(err.data());
     }
 
     struct sdl_window_deleter
@@ -59,13 +61,17 @@ export namespace util
                     sdl::SDL_Quit();
             }
 
-            sdl_context() = default;
+            sdl_context(const sdl_context&) = delete;
+            sdl_context& operator=(sdl_context&&) = delete;
+            sdl_context(sdl_context&& other) 
+                : init_successful{ other.init_successful }
+            {
+                other.init_successful = false;
+            }
 
             sdl_context(int flags) 
                 : init_successful{ sdl::SDL_Init(sdl::sdl_init_everything) == 0 }
-            {
-                sdl::SDL_Init(sdl::sdl_init_everything);
-            }
+            {}
 
         public:
             operator bool() const noexcept

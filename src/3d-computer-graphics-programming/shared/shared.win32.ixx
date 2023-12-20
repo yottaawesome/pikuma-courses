@@ -7,5 +7,8 @@ export module shared.win32;
 
 export namespace win32
 {
-
+	using
+		::OutputDebugStringA,
+		::OutputDebugStringW
+		;
 }
