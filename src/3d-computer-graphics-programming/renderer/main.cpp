@@ -9,12 +9,9 @@ import shared;
 import util;
 import renderer;
 
-uint32_t window_width = 800;
-uint32_t window_height = 600;
-
 main_app app{};
 
-bool initialize_window()
+bool initialize_window(main_app& app)
 {
     app.context = std::make_unique<util::sdl_context>(sdl::sdl_init_everything);
     if (not app.context->successful())
@@ -31,10 +28,10 @@ bool initialize_window()
         return false;
     }
 
-    window_width = mode.w;
-    window_height = mode.h;
+    app.window_width = mode.w;
+    app.window_height = mode.h;
 
-    app.main_buffer = {window_width, window_height};
+    app.main_buffer = { app.window_width, app.window_height};
 
     // Create a window
     // https://wiki.libsdl.org/SDL2/SDL_CreateWindow
@@ -43,8 +40,8 @@ bool initialize_window()
             nullptr,
             sdl::sdl_windowpos_centered,
             sdl::sdl_windowpos_centered,
-            window_width,
-            window_height,
+            app.window_width,
+            app.window_height,
             sdl::SDL_WindowFlags::SDL_WINDOW_BORDERLESS
         )
     );
@@ -66,7 +63,7 @@ bool initialize_window()
     if (sdl::SDL_SetWindowFullscreen(app.window.get(), sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN))
         return false;
 
-    return true;
+    return app.is_running = true;
 }
 
 void setup()
@@ -80,26 +77,55 @@ void setup()
             app.renderer.get(),
             sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_ARGB8888,
             sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
-            window_width,
-            window_height
+            app.window_width,
+            app.window_height
         )
     );
 }
 
-void draw_grid(const int32_t step, const uint32_t color)
+void draw_line_grid(const int32_t step, const uint32_t color, color_buffer& buffer)
 {
-    for (uint32_t column = 0; column < window_width; column++)
+    for (uint32_t row = 0; row < buffer.height(); row++)
     {
-        for (uint32_t row = 0; row < window_height; row++)
+        for (uint32_t column = 0; column < buffer.width(); column++)
         {
             if (row == 0)
-                app.main_buffer.set(row, column, color);
+                buffer.set(row, column, color);
             else if (column == 0)
-                app.main_buffer.set(row, column, color);
+                buffer.set(row, column, color);
             else if (std::div(row + 1ui32, step).rem == 0)
-                app.main_buffer.set(row, column, color);
+                buffer.set(row, column, color);
             else if (std::div(column + 1ui32, step).rem == 0)
-                app.main_buffer.set(row, column, color);
+                buffer.set(row, column, color);
+        }
+    }
+}
+
+void draw_dot_grid(const int32_t step, const uint32_t color, color_buffer& buffer)
+{
+    for (uint32_t row = 0; row < buffer.height(); row += 10)
+    {
+        for (uint32_t column = 0; column < buffer.width(); column += 10)
+        {
+            buffer.set(row, column, color);
+        }
+    }
+}
+
+void draw_rect(
+    const uint32_t x,
+    const uint32_t y,
+    const uint32_t width,
+    const uint32_t height,
+    const uint32_t color,
+    color_buffer& buffer
+)
+{
+    for (uint32_t row = y; row < y + width and row < buffer.height(); row++)
+    {
+        for (uint32_t column = x; column < x + height and column < buffer.width(); column++)
+        {
+            buffer.set(row, column, color);
         }
     }
 }
@@ -153,24 +179,26 @@ void update()
 
 }
 
-void render()
+void render(sdl::SDL_Renderer* renderer, color_buffer& buffer)
 {
-    sdl::SDL_SetRenderDrawColor(app.renderer.get(), 255, 0, 0, 255);
-    sdl::SDL_RenderClear(app.renderer.get());
+    sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    sdl::SDL_RenderClear(renderer);
 
-    draw_grid(10, 0xffc0c0c0);
+    //draw_line_grid(10, 0xffc0c0c0, app.main_buffer);
+    draw_dot_grid(10, 0xffc0c0c0, buffer);
+    draw_rect(50, 50, 100, 100, 0xffc0c0c0, buffer);
 
     render_color_buffer();
 
-    app.main_buffer.fill(0xff000000);
+    buffer.fill(0xff000000);
 
-    sdl::SDL_RenderPresent(app.renderer.get());
+    sdl::SDL_RenderPresent(renderer);
 }
 
 //int main(int argc, char* argv[]) // use this on subsystem:console
 int WinMain(int argc, char* argv[])
 {
-    app.is_running = initialize_window();
+    initialize_window(app);
 
     setup();
 
@@ -178,7 +206,7 @@ int WinMain(int argc, char* argv[])
     {
         process_input();
         update();
-        render();
+        render(app.renderer.get(), app.main_buffer);
     }
 
     teardown();

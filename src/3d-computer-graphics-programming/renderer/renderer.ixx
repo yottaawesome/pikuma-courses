@@ -85,6 +85,8 @@ export
         operator bool() const noexcept { return is_running; }
 
         bool is_running = false;
+        uint32_t window_width = 0;
+        uint32_t window_height = 0;
 
         // The SDL context for our application
         std::unique_ptr<util::sdl_context> context;
