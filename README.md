@@ -2,7 +2,7 @@
 
 ## Introduction
 
-My code and exercises as part of doing [Pikuma's](https://pikuma.com/) 3D graphics related courses. Currently, I'm going through [3d Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming).
+My code and exercises as part of doing [Pikuma's](https://pikuma.com/) 3D graphics related courses. Currently, I'm going through [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming).
 
 ## Building and running
 
@@ -10,4 +10,4 @@ You'll need Visual Studio 2022 with the _Desktop development with C++_ workload 
 
 ## Changes
 
-The [3d Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming) course is implemented with pure C on Pikuma. I've instead chosen to implement this project in C++ but I may do a C implementation at some point just to compare and contrast.
+The [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming) course is implemented with pure C on Pikuma. I've instead chosen to implement this project in C++ but I may do a C implementation at some point just to compare and contrast.
