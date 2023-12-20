@@ -130,17 +130,21 @@ void draw_rect(
     }
 }
 
-void render_color_buffer()
+void render_color_buffer(
+    sdl::SDL_Renderer* renderer,
+    color_buffer& buffer,
+    SDL_Texture* color_buffer_texture
+)
 {
     sdl::SDL_UpdateTexture(
-        app.color_buffer_texture.get(),
+        color_buffer_texture,
         nullptr,
-        app.main_buffer.raw_buffer(),
-        app.main_buffer.pitch()
+        buffer.raw_buffer(),
+        buffer.pitch()
     );
     sdl::SDL_RenderCopy(
-        app.renderer.get(),
-        app.color_buffer_texture.get(),
+        renderer,
+        color_buffer_texture,
         nullptr, 
         nullptr
     );
@@ -188,7 +192,7 @@ void render(sdl::SDL_Renderer* renderer, color_buffer& buffer)
     draw_dot_grid(10, 0xffc0c0c0, buffer);
     draw_rect(50, 50, 100, 100, 0xffc0c0c0, buffer);
 
-    render_color_buffer();
+    render_color_buffer(app.renderer.get(), app.main_buffer, app.color_buffer_texture.get());
 
     buffer.fill(0xff000000);
 
