@@ -183,7 +183,11 @@ void update()
 
 }
 
-void render(sdl::SDL_Renderer* renderer, color_buffer& buffer)
+void render(
+    sdl::SDL_Renderer* renderer, 
+    sdl::SDL_Texture* color_buffer_texture, 
+    color_buffer& buffer
+)
 {
     sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     sdl::SDL_RenderClear(renderer);
@@ -192,7 +196,7 @@ void render(sdl::SDL_Renderer* renderer, color_buffer& buffer)
     draw_dot_grid(10, 0xffc0c0c0, buffer);
     draw_rect(50, 50, 100, 100, 0xffc0c0c0, buffer);
 
-    render_color_buffer(app.renderer.get(), app.main_buffer, app.color_buffer_texture.get());
+    render_color_buffer(renderer, buffer, color_buffer_texture);
 
     buffer.fill(0xff000000);
 
@@ -210,7 +214,11 @@ int WinMain(int argc, char* argv[])
     {
         process_input();
         update();
-        render(app.renderer.get(), app.main_buffer);
+        render(
+            app.renderer.get(), 
+            app.color_buffer_texture.get(), 
+            app.main_buffer
+        );
     }
 
     teardown();
