@@ -19,16 +19,22 @@ export namespace util
         return not is_debug();
     }
 
-    void print_last_error(const std::source_location location = std::source_location::current())
+    inline void print_debug_string(const std::string_view msg)
     {
-        std::string err = std::format(
-            "SDL failed [{}] at {}:{}:{}\n",
-            sdl::SDL_GetError(),
-            location.file_name(),
-            location.function_name(),
-            location.line()
+        win32::OutputDebugStringA(std::format("{}\n", msg).c_str());
+    }
+
+    inline void print_last_error(const std::source_location location = std::source_location::current())
+    {
+        win32::OutputDebugStringA(
+            std::format(
+                "SDL failed [{}] at {}:{}:{}\n",
+                sdl::SDL_GetError(),
+                location.file_name(),
+                location.function_name(),
+                location.line()
+            ).c_str()
         );
-        win32::OutputDebugStringA(err.data());
     }
 
     struct sdl_window_deleter
