@@ -86,6 +86,46 @@ void setup()
     );
 }
 
+void draw_grid(const int32_t step = 10)
+{
+    for (uint32_t column = 0; column < window_width; column++)
+    {
+        for (uint32_t row = 0; row < window_height; row++)
+        {
+            if (row == 0)
+                app.main_buffer.set(row, column, 0xffc0c0c0);
+            else if (column == 0)
+                app.main_buffer.set(row, column, 0xffc0c0c0);
+            else if (std::div(row + 1ui32, step).rem == 0)
+                app.main_buffer.set(row, column, 0xffc0c0c0);
+            else if (std::div(column + 1ui32, step).rem == 0)
+                app.main_buffer.set(row, column, 0xffc0c0c0);
+        }
+    }
+}
+
+void render_color_buffer()
+{
+    sdl::SDL_UpdateTexture(
+        app.color_buffer_texture.get(),
+        nullptr,
+        app.main_buffer.raw_buffer(),
+        app.main_buffer.pitch()
+    );
+    sdl::SDL_RenderCopy(
+        app.renderer.get(),
+        app.color_buffer_texture.get(),
+        nullptr, 
+        nullptr
+    );
+}
+
+void teardown()
+{
+    // currently, nothing to do here as everything is managed
+    // via smart pointers
+}
+
 void process_input()
 {
     sdl::SDL_Event eventInfo;
@@ -108,49 +148,9 @@ void process_input()
     }
 }
 
-void draw_grid()
-{
-    for (uint32_t column = 0; column < window_width; column++)
-    {
-        for (uint32_t row = 0; row < window_height; row++)
-        {
-            if (row == 0)
-                app.main_buffer.set(row, column, 0x00000000);
-            else if (column == 0)
-                app.main_buffer.set(row, column, 0x00000000);
-            else if ((row + 1) % 10 == 0)
-                app.main_buffer.set(row, column, 0x00000000);
-            else if ((column + 1) % 10 == 0)
-                app.main_buffer.set(row, column, 0x00000000);
-        }
-    }
-}
-
-void render_color_buffer()
-{
-    sdl::SDL_UpdateTexture(
-        app.color_buffer_texture.get(),
-        nullptr,
-        app.main_buffer.raw_buffer(),
-        app.main_buffer.pitch()
-    );
-    sdl::SDL_RenderCopy(
-        app.renderer.get(),
-        app.color_buffer_texture.get(),
-        nullptr, 
-        nullptr
-    );
-}
-
 void update()
 {
 
-}
-
-void teardown()
-{
-    // currently, nothing to do here as everything is managed
-    // via smart pointers
 }
 
 void render()
@@ -162,7 +162,7 @@ void render()
 
     render_color_buffer();
 
-    app.main_buffer.fill(0xFFFFFF00);
+    app.main_buffer.fill(0xff000000);
 
     sdl::SDL_RenderPresent(app.renderer.get());
 }
