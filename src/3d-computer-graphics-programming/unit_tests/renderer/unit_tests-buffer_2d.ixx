@@ -2,7 +2,7 @@ export module unit_tests:buffer_2d;
 import std;
 import std.compat;
 import renderer;
-import :testing;
+import :framework;
 
 export namespace unit_tests::renderer
 {
