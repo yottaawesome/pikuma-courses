@@ -103,7 +103,7 @@ export namespace unit_tests::testing
 		using all_tests_t = decltype(all_tests);
 
 		results::time_start();
-		[]<typename TTuple, size_t...I>(TTuple && t, std::index_sequence<I...>)
+		[]<typename TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
 		{
 			([](unit_tests::testing::is_test auto&& test)
 			{
@@ -117,7 +117,7 @@ export namespace unit_tests::testing
 					results::report_failure(test.name);
 				}
 			}
-			(std::forward<std::tuple_element_t<I, all_tests_t>>(std::get<I>(t))), ...);
+			(std::forward<std::tuple_element_t<I, all_tests_t>>(std::get<I>(test_tuple))), ...);
 		}(
 			std::forward<all_tests_t>(all_tests),
 			std::make_index_sequence<std::tuple_size_v<all_tests_t>>{}
