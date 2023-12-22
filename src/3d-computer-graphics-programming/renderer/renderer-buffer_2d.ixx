@@ -21,7 +21,7 @@ export
             buffer_2d(const T width, const T height)
                 : m_width(width),
                 m_height(height),
-                m_buffer(std::vector<T>(width* height))
+                m_buffer(std::vector<T>(width * height))
             {}
 
         public:
