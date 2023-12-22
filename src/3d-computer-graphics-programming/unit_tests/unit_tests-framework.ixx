@@ -99,13 +99,16 @@ export namespace unit_tests::testing
 
 	void run(testing::has_tests auto&&...testers)
 	{
+		// Concatenate all tests into one tuple
 		std::tuple all_tests = std::tuple_cat(testers.tests()...);
 		using all_tests_t = decltype(all_tests);
 
 		results::time_start();
+		// Forward the all tests tuple on to this lambda and expand for each of its elements
 		[]<typename TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
 		{
-			([](unit_tests::testing::is_test auto&& test)
+			// Forward each element sequentially in the test_tuple to this lambda to run the test
+			([](testing::is_test auto&& test)
 			{
 				try
 				{
