@@ -7,10 +7,22 @@ namespace unit_tests::results
 	unsigned successes = 0;
 	unsigned failures = 0;
 	unsigned total = 0;
+	std::chrono::high_resolution_clock::time_point start;
+	std::chrono::high_resolution_clock::time_point end;
 }
 
 export namespace unit_tests::results
 {
+	void time_start()
+	{
+		start = std::chrono::high_resolution_clock::now();
+	}
+
+	void time_end()
+	{
+		end = std::chrono::high_resolution_clock::now();
+	}
+
 	void report_success(const std::string& name)
 	{
 		successes++;
@@ -24,15 +36,16 @@ export namespace unit_tests::results
 		total++;
 	}
 
-	void print_results(std::chrono::high_resolution_clock::duration& runtime)
+	void print_results()
 	{
+		auto duration = end - start;
 		std::println("yottaawesome's brand spanking new unit testing framework!");
 		std::println("---------------------------------------------------------");
 		std::println(
 			"All tests completed in {}/{}/{}.",
-			std::chrono::duration_cast<std::chrono::milliseconds>(runtime),
-			std::chrono::duration_cast<std::chrono::microseconds>(runtime),
-			std::chrono::duration_cast<std::chrono::nanoseconds>(runtime)
+			std::chrono::duration_cast<std::chrono::milliseconds>(duration),
+			std::chrono::duration_cast<std::chrono::microseconds>(duration),
+			std::chrono::duration_cast<std::chrono::nanoseconds>(duration)
 		);
 		std::println("{}/{} succeeded ({} failed).", successes, total, failures);
 		std::println("---------------------------------------------------------");
@@ -41,13 +54,16 @@ export namespace unit_tests::results
 
 export namespace unit_tests::testing
 {
-	template<typename T>
+	// Our basic test type
+	template<std::invocable T>
 	struct test
 	{
 		std::string name;
 		T run;
 	};
 
+	// Helper templates for determining whether a given type conforms 
+	// to the test concept
 	template<typename T>
 	struct is_some_test : std::false_type {};
 
@@ -56,17 +72,13 @@ export namespace unit_tests::testing
 	
 	template<typename T>
 	concept is_test = is_some_test<T>::value;
+	// end
 
-	template<is_test...T>
-	constexpr std::tuple<T...> do_make_tests(T&&... t)
-	{
-		return std::tuple{ std::forward<T>(t)... };
-	}
-
+	// Helper templates for determining whether a type is a tuple of tests
 	template<typename T>
 	struct is_some_tuple_of_tests : std::false_type {};
 
-	template<typename...T>
+	template<is_test...T>
 	struct is_some_tuple_of_tests<std::tuple<T...>> : std::true_type {};
 
 	template<typename T>
@@ -75,36 +87,42 @@ export namespace unit_tests::testing
 	template<typename T>
 	concept has_tests = requires(T t)
 	{
-		{t.tests()} -> unit_tests::testing::is_tuple_of_tests;
+		{t.tests()} -> testing::is_tuple_of_tests;
 	};
+	// end
 
-	std::chrono::high_resolution_clock::duration run(unit_tests::testing::has_tests auto&&...testers)
+	template<is_test...T>
+	constexpr std::tuple<T...> do_make_tests(T&&... t)
+	{
+		return std::tuple{ std::forward<T>(t)... };
+	}
+
+	void run(testing::has_tests auto&&...testers)
 	{
 		std::tuple all_tests = std::tuple_cat(testers.tests()...);
 		using all_tests_t = decltype(all_tests);
 
-		auto begin = std::chrono::high_resolution_clock::now();
-		[] <typename TTuple, size_t...I>(TTuple && t, std::index_sequence<I...>)
+		results::time_start();
+		[]<typename TTuple, size_t...I>(TTuple && t, std::index_sequence<I...>)
 		{
 			([](unit_tests::testing::is_test auto&& test)
+			{
+				try
 				{
-					try
-					{
-						test.run();
-						unit_tests::results::report_success(test.name);
-					}
-					catch (...)
-					{
-						unit_tests::results::report_failure(test.name);
-					}
+					test.run();
+					results::report_success(test.name);
 				}
+				catch (...)
+				{
+					results::report_failure(test.name);
+				}
+			}
 			(std::forward<std::tuple_element_t<I, all_tests_t>>(std::get<I>(t))), ...);
 		}(
 			std::forward<all_tests_t>(all_tests),
 			std::make_index_sequence<std::tuple_size_v<all_tests_t>>{}
 		);
-
-		return std::chrono::high_resolution_clock::now() - begin;
+		results::time_end();
 	}
 }
 
