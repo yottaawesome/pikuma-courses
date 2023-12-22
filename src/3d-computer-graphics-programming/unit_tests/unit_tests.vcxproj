@@ -134,7 +134,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer\unit_tests-buffer_2d.ixx" />
-    <ClCompile Include="framework\unit_tests-framework.ixx" />
+    <ClCompile Include="unit_tests-framework.ixx" />
     <ClCompile Include="unit_tests.ixx" />
   </ItemGroup>
   <ItemGroup>
