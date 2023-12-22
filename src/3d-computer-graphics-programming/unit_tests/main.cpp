@@ -8,7 +8,13 @@ decltype(std::tuple_cat(
     std::declval<input_t>()...
 ));
 
-void Run(auto&&...s)
+template<typename T>
+concept has_tests = requires(T t)
+{
+    {t.tests()} -> unit_tests::testing::is_tuple_of_tests;
+};
+
+void Run(has_tests auto&&...s)
 {
     std::tuple all_tests = std::tuple_cat(s.tests()...);
     using all_tests_t = decltype(all_tests);
