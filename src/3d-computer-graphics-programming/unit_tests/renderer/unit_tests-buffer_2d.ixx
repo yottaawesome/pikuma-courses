@@ -19,7 +19,7 @@ export namespace unit_tests::renderer
 						buffer_2d<uint32_t> buffer;
 						assert::is_true(buffer.width() == 0);
 						assert::is_true(buffer.height() == 0);
-					} 
+					}
 				},
 
 				unit_tests::testing::test{ 
@@ -29,7 +29,7 @@ export namespace unit_tests::renderer
 						buffer_2d<uint32_t> buffer{200, 300};
 						assert::is_true(buffer.width() == 200);
 						assert::is_true(buffer.height() == 300);
-					} 
+					}
 				},
 
 				unit_tests::testing::test{

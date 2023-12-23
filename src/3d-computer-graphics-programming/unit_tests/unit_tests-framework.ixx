@@ -54,12 +54,16 @@ export namespace unit_tests::results
 
 export namespace unit_tests::testing
 {
+	template<typename T>
+	concept invocable_or_nullptr = std::invocable<T> or std::is_null_pointer_v<T>;
+
 	// Our basic test type
-	template<std::invocable T>
+	template<std::invocable T, invocable_or_nullptr P = nullptr_t>
 	struct test
 	{
 		std::string name;
 		T run;
+		P prepare = nullptr;
 	};
 
 	// Helper templates for determining whether a given type conforms 
@@ -70,8 +74,17 @@ export namespace unit_tests::testing
 	template<typename T>
 	struct is_some_test<test<T>> : std::true_type {};
 	
+	template<typename T, typename U>
+	struct is_some_test<test<T, U>> : std::true_type {};
+
 	template<typename T>
 	concept is_test = is_some_test<T>::value;
+
+	template<typename T>
+	concept preparable_test = is_test<T> and requires(T t)
+	{
+		{t.prepare()} -> std::same_as<void>;
+	};
 	// end
 
 	// Helper templates for determining whether a type is a tuple of tests
@@ -112,6 +125,8 @@ export namespace unit_tests::testing
 			{
 				try
 				{
+					if constexpr (preparable_test<std::remove_cvref_t<decltype(test)>>)
+						test.prepare();
 					test.run();
 					results::report_success(test.name);
 				}
