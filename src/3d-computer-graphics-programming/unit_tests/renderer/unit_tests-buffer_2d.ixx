@@ -8,8 +8,8 @@ export namespace unit_tests::renderer
 {
 	struct renderer_tests
 	{
-		// with static ICEs
-		unit_tests::testing::is_tuple_of_tests auto tests()
+		// MSVC ICEs when this is made static
+		auto tests() -> testing::is_tuple_of_tests auto
 		{
 			return unit_tests::testing::make_tests(
 				unit_tests::testing::test{ 

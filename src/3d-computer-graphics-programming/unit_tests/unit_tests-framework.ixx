@@ -105,7 +105,7 @@ export namespace unit_tests::testing
 
 		results::time_start();
 		// Forward the all tests tuple on to this lambda and expand for each of its elements
-		[]<typename TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
+		[]<is_tuple_of_tests TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
 		{
 			// Forward each element sequentially in the test_tuple to this lambda to run the test
 			([](testing::is_test auto&& test)
@@ -133,9 +133,9 @@ export namespace unit_tests::assert
 {
 	struct assert_error final : public std::runtime_error
 	{
-		template<typename...T>
-		assert_error(const std::format_string<T...>& fmt, T&&...args)
-			: std::runtime_error(std::format(fmt, std::forward<T>(args)...))
+		template<typename...TArgs>
+		assert_error(const std::format_string<TArgs...>& fmt, TArgs&&...args)
+			: std::runtime_error(std::format(fmt, std::forward<TArgs>(args)...))
 		{ }
 	};
 
@@ -150,9 +150,3 @@ export namespace unit_tests::assert
 			);
 	}
 }
-
-std::tuple m{
-	unit_tests::testing::test{"a", []() {}},
-	unit_tests::testing::test{"a", []() {}}
-};
-static_assert(unit_tests::testing::is_tuple_of_tests<decltype(m)>);
