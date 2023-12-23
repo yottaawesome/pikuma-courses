@@ -71,9 +71,6 @@ export namespace unit_tests::testing
 	template<typename T>
 	struct is_some_test : std::false_type {};
 
-	template<typename T>
-	struct is_some_test<test<T>> : std::true_type {};
-	
 	template<typename T, typename U>
 	struct is_some_test<test<T, U>> : std::true_type {};
 
@@ -121,11 +118,11 @@ export namespace unit_tests::testing
 		[]<is_tuple_of_tests TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
 		{
 			// Forward each element sequentially in the test_tuple to this lambda to run the test
-			([](testing::is_test auto&& test)
+			([]<testing::is_test TTest>(TTest&& test)
 			{
 				try
 				{
-					if constexpr (preparable_test<std::remove_cvref_t<decltype(test)>>)
+					if constexpr (preparable_test<TTest>)
 						test.prepare();
 					test.run();
 					results::report_success(test.name);
