@@ -87,7 +87,7 @@ export namespace unit_tests::testing
 	template<typename T>
 	concept has_tests = requires(T t)
 	{
-		{t.tests()} -> testing::is_tuple_of_tests;
+		{t.tests()} -> is_tuple_of_tests;
 	};
 	// end
 
