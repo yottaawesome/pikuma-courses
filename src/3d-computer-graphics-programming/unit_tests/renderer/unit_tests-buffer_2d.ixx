@@ -54,4 +54,6 @@ export namespace unit_tests::renderer
 			);
 		}
 	};
+
+	static_assert(testing::has_tests<renderer_tests>);
 }

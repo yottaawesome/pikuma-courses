@@ -131,16 +131,22 @@ export namespace unit_tests::testing
 
 export namespace unit_tests::assert
 {
+	struct assert_error final : public std::runtime_error
+	{
+		template<typename...T>
+		assert_error(const std::format_string<T...>& fmt, T&&...args)
+			: std::runtime_error(std::format(fmt, std::forward<T>(args)...))
+		{ }
+	};
+
 	inline void is_true(const bool condition, const std::source_location& loc = std::source_location::current())
 	{
 		if (not condition)
-			throw std::runtime_error(
-				std::format(
-					"Assertion failed at {} in {}:{}.",
-					loc.function_name(),
-					loc.file_name(),
-					loc.line()
-				)
+			throw assert_error(
+				"Assertion failed at {} in {}:{}.",
+				loc.function_name(),
+				loc.file_name(),
+				loc.line()
 			);
 	}
 }
