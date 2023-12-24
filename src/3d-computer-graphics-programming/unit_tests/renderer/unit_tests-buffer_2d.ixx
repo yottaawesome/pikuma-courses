@@ -19,8 +19,7 @@ export namespace unit_tests::renderer
 						buffer_2d<uint32_t> buffer;
 						assert::is_true(buffer.width() == 0);
 						assert::is_true(buffer.height() == 0);
-					},
-					[] { std::println("Hello, world!"); }
+					}
 				},
 
 				unit_tests::testing::test{ 
