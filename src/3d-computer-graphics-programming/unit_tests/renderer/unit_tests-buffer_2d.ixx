@@ -14,8 +14,7 @@ export namespace unit_tests::renderer
 			return unit_tests::testing::make_tests(
 				unit_tests::testing::test{ 
 					"Test default constructor", 
-					[]() 
-					{
+					[]{
 						buffer_2d<uint32_t> buffer;
 						assert::is_true(buffer.width() == 0);
 						assert::is_true(buffer.height() == 0);
@@ -24,8 +23,7 @@ export namespace unit_tests::renderer
 
 				unit_tests::testing::test{ 
 					"Test width/height constructor", 
-					[]() 
-					{
+					[]{
 						buffer_2d<uint32_t> buffer{200, 300};
 						assert::is_true(buffer.width() == 200);
 						assert::is_true(buffer.height() == 300);
@@ -34,8 +32,7 @@ export namespace unit_tests::renderer
 
 				unit_tests::testing::test{
 					"Test set() [1]",
-					[]()
-					{
+					[]{
 						buffer_2d<uint32_t> buffer{200, 300};
 						buffer.set(0, 1, 45);
 						assert::is_true(buffer.raw_buffer()[1] == 45);
@@ -44,8 +41,7 @@ export namespace unit_tests::renderer
 
 				unit_tests::testing::test{
 					"Test set() [2]",
-					[]()
-					{
+					[]{
 						buffer_2d<uint32_t> buffer{200, 300};
 						buffer.set(1, 1, 45);
 						assert::is_true(buffer.raw_buffer()[200 + 1] == 45);
