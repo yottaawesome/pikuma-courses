@@ -87,7 +87,11 @@ export namespace unit_tests::testing
 
 	template<typename T>
 	concept preparable_testable = 
-		testable<T> and requires(T t) { {t.prepare()} -> std::same_as<void>; };
+		testable<T> 
+		and requires(T t) 
+		{ 
+			{t.prepare()} -> std::same_as<void>; 
+		};
 	// end
 
 	// Helper templates for determining whether a type is a tuple of tests
