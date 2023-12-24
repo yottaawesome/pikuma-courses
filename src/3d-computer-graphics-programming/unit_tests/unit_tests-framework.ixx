@@ -75,10 +75,10 @@ export namespace unit_tests::testing
 	struct is_some_test<test<T, U>> : std::true_type {};
 
 	template<typename T>
-	concept is_test = is_some_test<T>::value;
+	concept testable = is_some_test<T>::value;
 
 	template<typename T>
-	concept preparable_test = is_test<T> and requires(T t)
+	concept preparable_testable = testable<T> and requires(T t)
 	{
 		{t.prepare()} -> std::same_as<void>;
 	};
@@ -88,20 +88,20 @@ export namespace unit_tests::testing
 	template<typename T>
 	struct is_some_tuple_of_tests : std::false_type {};
 
-	template<is_test...T>
+	template<testable...T>
 	struct is_some_tuple_of_tests<std::tuple<T...>> : std::true_type {};
 
 	template<typename T>
-	concept is_tuple_of_tests = is_some_tuple_of_tests<T>::value;
+	concept tuple_of_tests = is_some_tuple_of_tests<T>::value;
 
 	template<typename T>
 	concept has_tests = requires(T t)
 	{
-		{t.tests()} -> is_tuple_of_tests;
+		{t.tests()} -> tuple_of_tests;
 	};
 	// end
 
-	template<is_test...T>
+	template<testable...T>
 	inline constexpr std::tuple<T...> make_tests(T&&... t)
 	{
 		return std::tuple{ std::forward<T>(t)... };
@@ -115,14 +115,14 @@ export namespace unit_tests::testing
 
 		results::time_start();
 		// Forward the all tests tuple on to this lambda and expand for each of its elements
-		[]<is_tuple_of_tests TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
+		[]<tuple_of_tests TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
 		{
 			// Forward each element sequentially in the test_tuple to this lambda to run the test
-			([]<testing::is_test TTest>(TTest&& test)
+			([]<testing::testable TTest>(TTest&& test)
 			{
 				try
 				{
-					if constexpr (preparable_test<TTest>)
+					if constexpr (preparable_testable<TTest>)
 						test.prepare();
 					test.run();
 					results::report_success(test.name);
