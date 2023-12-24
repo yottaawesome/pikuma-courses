@@ -95,7 +95,7 @@ export namespace unit_tests::testing
 	concept tuple_of_tests = is_some_tuple_of_tests<T>::value;
 
 	template<typename T>
-	concept has_tests = requires(T t)
+	concept tests_exporter = requires(T t)
 	{
 		{t.tests()} -> tuple_of_tests;
 	};
@@ -107,7 +107,7 @@ export namespace unit_tests::testing
 		return std::tuple{ std::forward<T>(t)... };
 	}
 
-	void run(testing::has_tests auto&&...testers)
+	void run(testing::tests_exporter auto&&...testers)
 	{
 		// Concatenate all tests into one tuple
 		std::tuple all_tests = std::tuple_cat(testers.tests()...);
