@@ -102,7 +102,7 @@ export namespace unit_tests::testing
 	// end
 
 	template<is_test...T>
-	constexpr std::tuple<T...> make_tests(T&&... t)
+	inline constexpr std::tuple<T...> make_tests(T&&... t)
 	{
 		return std::tuple{ std::forward<T>(t)... };
 	}
