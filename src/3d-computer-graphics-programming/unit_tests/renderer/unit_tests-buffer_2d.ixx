@@ -4,9 +4,9 @@ import std.compat;
 import renderer;
 import :framework;
 
-export namespace unit_tests::renderer
+export namespace unit_tests::renderer_tests
 {
-	struct renderer_tests
+	struct buffer_2d_tests
 	{
 		// MSVC ICEs when this is made static
 		auto tests() -> testing::is_tuple_of_tests auto
@@ -51,5 +51,5 @@ export namespace unit_tests::renderer
 		}
 	};
 
-	static_assert(testing::has_tests<renderer_tests>);
+	static_assert(testing::has_tests<buffer_2d_tests>);
 }

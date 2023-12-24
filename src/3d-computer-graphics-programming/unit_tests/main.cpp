@@ -7,8 +7,11 @@ using tuple_cat_t = decltype(std::tuple_cat(std::declval<input_t>()...));
 
 int main()
 {
-    unit_tests::testing::run(
-        unit_tests::renderer::renderer_tests{}
+    using namespace unit_tests;
+    
+    testing::run(
+        renderer_tests::buffer_2d_tests{},
+        util_tests::sdl_context_tests{}
     );
     unit_tests::results::print_results();
 
