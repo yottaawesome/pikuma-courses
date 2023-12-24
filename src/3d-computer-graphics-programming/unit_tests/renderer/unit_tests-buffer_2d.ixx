@@ -51,5 +51,5 @@ export namespace unit_tests::renderer_tests
 		}
 	};
 
-	static_assert(testing::tests_exporter<buffer_2d_tests>);
+	static_assert(testing::test_exporter<buffer_2d_tests>);
 }

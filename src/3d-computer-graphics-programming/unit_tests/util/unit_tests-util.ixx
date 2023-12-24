@@ -20,5 +20,5 @@ export namespace unit_tests::util_tests
 			);
 		}
 	};
-	static_assert(testing::tests_exporter<sdl_context_tests>);
+	static_assert(testing::test_exporter<sdl_context_tests>);
 }
