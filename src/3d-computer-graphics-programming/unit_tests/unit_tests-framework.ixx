@@ -57,7 +57,9 @@ export namespace unit_tests::testing
 	template<typename T>
 	concept invocable_or_nullptr = std::invocable<T> or std::is_null_pointer_v<T>;
 
-	// Our basic test type
+	// Our basic test type. This is defined more out of utility than
+	// necessity, as the testable concept (defined below) doesn't
+	// technically require a type to be a template of this type.
 	template<std::invocable T, invocable_or_nullptr P = nullptr_t>
 	struct test
 	{
@@ -74,14 +76,18 @@ export namespace unit_tests::testing
 	template<typename T, typename U>
 	struct is_some_test<test<T, U>> : std::true_type {};
 
+	// This was originally is_some_test<T>::value, but this unnecessarily constrains
+	// it to a template type of test, when the testable concept is wider than that.
 	template<typename T>
-	concept testable = is_some_test<T>::value;
+	concept testable = requires(T t) 
+	{ 
+		requires std::same_as<decltype(t.name), std::string>;
+		t.run(); 
+	};
 
 	template<typename T>
-	concept preparable_testable = testable<T> and requires(T t)
-	{
-		{t.prepare()} -> std::same_as<void>;
-	};
+	concept preparable_testable = 
+		testable<T> and requires(T t) { {t.prepare()} -> std::same_as<void>; };
 	// end
 
 	// Helper templates for determining whether a type is a tuple of tests
