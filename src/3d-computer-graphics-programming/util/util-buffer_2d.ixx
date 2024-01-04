@@ -1,7 +1,7 @@
-export module renderer:buffer_2d;
+export module util:buffer_2d;
 import std;
 import std.compat;
-import util;
+import :functions;
 
 export
 {

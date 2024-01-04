@@ -1,10 +1,10 @@
 export module unit_tests:buffer_2d;
 import std;
 import std.compat;
-import renderer;
+import util;
 import :framework;
 
-export namespace unit_tests::renderer_tests
+export namespace unit_tests::util_tests
 {
 	struct buffer_2d_tests
 	{

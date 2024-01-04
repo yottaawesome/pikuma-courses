@@ -143,7 +143,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="renderer-buffer_2d.ixx" />
     <ClCompile Include="renderer-main_app.ixx" />
     <ClCompile Include="renderer.ixx" />
   </ItemGroup>

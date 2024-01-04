@@ -7,7 +7,7 @@ int main()
     using namespace unit_tests;
     
     testing::run(
-        renderer_tests::buffer_2d_tests{},
+        util_tests::buffer_2d_tests{},
         util_tests::sdl_context_tests{}
     );
     unit_tests::results::print_results();

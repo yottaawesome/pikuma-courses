@@ -1,7 +1,6 @@
 export module renderer:main_app;
 import shared;
 import util;
-import :buffer_2d;
 
 export
 {
