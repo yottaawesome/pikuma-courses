@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="renderer-display.ixx" />
     <ClCompile Include="renderer-main_app.ixx" />
     <ClCompile Include="renderer.ixx" />
   </ItemGroup>
