@@ -56,8 +56,11 @@ void process_input()
     }
 }
 
-void update()
+rectangle r{ {0,0}, 50, 50 };
+
+void update(const std::chrono::milliseconds elapsed)
 {
+    r.origin.x++;
 }
 
 void render(
@@ -71,7 +74,8 @@ void render(
 
     //draw_line_grid(10, 0xffc0c0c0, app.main_buffer);
     draw_dot_grid(10, 0xffc0c0c0, buffer);
-    draw_rect(50, 50, 100, 100, 0xffc0c0c0, buffer);
+    draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
+    draw_pixel(0, 50, 0xffff0000, buffer);
 
     render_color_buffer(renderer, buffer, color_buffer_texture);
 
@@ -87,15 +91,18 @@ int WinMain(int argc, char* argv[])
 
     setup();
 
+    std::chrono::milliseconds elapsed{ 0 };
     while (app.is_running)
     {
+        std::chrono::high_resolution_clock::time_point begin = std::chrono::high_resolution_clock::now();
         process_input();
-        update();
+        update(elapsed);
         render(
             app.renderer.get(), 
             app.color_buffer_texture.get(), 
             app.main_buffer
         );
+        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(begin - std::chrono::high_resolution_clock::now());
     }
 
     teardown();

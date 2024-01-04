@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="util-buffer_2d.ixx" />
     <ClCompile Include="util-functions.ixx" />
+    <ClCompile Include="util-primitives.ixx" />
     <ClCompile Include="util.ixx" />
   </ItemGroup>
   <ItemGroup>

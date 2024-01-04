@@ -107,6 +107,11 @@ export
         }
     }
 
+    void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, color_buffer& buffer)
+    {
+        buffer.set(x, y, color);
+    }
+
     void render_color_buffer(
         sdl::SDL_Renderer* renderer,
         color_buffer& buffer,
