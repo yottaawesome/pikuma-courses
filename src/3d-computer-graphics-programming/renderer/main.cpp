@@ -11,6 +11,9 @@ import renderer;
 
 main_app app{};
 
+constexpr auto number_of_points = 9 * 9 * 9;
+std::array<vector_3f, number_of_points> cube_points{};
+
 void setup()
 {
     if (not app.is_running)
@@ -26,6 +29,18 @@ void setup()
             app.window_height
         )
     );
+
+    unsigned count = 0;
+    for (float x = -1; x <= 1; x += 0.25)
+    {
+        for (float y = -1; y <= 1; y += 0.25)
+        {
+            for (float z = -1; z <= 1; z += 0.25)
+            {
+                cube_points[count++] = vector_3f{ x,y,z };
+            }
+        }
+    }
 }
 
 void teardown()
@@ -56,11 +71,8 @@ void process_input()
     }
 }
 
-rectangle r{ {0,0}, 50, 50 };
-
 void update(const std::chrono::milliseconds elapsed)
 {
-    r.origin.x++;
 }
 
 void render(
@@ -74,7 +86,8 @@ void render(
 
     //draw_line_grid(10, 0xffc0c0c0, app.main_buffer);
     draw_dot_grid(10, 0xffc0c0c0, buffer);
-    draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
+    //draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
+    //draw_rect(50, 50, 60, 50, 0xffc0c0c0, buffer);
     draw_pixel(0, 50, 0xffff0000, buffer);
 
     render_color_buffer(renderer, buffer, color_buffer_texture);

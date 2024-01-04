@@ -19,4 +19,17 @@ export
 			return (origin.x + width < point.x) and (origin.y + height < point.y);
 		}
 	};
+
+	struct vector_2f
+	{
+		float x = 0;
+		float y = 0;
+	};
+
+	struct vector_3f
+	{
+		float x = 0;
+		float y = 0;
+		float z = 0;
+	};
 }
