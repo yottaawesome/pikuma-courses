@@ -102,12 +102,12 @@ export namespace unit_tests::testing
 	struct is_some_tuple_of_tests<std::tuple<T...>> : std::true_type {};
 
 	template<typename T>
-	concept tuple_of_testables = is_some_tuple_of_tests<T>::value;
+	concept testables = is_some_tuple_of_tests<T>::value;
 
 	template<typename T>
 	concept test_exporter = requires(T t)
 	{
-		{t.tests()} -> tuple_of_testables;
+		{t.tests()} -> testables;
 	};
 	// end
 
@@ -125,10 +125,10 @@ export namespace unit_tests::testing
 
 		results::time_start();
 		// Forward the all tests tuple on to this lambda and expand for each of its elements
-		[]<tuple_of_testables TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
+		[]<testables TTuple, size_t...I>(TTuple&& test_tuple, std::index_sequence<I...>)
 		{
 			// Forward each element sequentially in the test_tuple to this lambda to run the test
-			([]<testing::testable TTest>(TTest&& test)
+			([]<testable TTest>(TTest&& test)
 			{
 				try
 				{

@@ -9,7 +9,7 @@ export namespace unit_tests::util_tests
 	struct buffer_2d_tests
 	{
 		// MSVC ICEs when this is made static
-		auto tests() -> testing::tuple_of_testables auto
+		auto tests() -> testing::testables auto
 		{
 			return unit_tests::testing::make_tests(
 				unit_tests::testing::test{ 

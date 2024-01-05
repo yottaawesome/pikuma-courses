@@ -7,7 +7,7 @@ export namespace unit_tests::util_tests
 {
 	struct sdl_context_tests
 	{
-		auto tests() -> testing::tuple_of_testables auto
+		auto tests() -> testing::testables auto
 		{
 			return testing::make_tests(
 				testing::test{
