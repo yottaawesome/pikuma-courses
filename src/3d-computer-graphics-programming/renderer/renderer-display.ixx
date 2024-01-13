@@ -81,12 +81,13 @@ export
     void draw_dot_grid(const int32_t step, const uint32_t color, color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
-        {
             for (uint32_t column = 0; column < buffer.width(); column += 10)
-            {
                 buffer.set(row, column, color);
-            }
-        }
+    }
+
+    void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, color_buffer& buffer)
+    {
+        buffer.set(x, y, color);
     }
 
     void draw_rect(
@@ -99,17 +100,8 @@ export
     )
     {
         for (uint32_t row = y; row < y + width and row < buffer.height(); row++)
-        {
             for (uint32_t column = x; column < x + height and column < buffer.width(); column++)
-            {
-                buffer.set(row, column, color);
-            }
-        }
-    }
-
-    void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, color_buffer& buffer)
-    {
-        buffer.set(x, y, color);
+                draw_pixel(row, column, color, buffer);
     }
 
     void render_color_buffer(

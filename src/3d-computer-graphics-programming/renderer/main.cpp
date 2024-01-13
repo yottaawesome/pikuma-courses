@@ -11,9 +11,6 @@ import renderer;
 
 main_app app{};
 
-constexpr auto number_of_points = 9 * 9 * 9;
-std::array<vector_3f, number_of_points> cube_points{};
-
 void setup()
 {
     if (not app.is_running)
@@ -32,15 +29,9 @@ void setup()
 
     unsigned count = 0;
     for (float x = -1; x <= 1; x += 0.25)
-    {
         for (float y = -1; y <= 1; y += 0.25)
-        {
             for (float z = -1; z <= 1; z += 0.25)
-            {
-                cube_points[count++] = vector_3f{ x,y,z };
-            }
-        }
-    }
+                app.cube_points[count++] = vector_3f{ x, y, z };
 }
 
 void teardown()
@@ -71,8 +62,20 @@ void process_input()
     }
 }
 
+constexpr float fov_factor = 128;
+
+// orthographically projects a 3D vector into 2D space
+vector_2f project(vector_3f vec)
+{
+    // scale by fov_factor
+    return { fov_factor * vec.x, fov_factor * vec.y };
+}
+
 void update(const std::chrono::milliseconds elapsed)
 {
+    // convert the 3D cube points to 2D
+    for (int i = 0; i < number_of_points; i++)
+        app.projected_cube_points[i] = project(app.cube_points[i]);
 }
 
 void render(
@@ -81,14 +84,25 @@ void render(
     color_buffer& buffer
 )
 {
-    sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    sdl::SDL_RenderClear(renderer);
-
+    //sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    //sdl::SDL_RenderClear(renderer);
     //draw_line_grid(10, 0xffc0c0c0, app.main_buffer);
-    draw_dot_grid(10, 0xffc0c0c0, buffer);
     //draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
     //draw_rect(50, 50, 60, 50, 0xffc0c0c0, buffer);
-    draw_pixel(0, 50, 0xffff0000, buffer);
+    //draw_pixel(0, 50, 0xffff0000, buffer);
+    draw_dot_grid(10, 0xff464646, buffer);
+
+    for (int i = 0; i < number_of_points; i++)
+    {
+        draw_rect(
+            app.projected_cube_points[i].x + app.window_width / 2,
+            app.projected_cube_points[i].y + app.window_height / 2,
+            4,
+            4,
+            0xffffff00,
+            buffer
+        );
+    }
 
     render_color_buffer(renderer, buffer, color_buffer_texture);
 

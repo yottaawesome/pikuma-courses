@@ -1,9 +1,12 @@
 export module renderer:main_app;
+import std;
 import shared;
 import util;
 
 export
 {
+    constexpr auto number_of_points = 9 * 9 * 9;
+
     struct main_app
     {
         main_app() = default;
@@ -29,5 +32,8 @@ export
         color_buffer main_buffer{};
         // We copy the color buffer to this
         util::sdl_texture_unique_ptr color_buffer_texture;
+
+        std::array<vector_3f, number_of_points> cube_points{};
+        std::array<vector_2f, number_of_points> projected_cube_points{};
     };
 }
