@@ -6,6 +6,7 @@ import util;
 export
 {
     constexpr auto number_of_points = 9 * 9 * 9;
+    constexpr float fov_factor = 640;
 
     struct main_app
     {
@@ -35,5 +36,7 @@ export
 
         std::array<vector_3f, number_of_points> cube_points{};
         std::array<vector_2f, number_of_points> projected_cube_points{};
+
+        vector_3f camera_position = { 0, 0, -5 };
     };
 }
