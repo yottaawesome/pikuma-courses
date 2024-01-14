@@ -116,6 +116,7 @@ void render(
     for (int i = 0; i < number_of_points; i++)
     {
         draw_rect(
+            // translate to center of the screen.
             app.projected_cube_points[i].x + app.window_width / 2,
             app.projected_cube_points[i].y + app.window_height / 2,
             4,
