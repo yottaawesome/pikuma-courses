@@ -62,20 +62,46 @@ void process_input()
     }
 }
 
-constexpr float fov_factor = 128;
+vector_3f camera_position = { 0, 0, -5 };
+constexpr float fov_factor = 640;
 
 // orthographically projects a 3D vector into 2D space
 vector_2f project(vector_3f vec)
 {
-    // scale by fov_factor
-    return { fov_factor * vec.x, fov_factor * vec.y };
+    /*
+    * Perspective divide (perspective projection lecture):
+    *   P'x = Px/Pz
+    *   P'y = Py/Pz
+    * where P'x and P'y are the projected points on the screen
+    * and Px, Py, and Pz are the original 3-space components.
+    * The idea is based on similar trianges, whose ratios
+    * between sides must remain constant.
+    *
+    * We scale by the fov_factor and perform the perspective
+    * divide.
+    */
+    return { 
+        fov_factor * vec.x / vec.z, 
+        fov_factor * vec.y / vec.z
+    };
 }
+
+/*
+* Coordinate system handedness:
+* Left-handed: Z-axis is positive away from the viewer.
+* Right-handed: Z-axis is positive toward the viewer.
+*/
 
 void update(const std::chrono::milliseconds elapsed)
 {
     // convert the 3D cube points to 2D
     for (int i = 0; i < number_of_points; i++)
-        app.projected_cube_points[i] = project(app.cube_points[i]);
+    {
+        auto point = app.cube_points[i];
+        // Move the points away from the camera
+        point.z -= camera_position.z;
+        app.projected_cube_points[i] = project(point);
+    }
 }
 
 void render(
