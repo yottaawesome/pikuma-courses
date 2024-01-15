@@ -141,8 +141,9 @@ export namespace unit_tests::testing
 				{
 					results::report_failure(test.name);
 				}
-			}
-			(std::forward<std::tuple_element_t<I, all_tests_t>>(std::get<I>(test_tuple))), ...);
+			}(
+				std::forward<std::tuple_element_t<I, all_tests_t>>(std::get<I>(test_tuple))
+			), ...);
 		}(
 			std::forward<all_tests_t>(all_tests),
 			std::make_index_sequence<std::tuple_size_v<all_tests_t>>{}
