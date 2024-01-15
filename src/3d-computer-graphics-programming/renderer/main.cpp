@@ -31,7 +31,7 @@ void setup()
     for (float x = -1; x <= 1; x += 0.25)
         for (float y = -1; y <= 1; y += 0.25)
             for (float z = -1; z <= 1; z += 0.25)
-                app.cube_points[count++] = vector_3f{ x, y, z };
+                app.cube_points[count++] = util::vector_3f{ x, y, z };
 }
 
 void teardown()
@@ -62,8 +62,7 @@ void process_input()
     }
 }
 
-// orthographically projects a 3D vector into 2D space
-vector_2f project(vector_3f vec)
+util::vector_2f project(util::vector_3f vec)
 {
     /*
     * Perspective divide (perspective projection lecture):
@@ -102,7 +101,7 @@ void update(const std::chrono::milliseconds elapsed)
 void render(
     sdl::SDL_Renderer* renderer, 
     sdl::SDL_Texture* color_buffer_texture, 
-    color_buffer& buffer
+    util::color_buffer& buffer
 )
 {
     //sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -111,11 +110,11 @@ void render(
     //draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
     //draw_rect(50, 50, 60, 50, 0xffc0c0c0, buffer);
     //draw_pixel(0, 50, 0xffff0000, buffer);
-    draw_dot_grid(10, 0xff464646, buffer);
+    display::draw_dot_grid(10, 0xff464646, buffer);
 
     for (int i = 0; i < number_of_points; i++)
     {
-        draw_rect(
+        display::draw_rect(
             // translate to center of the screen.
             app.projected_cube_points[i].x + app.window_width / 2,
             app.projected_cube_points[i].y + app.window_height / 2,
@@ -126,7 +125,7 @@ void render(
         );
     }
 
-    render_color_buffer(renderer, buffer, color_buffer_texture);
+    display::render_color_buffer(renderer, buffer, color_buffer_texture);
 
     buffer.fill(0xff000000);
 
@@ -136,7 +135,7 @@ void render(
 //int main(int argc, char* argv[]) // use this on subsystem:console
 int WinMain(int argc, char* argv[])
 {
-    initialize_window(app);
+    display::initialize_window(app);
 
     setup();
 

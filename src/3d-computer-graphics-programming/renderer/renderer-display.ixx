@@ -3,7 +3,7 @@ import util;
 import shared;
 import :main_app;
 
-export 
+export namespace display
 {
     bool initialize_window(main_app& app)
     {
@@ -60,7 +60,7 @@ export
         return app.is_running = true;
     }
 
-    void draw_line_grid(const int32_t step, const uint32_t color, color_buffer& buffer)
+    void draw_line_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)
         {
@@ -78,14 +78,14 @@ export
         }
     }
 
-    void draw_dot_grid(const int32_t step, const uint32_t color, color_buffer& buffer)
+    void draw_dot_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
             for (uint32_t column = 0; column < buffer.width(); column += 10)
                 buffer.set(row, column, color);
     }
 
-    void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, color_buffer& buffer)
+    void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, util::color_buffer& buffer)
     {
         buffer.set(x, y, color);
     }
@@ -96,7 +96,7 @@ export
         const uint32_t width,
         const uint32_t height,
         const uint32_t color,
-        color_buffer& buffer
+        util::color_buffer& buffer
     )
     {
         for (uint32_t row = y; row < y + width and row < buffer.height(); row++)
@@ -106,8 +106,8 @@ export
 
     void render_color_buffer(
         sdl::SDL_Renderer* renderer,
-        color_buffer& buffer,
-        SDL_Texture* color_buffer_texture
+        util::color_buffer& buffer,
+        sdl::SDL_Texture* color_buffer_texture
     )
     {
         sdl::SDL_UpdateTexture(

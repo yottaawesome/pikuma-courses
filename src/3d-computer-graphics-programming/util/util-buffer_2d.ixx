@@ -3,7 +3,7 @@ import std;
 import std.compat;
 import :functions;
 
-export
+export namespace util
 {
     template<typename T>
     concept is_arithmetic = std::is_arithmetic_v<T>;

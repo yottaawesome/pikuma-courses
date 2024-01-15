@@ -1,7 +1,7 @@
 export module util:primitives;
 import shared;
 
-export
+export namespace util
 {
 	struct point_2d final
 	{

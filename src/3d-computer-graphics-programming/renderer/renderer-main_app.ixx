@@ -30,13 +30,13 @@ export
         util::sdl_renderer_unique_ptr renderer;
         // Our color buffer, we copy this to the color_buffer_texture
         // texture and then pass the texture to the renderer
-        color_buffer main_buffer{};
+        util::color_buffer main_buffer{};
         // We copy the color buffer to this
         util::sdl_texture_unique_ptr color_buffer_texture;
 
-        std::array<vector_3f, number_of_points> cube_points{};
-        std::array<vector_2f, number_of_points> projected_cube_points{};
+        std::array<util::vector_3f, number_of_points> cube_points{};
+        std::array<util::vector_2f, number_of_points> projected_cube_points{};
 
-        vector_3f camera_position = { 0, 0, -5 };
+        util::vector_3f camera_position = { 0, 0, -5 };
     };
 }
