@@ -24,17 +24,19 @@ export namespace util
         win32::OutputDebugStringA(std::format("{}\n", msg).c_str());
     }
 
-    inline void print_last_error(const std::source_location location = std::source_location::current())
+    std::string print_last_error(const std::source_location location = std::source_location::current())
     {
-        win32::OutputDebugStringA(
-            std::format(
-                "SDL failed [{}] at {}:{}:{}\n",
-                sdl::SDL_GetError(),
-                location.file_name(),
-                location.function_name(),
-                location.line()
-            ).c_str()
+        std::string msg = std::format(
+            "SDL failed [{}] at {}:{}:{}\n",
+            sdl::SDL_GetError(),
+            location.file_name(),
+            location.function_name(),
+            location.line()
         );
+        win32::OutputDebugStringA(
+            msg.c_str()
+        );
+        return msg;
     }
 
     struct sdl_window_deleter

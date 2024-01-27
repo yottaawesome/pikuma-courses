@@ -9,6 +9,12 @@ export namespace util
 		uint32_t y = 0;
 	};
 
+	struct basic_rectangle final
+	{
+		uint32_t width = 0;
+		uint32_t height = 0;
+	};
+
 	struct rectangle final
 	{
 		point_2d origin{};
