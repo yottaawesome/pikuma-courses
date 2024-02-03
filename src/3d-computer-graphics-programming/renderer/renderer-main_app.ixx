@@ -98,7 +98,23 @@ export
                 return renderer;
             }(window);
 
+        util::sdl_texture_unique_ptr color_buffer_texture = 
+            [](util::sdl_renderer_unique_ptr& renderer, const util::basic_rectangle& screen_dimensions) 
+            {
+                return util::sdl_texture_unique_ptr(
+                    sdl::SDL_CreateTexture
+                    (
+                        renderer.get(),
+                        sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_ARGB8888,
+                        sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
+                        screen_dimensions.width,
+                        screen_dimensions.height
+                    )
+                );
+            }(renderer, screen_dimensions);
+
         std::array<util::vector_3f, number_of_points> cube_points{};
+        util::vector_3f camera_position = { 0, 0, -5 };
 
         bool is_running = 
             [](std::array<util::vector_3f, number_of_points>& cube_points, const util::sdl_window_unique_ptr& window)

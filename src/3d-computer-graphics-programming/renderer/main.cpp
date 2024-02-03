@@ -9,11 +9,11 @@ import shared;
 import util;
 import renderer;
 
-main_app app{};
+main_app_2 app{};
 
 void setup()
 {
-    if (not app.is_running)
+    /*if (not app.is_running)
         return;
 
     app.color_buffer_texture = util::sdl_texture_unique_ptr(
@@ -31,7 +31,7 @@ void setup()
     for (float x = -1; x <= 1; x += 0.25)
         for (float y = -1; y <= 1; y += 0.25)
             for (float z = -1; z <= 1; z += 0.25)
-                app.cube_points[count++] = util::vector_3f{ x, y, z };
+                app.cube_points[count++] = util::vector_3f{ x, y, z };*/
 }
 
 void teardown()
@@ -116,8 +116,8 @@ void render(
     {
         display::draw_rect(
             // translate to center of the screen.
-            static_cast<uint32_t>(app.projected_cube_points[i].x + app.window_width / 2),
-            static_cast<uint32_t>(app.projected_cube_points[i].y + app.window_height / 2),
+            static_cast<uint32_t>(app.projected_cube_points[i].x + app.screen_dimensions.width / 2),
+            static_cast<uint32_t>(app.projected_cube_points[i].y + app.screen_dimensions.height / 2),
             4,
             4,
             0xffffff00,
@@ -140,7 +140,7 @@ int WinMain(int argc, char* argv[])
         std::chrono::high_resolution_clock, 
         std::chrono::duration_cast;
 
-    display::initialize_window(app);
+    //display::initialize_window(app);
 
     setup();
 
