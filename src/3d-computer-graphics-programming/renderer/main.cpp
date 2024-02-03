@@ -9,29 +9,11 @@ import shared;
 import util;
 import renderer;
 
-main_app_2 app{};
+main_app app{};
 
-void setup()
+void setup() 
 {
-    /*if (not app.is_running)
-        return;
-
-    app.color_buffer_texture = util::sdl_texture_unique_ptr(
-        sdl::SDL_CreateTexture
-        (
-            app.renderer.get(),
-            sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_ARGB8888,
-            sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
-            app.window_width,
-            app.window_height
-        )
-    );
-
-    unsigned count = 0;
-    for (float x = -1; x <= 1; x += 0.25)
-        for (float y = -1; y <= 1; y += 0.25)
-            for (float z = -1; z <= 1; z += 0.25)
-                app.cube_points[count++] = util::vector_3f{ x, y, z };*/
+    // Nothing to do -- setup logic moved to main_app.
 }
 
 void teardown()

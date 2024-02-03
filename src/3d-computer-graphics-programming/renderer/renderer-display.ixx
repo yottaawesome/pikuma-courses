@@ -7,57 +7,8 @@ export namespace display
 {
     bool initialize_window(main_app& app)
     {
-        app.context = std::make_unique<util::sdl_context>(sdl::sdl_init_everything);
-        if (not app.context->successful())
-        {
-            util::print_last_error();
-            return false;
-        }
-
-        sdl::SDL_DisplayMode mode;
-        // https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
-        if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
-        {
-            util::print_last_error();
-            return false;
-        }
-
-        app.window_width = mode.w;
-        app.window_height = mode.h;
-
-        app.main_buffer = { app.window_width, app.window_height };
-
-        // Create a window
-        // https://wiki.libsdl.org/SDL2/SDL_CreateWindow
-        app.window = util::sdl_window_unique_ptr(
-            sdl::SDL_CreateWindow(
-                nullptr,
-                sdl::sdl_windowpos_centered,
-                sdl::sdl_windowpos_centered,
-                app.window_width,
-                app.window_height,
-                sdl::SDL_WindowFlags::SDL_WINDOW_BORDERLESS
-            )
-        );
-        if (not app.window)
-        {
-            util::print_last_error();
-            return false;
-        }
-
-        // Create a SDL renderer
-        // https://wiki.libsdl.org/SDL2/SDL_CreateRenderer
-        app.renderer = util::sdl_renderer_unique_ptr(sdl::SDL_CreateRenderer(app.window.get(), -1, 0));
-        if (not app.renderer)
-        {
-            util::print_last_error();
-            return false;
-        }
-
-        if (sdl::SDL_SetWindowFullscreen(app.window.get(), sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN))
-            return false;
-
-        return app.is_running = true;
+        // Nothing to do -- setup logic moved to main_app.
+        return true;
     }
 
     void draw_line_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
