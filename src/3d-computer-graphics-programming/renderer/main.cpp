@@ -116,8 +116,8 @@ void render(
     {
         display::draw_rect(
             // translate to center of the screen.
-            app.projected_cube_points[i].x + app.window_width / 2,
-            app.projected_cube_points[i].y + app.window_height / 2,
+            static_cast<uint32_t>(app.projected_cube_points[i].x + app.window_width / 2),
+            static_cast<uint32_t>(app.projected_cube_points[i].y + app.window_height / 2),
             4,
             4,
             0xffffff00,
@@ -135,14 +135,19 @@ void render(
 //int main(int argc, char* argv[]) // use this on subsystem:console
 int WinMain(int argc, char* argv[])
 {
+    using 
+        std::chrono::milliseconds, 
+        std::chrono::high_resolution_clock, 
+        std::chrono::duration_cast;
+
     display::initialize_window(app);
 
     setup();
 
-    std::chrono::milliseconds elapsed{ 0 };
+    milliseconds elapsed{ 0 };
     while (app.is_running)
     {
-        std::chrono::high_resolution_clock::time_point begin = std::chrono::high_resolution_clock::now();
+        high_resolution_clock::time_point begin = high_resolution_clock::now();
         process_input();
         update(elapsed);
         render(
@@ -150,7 +155,7 @@ int WinMain(int argc, char* argv[])
             app.color_buffer_texture.get(), 
             app.main_buffer
         );
-        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(begin - std::chrono::high_resolution_clock::now());
+        elapsed = duration_cast<milliseconds>(begin - high_resolution_clock::now());
     }
 
     teardown();
