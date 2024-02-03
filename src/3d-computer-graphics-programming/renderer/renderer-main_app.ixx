@@ -43,6 +43,12 @@ export
     // An alternative implementation of main_app that does all of its own initialisation.
     struct main_app_2
     {
+        main_app_2() = default;
+        main_app_2(const main_app_2&) = delete;
+        main_app_2& operator=(const main_app_2&) = delete;
+        main_app_2(main_app_2&&) = default;
+        main_app_2& operator=(main_app_2&&) = default;
+
         std::unique_ptr<util::sdl_context> context = 
             []{
                 auto ptr = std::make_unique<util::sdl_context>(sdl::sdl_init_everything);
