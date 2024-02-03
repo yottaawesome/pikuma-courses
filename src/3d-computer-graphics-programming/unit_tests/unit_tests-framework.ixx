@@ -157,7 +157,7 @@ export namespace unit_tests::assert
 	struct assert_error final : public std::runtime_error
 	{
 		template<typename...TArgs>
-		assert_error(const std::format_string<TArgs...>& fmt, TArgs&&...args)
+		assert_error(std::format_string<TArgs...> fmt, TArgs&&...args)
 			: std::runtime_error(std::format(fmt, std::forward<TArgs>(args)...))
 		{ }
 	};
