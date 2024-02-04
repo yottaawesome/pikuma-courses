@@ -150,6 +150,7 @@
     <ClCompile Include="renderer.ixx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
