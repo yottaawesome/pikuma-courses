@@ -1,3 +1,3 @@
 # Course Notes
 
-![Trigonometry Review](./trig-review-notes.png "Trigonometry Review Notes")
+![Trigonometry Review](1-trig-review-notes.png "Trigonometry Review Notes")
