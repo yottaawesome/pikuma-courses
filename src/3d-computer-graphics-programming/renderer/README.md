@@ -13,14 +13,20 @@
 Given that:
 
 $$
-cos(\alpha) = \dfrac{x}{r} \\
+cos(\alpha) = \dfrac{x}{r}
+$$
+
+$$
 \therefore x = r \cdot cos(\alpha)
 $$
 
 And:
 
 $$
-sin(\alpha) = \dfrac{y}{r} \\
+sin(\alpha) = \dfrac{y}{r}
+$$
+
+$$
 \therefore y = r \cdot sin(\alpha)
 $$
 
@@ -37,3 +43,4 @@ $$
 ## Additional resources
 
 * [Markdown and LaTeX introduction](https://ashki23.github.io/markdown-latex.html)
+* [Mathjax newline issue (Github rendering related)](https://github.com/mathjax/MathJax/issues/2312)
