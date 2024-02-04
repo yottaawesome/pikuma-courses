@@ -13,8 +13,8 @@
 Given that:
 
 $$
-cos(\alpha) = \dfrac{x}{r}\\
-\therefore x = r \cdot cos(\alpha)\\
+cos(\alpha) = \dfrac{x}{r} \\
+\therefore x = r \cdot cos(\alpha)
 $$
 
 And:
