@@ -38,4 +38,31 @@ export namespace util
 		float y = 0;
 		float z = 0;
 	};
+
+	vector_3f rotate_x(vector_3f v, float angle)
+	{
+		return {
+			v.x,
+			v.y * std::cos(angle) - v.z * std::sin(angle),
+			v.y * std::sin(angle) + v.z * std::cos(angle)
+		};
+	}
+
+	vector_3f rotate_y(vector_3f v, float angle)
+	{
+		return {
+			v.x * std::cos(angle) - v.z * std::sin(angle),
+			v.y,
+			v.x * std::sin(angle) + v.z * std::cos(angle)
+		};
+	}
+
+	vector_3f rotate_z(vector_3f v, float angle)
+	{
+		return {
+			v.x * std::cos(angle) - v.y * std::sin(angle),
+			v.x * std::sin(angle) + v.y * std::cos(angle),
+			v.z
+		};
+	}
 }
