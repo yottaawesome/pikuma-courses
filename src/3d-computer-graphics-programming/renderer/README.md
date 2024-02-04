@@ -30,7 +30,7 @@ $$
 \therefore y = r \cdot sin(\alpha)
 $$
 
-then rotating a vector yields:
+then rotating a vector $[x, y]$ from angle $\alpha$ to angle $\beta$ yields the following transformed vector $[x^\prime, y^\prime]$ where:
 
 $$
 x^ \prime = x \cdot cos(\beta) - y \cdot sin(\beta)
