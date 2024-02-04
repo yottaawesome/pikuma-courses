@@ -20,14 +20,16 @@ $$
 And:
 
 $$
-sin(\alpha) = \dfrac{y}{r}\\
+sin(\alpha) = \dfrac{y}{r} \\
 \therefore y = r \cdot sin(\alpha)
 $$
 
 then rotating a vector yields:
 
-$$x^ \prime = x \cdot cos(\beta) - y \cdot sin(\beta)\\
-y^ \prime = y \cdot cos(\beta) + x \cdot sin(\beta)$$
+$$
+x^ \prime = x \cdot cos(\beta) - y \cdot sin(\beta)\newline
+y^ \prime = y \cdot cos(\beta) + x \cdot sin(\beta)
+$$
 
 ## Additional resources
 
