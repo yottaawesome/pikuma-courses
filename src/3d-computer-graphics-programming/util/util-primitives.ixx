@@ -70,13 +70,15 @@ export namespace util
 	{ 
 		float value = 0; 
 		operator float() const noexcept { return value; }
-		bool operator==(float rhs) const noexcept { return value == rhs; } 
+		auto operator<=>(const radians&) const = default;
+		bool operator==(float rhs) const noexcept { return value == rhs; }
 	};
 
 	struct degrees final 
 	{ 
-		float value = 0; 
+		float value = 0;
 		operator float() const noexcept { return value; }
+		auto operator<=>(const degrees&) const = default;
 		bool operator==(float rhs) const noexcept { return value == rhs; }
 	};
 	
