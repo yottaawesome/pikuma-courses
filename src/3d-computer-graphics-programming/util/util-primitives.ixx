@@ -81,6 +81,8 @@ export namespace util
 		auto operator<=>(const degrees&) const = default;
 		bool operator==(float rhs) const noexcept { return value == rhs; }
 	};
+
+	bool operator==(const degrees&, const radians&) = delete;
 	
 	radians convert(degrees v) noexcept
 	{
