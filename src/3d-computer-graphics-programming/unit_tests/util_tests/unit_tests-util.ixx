@@ -32,7 +32,7 @@ export namespace unit_tests::util_tests
 					[] {
 						util::radians value{std::numbers::pi};
 						auto converted = util::convert(value);
-						assert::is_true(converted.value == 180.f);
+						assert::is_true(converted == 180.f);
 					}
 				},
 				testing::test{
@@ -40,7 +40,7 @@ export namespace unit_tests::util_tests
 					[] {
 						util::degrees value{180};
 						auto converted = util::convert(value);
-						assert::is_true(converted.value == 3.14159274f);
+						assert::is_true(converted == 3.14159274f);
 					}
 				}
 			);

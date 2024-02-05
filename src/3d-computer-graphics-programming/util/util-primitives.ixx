@@ -66,12 +66,25 @@ export namespace util
 		};
 	}
 
-	struct radians { float value = 0; };
-	struct degrees { float value = 0; };
+	struct radians final 
+	{ 
+		float value = 0; 
+		operator float() const noexcept { return value; }
+		bool operator==(float rhs) const noexcept { return value == rhs; } 
+	};
+
+	struct degrees final 
+	{ 
+		float value = 0; 
+		operator float() const noexcept { return value; }
+		bool operator==(float rhs) const noexcept { return value == rhs; }
+	};
+	
 	radians convert(degrees v) noexcept
 	{
 		return { v.value * static_cast<float>(std::numbers::pi) / 180.f };
 	}
+
 	degrees convert(radians v) noexcept
 	{
 		return { v.value * 180.f / static_cast<float>(std::numbers::pi) };
