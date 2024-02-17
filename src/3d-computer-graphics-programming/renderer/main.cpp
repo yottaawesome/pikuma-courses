@@ -148,7 +148,7 @@ int WinMain(int argc, char* argv[])
             app.color_buffer_texture.get(), 
             app.main_buffer
         );
-        elapsed = duration_cast<milliseconds>(begin - high_resolution_clock::now());
+        elapsed = duration_cast<milliseconds>(high_resolution_clock::now() - begin);
     }
 
     teardown();
