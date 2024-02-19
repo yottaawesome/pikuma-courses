@@ -77,6 +77,7 @@ void update(const std::chrono::milliseconds elapsed)
     if (time_to_wait.count() > 0 and time_to_wait <= frame_target_time)
         sdl::SDL_Delay(time_to_wait.count());
     app.previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
+    app.elapsed += elapsed;
 
     app.cube_rotation.x += 0.01f;
     app.cube_rotation.y += 0.01f;
