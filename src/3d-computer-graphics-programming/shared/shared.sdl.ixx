@@ -29,7 +29,8 @@ export namespace sdl
 		::SDL_GetDisplayMode,
 		::SDL_SetWindowFullscreen,
 		::SDL_GetTicks,
-		::SDL_GetTicks64
+		::SDL_GetTicks64,
+		::SDL_Delay
 		;
 
 	using

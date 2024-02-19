@@ -70,14 +70,13 @@ util::vector_2f project(util::vector_3f vec)
 
 void update(const std::chrono::milliseconds elapsed)
 {
-    // Note: we can do this ourselves by keeping track of the elapsed
-    // milliseconds
-    while (sdl::SDL_GetTicks() < app.previous_frame_time.count() + frame_target_time.count())
-    {
-        // waste time
-    }
+    // Delay to meet target frame rate. Note: we can 
+    // do this ourselves by keeping track of the 
+    // elapsed milliseconds.
+    std::chrono::milliseconds time_to_wait = frame_target_time - std::chrono::milliseconds{ sdl::SDL_GetTicks64() } - app.previous_frame_time;
+    if (time_to_wait.count() > 0 and time_to_wait <= frame_target_time)
+        sdl::SDL_Delay(time_to_wait.count());
     app.previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
-    app.elapsed += elapsed;
 
     app.cube_rotation.x += 0.01f;
     app.cube_rotation.y += 0.01f;
