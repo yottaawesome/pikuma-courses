@@ -27,7 +27,9 @@ export namespace sdl
 		::SDL_UpdateTexture,
 		::SDL_GetCurrentDisplayMode,
 		::SDL_GetDisplayMode,
-		::SDL_SetWindowFullscreen
+		::SDL_SetWindowFullscreen,
+		::SDL_GetTicks,
+		::SDL_GetTicks64
 		;
 
 	using

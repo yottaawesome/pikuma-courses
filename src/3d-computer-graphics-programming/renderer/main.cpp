@@ -11,8 +11,6 @@ import renderer;
 
 main_app app{};
 
-util::vector_3f cube_rotation{};
-
 void setup() 
 {
     // Nothing to do -- setup logic moved to main_app.
@@ -72,18 +70,27 @@ util::vector_2f project(util::vector_3f vec)
 
 void update(const std::chrono::milliseconds elapsed)
 {
-    cube_rotation.x += 0.01f;
-    cube_rotation.y += 0.01f;
-    cube_rotation.z += 0.01f;
+    // Note: we can do this ourselves by keeping track of the elapsed
+    // milliseconds
+    while (sdl::SDL_GetTicks() < app.previous_frame_time.count() + frame_target_time.count())
+    {
+        // waste time
+    }
+    app.previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
+    app.elapsed += elapsed;
+
+    app.cube_rotation.x += 0.01f;
+    app.cube_rotation.y += 0.01f;
+    app.cube_rotation.z += 0.01f;
 
     // convert the 3D cube points to 2D
     for (int i = 0; i < number_of_points; i++)
     {
         auto point = app.cube_points[i];
 
-        util::vector_3f transformed_point = util::rotate_x(point, cube_rotation.x);
-        transformed_point = util::rotate_y(transformed_point, cube_rotation.y);
-        transformed_point = util::rotate_z(transformed_point, cube_rotation.z);
+        util::vector_3f transformed_point = util::rotate_x(point, app.cube_rotation.x);
+        transformed_point = util::rotate_y(transformed_point, app.cube_rotation.y);
+        transformed_point = util::rotate_z(transformed_point, app.cube_rotation.z);
 
         // Move the points away from the camera
         transformed_point.z -= app.camera_position.z;

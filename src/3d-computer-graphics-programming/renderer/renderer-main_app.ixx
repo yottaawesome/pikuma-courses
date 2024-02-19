@@ -7,6 +7,8 @@ export
 {
     constexpr auto number_of_points = 9 * 9 * 9;
     constexpr float fov_factor = 640;
+    constexpr int fps = 60;
+    constexpr std::chrono::milliseconds frame_target_time{ 1000 / fps };
 
     // An alternative implementation of main_app that does all of its own initialisation.
     struct main_app
@@ -106,5 +108,10 @@ export
             }(cube_points, window);
 
         std::array<util::vector_2f, number_of_points> projected_cube_points{};
+
+        util::vector_3f cube_rotation{};
+
+        std::chrono::milliseconds previous_frame_time{ 0 };
+        std::chrono::milliseconds elapsed{ 0 };
     };
 }
