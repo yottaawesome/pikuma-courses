@@ -75,7 +75,7 @@ void update(const std::chrono::milliseconds elapsed)
     // elapsed milliseconds.
     std::chrono::milliseconds time_to_wait = frame_target_time - elapsed;
     if (time_to_wait.count() > 0 and time_to_wait <= frame_target_time)
-        sdl::SDL_Delay(time_to_wait.count());
+        sdl::SDL_Delay(static_cast<uint32_t>(time_to_wait.count()));
     app.previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
     app.elapsed += elapsed;
 
