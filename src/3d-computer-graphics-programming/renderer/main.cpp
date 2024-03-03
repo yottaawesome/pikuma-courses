@@ -137,30 +137,17 @@ void render(
     for (int i = 0; i < renderer::mesh_faces.size(); i++)
     {
         renderer::triangle triangle = triangles_to_render[i];
-        display::draw_rect(
-            triangle.points[0].x,
-            triangle.points[0].y,
-            3,
-            3,
-            0xffffff00,
-            buffer
-        );
-        display::draw_rect(
-            triangle.points[1].x,
-            triangle.points[1].y,
-            3,
-            3,
-            0xffffff00,
-            buffer
-        );
-        display::draw_rect(
-            triangle.points[2].x,
-            triangle.points[2].y,
-            3,
-            3,
-            0xffffff00,
-            buffer
-        );
+        for (auto point : triangle.points)
+        {
+            display::draw_rect(
+                static_cast<uint32_t>(point.x),
+                static_cast<uint32_t>(point.y),
+                3,
+                3,
+                0xffffff00, 
+                buffer
+            );
+        }
     }
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);
