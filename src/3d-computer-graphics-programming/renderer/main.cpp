@@ -68,6 +68,8 @@ util::vector_2f project(util::vector_3f vec)
     };
 }
 
+renderer::triangle triangles_to_render[renderer::mesh_faces.size()];
+
 void update(const std::chrono::milliseconds elapsed)
 {
     // Delay to meet target frame rate. Note: we can 
@@ -83,18 +85,38 @@ void update(const std::chrono::milliseconds elapsed)
     app.cube_rotation.y += 0.01f;
     app.cube_rotation.z += 0.01f;
 
-    // convert the 3D cube points to 2D
-    for (int i = 0; i < number_of_points; i++)
+    for (int i = 0; i < renderer::mesh_faces.size(); i++)
     {
-        auto point = app.cube_points[i];
+        renderer::face mesh_face = renderer::mesh_faces[i];
+        util::vector_3f face_vertices[3];
+        face_vertices[0] = renderer::mesh_vertices[mesh_face.a - 1];
+        face_vertices[1] = renderer::mesh_vertices[mesh_face.b - 1];
+        face_vertices[2] = renderer::mesh_vertices[mesh_face.c - 1];
 
-        util::vector_3f transformed_point = util::rotate_x(point, app.cube_rotation.x);
-        transformed_point = util::rotate_y(transformed_point, app.cube_rotation.y);
-        transformed_point = util::rotate_z(transformed_point, app.cube_rotation.z);
+        renderer::triangle projected_triangle;
 
-        // Move the points away from the camera
-        transformed_point.z -= app.camera_position.z;
-        app.projected_cube_points[i] = project(transformed_point);
+        for (int j = 0; j < 3; j++)
+        {
+            util::vector_3f transformed_vertex = face_vertices[j];
+            transformed_vertex = rotate_x(transformed_vertex, app.cube_rotation.x);
+            transformed_vertex = rotate_y(transformed_vertex, app.cube_rotation.y);
+            transformed_vertex = rotate_z(transformed_vertex, app.cube_rotation.z);
+
+            //Translate the vertex away from the camera
+            transformed_vertex.z -= app.camera_position.z;
+
+            // Project the current vertex
+            util::vector_2f projected_point = project(transformed_vertex);
+            
+            // Scale and translate the projected points to the middle of the screen
+            projected_point.x += app.screen_dimensions.width / 2;
+            projected_point.y += app.screen_dimensions.height / 2;
+
+            projected_triangle.points[j] = projected_point;
+        }
+
+        // Save the projected triangle in the array of triangles to render
+        triangles_to_render[i] = projected_triangle;
     }
 }
 
@@ -112,14 +134,30 @@ void render(
     //draw_pixel(0, 50, 0xffff0000, buffer);
     display::draw_dot_grid(10, 0xff464646, buffer);
 
-    for (int i = 0; i < number_of_points; i++)
+    for (int i = 0; i < renderer::mesh_faces.size(); i++)
     {
+        renderer::triangle triangle = triangles_to_render[i];
         display::draw_rect(
-            // translate to center of the screen.
-            static_cast<uint32_t>(app.projected_cube_points[i].x + app.screen_dimensions.width / 2),
-            static_cast<uint32_t>(app.projected_cube_points[i].y + app.screen_dimensions.height / 2),
-            4,
-            4,
+            triangle.points[0].x,
+            triangle.points[0].y,
+            3,
+            3,
+            0xffffff00,
+            buffer
+        );
+        display::draw_rect(
+            triangle.points[1].x,
+            triangle.points[1].y,
+            3,
+            3,
+            0xffffff00,
+            buffer
+        );
+        display::draw_rect(
+            triangle.points[2].x,
+            triangle.points[2].y,
+            3,
+            3,
             0xffffff00,
             buffer
         );
