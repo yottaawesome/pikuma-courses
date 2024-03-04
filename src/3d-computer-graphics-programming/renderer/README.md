@@ -61,7 +61,7 @@ $$
 Note the following properties:
 
 $$
-m = \dfrac{\Delta y}{\Delta x} = 
+m = \dfrac{\Delta y}{\Delta x} 
 \begin{cases}
 \lt 1 & \quad \text{when $\Delta y \lt \Delta x$}\\ 
 \gt 1 & \quad \text{when $\Delta y \gt \Delta x$}\\ 
