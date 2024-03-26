@@ -74,4 +74,38 @@ export namespace display
             nullptr
         );
     }
+
+    // DDA algorithm
+    void draw_line(
+        const int x0,
+        const int x1,
+        const int y0,
+        const int y1,
+        const uint32_t color,
+        util::color_buffer& buffer
+    )
+    {
+        int delta_x = x1 - x0;
+        int delta_y = y1 - y0;
+
+        int side_length = std::abs(delta_x) >= std::abs(delta_y) ? std::abs(delta_x) : std::abs(delta_y);
+
+        float x_inc = delta_x / static_cast<float>(side_length);
+        float y_inc = delta_y / static_cast<float>(side_length);
+
+        float current_x = static_cast<float>(x0);
+        float current_y = static_cast<float>(y0);
+
+        for (int i = 0; i <= side_length; i++)
+        {
+            draw_pixel(
+                static_cast<uint32_t>(std::round(current_x)), 
+                static_cast<uint32_t>(std::round(current_y)), 
+                color, 
+                buffer
+            );
+            current_x += x_inc;
+            current_y += y_inc;
+        }
+    }
 }
