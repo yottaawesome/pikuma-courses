@@ -137,7 +137,7 @@ void render(
     for (int i = 0; i < renderer::mesh_faces.size(); i++)
     {
         renderer::triangle triangle = triangles_to_render[i];
-        for (auto point : triangle.points)
+        for (int i = 0; auto point : triangle.points)
         {
             display::draw_rect(
                 static_cast<uint32_t>(point.x),
@@ -147,6 +147,29 @@ void render(
                 0xffffff00, 
                 buffer
             );
+            if (i > 0)
+            {
+                display::draw_line(
+                    triangle.points[i - 1].x,
+                    triangle.points[i].x,
+                    triangle.points[i - 1].y,
+                    triangle.points[i].y,
+                    0xffffff00,
+                    buffer
+                );
+            }
+            else
+            {
+                display::draw_line(
+                    triangle.points[2].x,
+                    triangle.points[i].x,
+                    triangle.points[2].y,
+                    triangle.points[i].y,
+                    0xffffff00,
+                    buffer
+                );
+            }
+            i++;
         }
     }
 

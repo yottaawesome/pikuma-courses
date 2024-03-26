@@ -99,8 +99,8 @@ export namespace display
         for (int i = 0; i <= side_length; i++)
         {
             draw_pixel(
-                static_cast<uint32_t>(std::round(current_x)), 
-                static_cast<uint32_t>(std::round(current_y)), 
+                static_cast<uint32_t>(std::round(current_y)),
+                static_cast<uint32_t>(std::round(current_x)),
                 color, 
                 buffer
             );
