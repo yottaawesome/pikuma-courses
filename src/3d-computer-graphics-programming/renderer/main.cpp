@@ -151,8 +151,8 @@ void render(
             {
                 display::draw_line(
                     triangle.points[i - 1].x,
-                    triangle.points[i].x,
                     triangle.points[i - 1].y,
+                    triangle.points[i].x,
                     triangle.points[i].y,
                     0xffffff00,
                     buffer
@@ -162,8 +162,8 @@ void render(
             {
                 display::draw_line(
                     triangle.points[2].x,
-                    triangle.points[i].x,
                     triangle.points[2].y,
+                    triangle.points[i].x,
                     triangle.points[i].y,
                     0xffffff00,
                     buffer

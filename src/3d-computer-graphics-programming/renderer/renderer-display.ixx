@@ -78,8 +78,8 @@ export namespace display
     // DDA algorithm
     void draw_line(
         const int x0,
-        const int x1,
         const int y0,
+        const int x1,
         const int y1,
         const uint32_t color,
         util::color_buffer& buffer
