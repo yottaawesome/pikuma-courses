@@ -116,27 +116,27 @@ export namespace display
         util::color_buffer& buffer
     )
     {
-        display::draw_line(
-            triangle.points[0].x,
-            triangle.points[0].y,
-            triangle.points[1].x,
-            triangle.points[1].y,
+        draw_line(
+            static_cast<int>(triangle.points[0].x),
+            static_cast<int>(triangle.points[0].y),
+            static_cast<int>(triangle.points[1].x),
+            static_cast<int>(triangle.points[1].y),
             color,
             buffer
         ); // line from 0 -> 1
-        display::draw_line(
-            triangle.points[1].x,
-            triangle.points[1].y,
-            triangle.points[2].x,
-            triangle.points[2].y,
+        draw_line(
+            static_cast<int>(triangle.points[1].x),
+            static_cast<int>(triangle.points[1].y),
+            static_cast<int>(triangle.points[2].x),
+            static_cast<int>(triangle.points[2].y),
             color,
             buffer
         ); // line from 1 -> 2
-        display::draw_line(
-            triangle.points[2].x,
-            triangle.points[2].y,
-            triangle.points[0].x,
-            triangle.points[0].y,
+        draw_line(
+            static_cast<int>(triangle.points[2].x),
+            static_cast<int>(triangle.points[2].y),
+            static_cast<int>(triangle.points[0].x),
+            static_cast<int>(triangle.points[0].y),
             color,
             buffer
         ); // and back to 2 -> 0
