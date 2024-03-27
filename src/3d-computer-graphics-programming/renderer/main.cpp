@@ -134,22 +134,8 @@ void render(
     //draw_pixel(0, 50, 0xffff0000, buffer);
     display::draw_dot_grid(10, 0xff464646, buffer);
 
-    for (int i = 0; i < renderer::mesh_faces.size(); i++)
-    {
-        renderer::triangle triangle = triangles_to_render[i];
-        for (auto point : triangle.points)
-        {
-            display::draw_rect(
-                static_cast<uint32_t>(point.x),
-                static_cast<uint32_t>(point.y),
-                3,
-                3,
-                0xffffff00, 
-                buffer
-            );
-        }
+    for (renderer::triangle triangle : triangles_to_render)
         display::draw_triangle(triangle, 0xffffff00, buffer);
-    }
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);
 
