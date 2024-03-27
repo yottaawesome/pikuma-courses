@@ -2,6 +2,7 @@ export module renderer:display;
 import util;
 import shared;
 import :main_app;
+import :triangle;
 
 export namespace display
 {
@@ -107,5 +108,37 @@ export namespace display
             current_x += x_inc;
             current_y += y_inc;
         }
+    }
+
+    void draw_triangle(
+        const renderer::triangle triangle,
+        const uint32_t color,
+        util::color_buffer& buffer
+    )
+    {
+        display::draw_line(
+            triangle.points[0].x,
+            triangle.points[0].y,
+            triangle.points[1].x,
+            triangle.points[1].y,
+            color,
+            buffer
+        ); // line from 0 -> 1
+        display::draw_line(
+            triangle.points[1].x,
+            triangle.points[1].y,
+            triangle.points[2].x,
+            triangle.points[2].y,
+            color,
+            buffer
+        ); // line from 1 -> 2
+        display::draw_line(
+            triangle.points[2].x,
+            triangle.points[2].y,
+            triangle.points[0].x,
+            triangle.points[0].y,
+            color,
+            buffer
+        ); // and back to 2 -> 0
     }
 }
