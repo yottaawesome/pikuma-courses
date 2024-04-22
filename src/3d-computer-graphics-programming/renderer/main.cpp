@@ -9,19 +9,6 @@ import shared;
 import util;
 import renderer;
 
-main_app app{};
-
-void setup() 
-{
-    // Nothing to do -- setup logic moved to main_app.
-}
-
-void teardown()
-{
-    // currently, nothing to do here as everything is managed
-    // via smart pointers
-}
-
 void process_input()
 {
     sdl::SDL_Event eventInfo;
@@ -31,14 +18,14 @@ void process_input()
     {
         case sdl::SDL_EventType::SDL_QUIT:
         {
-            app.is_running = false;
+            main_app::is_running = false;
         }
         break;
 
         case sdl::SDL_EventType::SDL_KEYDOWN:
         {
             if (eventInfo.key.keysym.sym == sdl::SDL_KeyCode::SDLK_ESCAPE)
-                app.is_running = false;
+                main_app::is_running = false;
         }
         break;
     }
@@ -63,28 +50,28 @@ util::vector_2f project(util::vector_3f vec)
     * divide.
     */
     return { 
-        fov_factor * vec.x / vec.z, 
-        fov_factor * vec.y / vec.z
+        main_app::fov_factor * vec.x / vec.z,
+        main_app::fov_factor * vec.y / vec.z
     };
 }
 
-renderer::triangle triangles_to_render[renderer::mesh_faces.size()];
 
-void update(const std::chrono::milliseconds elapsed)
+void update(const std::chrono::milliseconds elapsed_time)
 {
     // Delay to meet target frame rate. Note: we can 
     // do this ourselves by keeping track of the 
     // elapsed milliseconds.
-    std::chrono::milliseconds time_to_wait = frame_target_time - elapsed;
-    if (time_to_wait.count() > 0 and time_to_wait <= frame_target_time)
+    std::chrono::milliseconds time_to_wait = main_app::frame_target_time - elapsed_time;
+    if (time_to_wait.count() > 0 and time_to_wait <= main_app::frame_target_time)
         sdl::SDL_Delay(static_cast<uint32_t>(time_to_wait.count()));
-    app.previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
-    app.elapsed += elapsed;
+    main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
+    main_app::elapsed += elapsed_time;
 
-    app.cube_rotation.x += 0.01f;
-    app.cube_rotation.y += 0.01f;
-    app.cube_rotation.z += 0.01f;
+    main_app::cube_rotation.x += 0.01f;
+    main_app::cube_rotation.y += 0.01f;
+    main_app::cube_rotation.z += 0.01f;
 
+    main_app::triangles_to_render.clear();
     for (int i = 0; i < renderer::mesh_faces.size(); i++)
     {
         renderer::face mesh_face = renderer::mesh_faces[i];
@@ -98,25 +85,25 @@ void update(const std::chrono::milliseconds elapsed)
         for (int j = 0; j < 3; j++)
         {
             util::vector_3f transformed_vertex = face_vertices[j];
-            transformed_vertex = rotate_x(transformed_vertex, app.cube_rotation.x);
-            transformed_vertex = rotate_y(transformed_vertex, app.cube_rotation.y);
-            transformed_vertex = rotate_z(transformed_vertex, app.cube_rotation.z);
+            transformed_vertex = rotate_x(transformed_vertex, main_app::cube_rotation.x);
+            transformed_vertex = rotate_y(transformed_vertex, main_app::cube_rotation.y);
+            transformed_vertex = rotate_z(transformed_vertex, main_app::cube_rotation.z);
 
             //Translate the vertex away from the camera
-            transformed_vertex.z -= app.camera_position.z;
+            transformed_vertex.z -= main_app::camera_position.z;
 
             // Project the current vertex
             util::vector_2f projected_point = project(transformed_vertex);
             
             // Scale and translate the projected points to the middle of the screen
-            projected_point.x += app.screen_dimensions.width / 2;
-            projected_point.y += app.screen_dimensions.height / 2;
+            projected_point.x += main_app::screen_dimensions.width / 2;
+            projected_point.y += main_app::screen_dimensions.height / 2;
 
             projected_triangle.points[j] = projected_point;
         }
 
         // Save the projected triangle in the array of triangles to render
-        triangles_to_render[i] = projected_triangle;
+        main_app::triangles_to_render.push_back(projected_triangle);
     }
 }
 
@@ -134,7 +121,7 @@ void render(
     //draw_pixel(0, 50, 0xffff0000, buffer);
     display::draw_dot_grid(10, 0xff464646, buffer);
 
-    for (renderer::triangle triangle : triangles_to_render)
+    for (renderer::triangle triangle : main_app::triangles_to_render)
         display::draw_triangle(triangle, 0xffffff00, buffer);
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);
@@ -154,23 +141,19 @@ int WinMain(int argc, char* argv[])
 
     //display::initialize_window(app);
 
-    setup();
-
     milliseconds elapsed{ 0 };
-    while (app.is_running)
+    while (main_app::is_running)
     {
         high_resolution_clock::time_point begin = high_resolution_clock::now();
         process_input();
         update(elapsed);
         render(
-            app.renderer.get(), 
-            app.color_buffer_texture.get(), 
-            app.main_buffer
+            main_app::sdl_renderer.get(),
+            main_app::color_buffer_texture.get(),
+            main_app::main_buffer
         );
         elapsed = duration_cast<milliseconds>(high_resolution_clock::now() - begin);
     }
-
-    teardown();
 
     return 0;
 }

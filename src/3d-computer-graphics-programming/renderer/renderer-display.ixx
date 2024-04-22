@@ -6,7 +6,7 @@ import :triangle;
 
 export namespace display
 {
-    bool initialize_window(main_app& app)
+    bool initialize_window()
     {
         // Nothing to do -- setup logic moved to main_app.
         return true;
