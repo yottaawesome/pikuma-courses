@@ -42,7 +42,7 @@ $$
 
 ## Triangles and Meshes
 
-A mesh is an arrangment of trianges in 3D space to create the impression of a solid object. Triangles are defined by three corner point vertices which also defines the triangle's face. The order of the vertices that defines the triangle matters -- a clockwise orientation determines what is the face's front and back.
+A mesh is an arrangement of triangles in 3D space to create the impression of a solid object. Triangles are defined by three corner point vertices which also defines the triangle's face. The order of the vertices that defines the triangle matters -- a clockwise orientation determines what is the face's front and back.
 
 ## Lines
 
