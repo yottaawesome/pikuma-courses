@@ -24,17 +24,17 @@ namespace
     auto cube_faces = std::array<renderer::face, total_cube_faces>
     {
         renderer::face{ 1, 2, 3 },
-            renderer::face{ 1, 3, 4 },
-            renderer::face{ 4, 3, 5 },
-            renderer::face{ 4, 5, 6 },
-            renderer::face{ 6, 5, 7 },
-            renderer::face{ 6, 7, 8 },
-            renderer::face{ 8, 7, 2 },
-            renderer::face{ 8, 2, 1 },
-            renderer::face{ 2, 7, 5 },
-            renderer::face{ 2, 5, 3 },
-            renderer::face{ 6, 8, 1 },
-            renderer::face{ 6, 1, 4 }
+        renderer::face{ 1, 3, 4 },
+        renderer::face{ 4, 3, 5 },
+        renderer::face{ 4, 5, 6 },
+        renderer::face{ 6, 5, 7 },
+        renderer::face{ 6, 7, 8 },
+        renderer::face{ 8, 7, 2 },
+        renderer::face{ 8, 2, 1 },
+        renderer::face{ 2, 7, 5 },
+        renderer::face{ 2, 5, 3 },
+        renderer::face{ 6, 8, 1 },
+        renderer::face{ 6, 1, 4 }
     };
 }
 
