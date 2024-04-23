@@ -12,13 +12,13 @@ namespace
 
     auto cube_vertices = std::array<util::vector_3f, total_cube_vertices>{
         util::vector_3f{ .x = -1, .y = -1, .z = -1 }, // 1
-            util::vector_3f{ .x = -1, .y = 1, .z = -1 }, // 2
-            util::vector_3f{ .x = 1, .y = 1, .z = -1 }, // 3
-            util::vector_3f{ .x = 1, .y = -1, .z = -1 }, // 4
-            util::vector_3f{ .x = 1, .y = 1, .z = 1 }, // 5
-            util::vector_3f{ .x = 1, .y = -1, .z = 1 }, // 6
-            util::vector_3f{ .x = -1, .y = 1, .z = 1 }, // 7
-            util::vector_3f{ .x = -1, .y = -1, .z = 1 } // 8
+        util::vector_3f{ .x = -1, .y = 1, .z = -1 }, // 2
+        util::vector_3f{ .x = 1, .y = 1, .z = -1 }, // 3
+        util::vector_3f{ .x = 1, .y = -1, .z = -1 }, // 4
+        util::vector_3f{ .x = 1, .y = 1, .z = 1 }, // 5
+        util::vector_3f{ .x = 1, .y = -1, .z = 1 }, // 6
+        util::vector_3f{ .x = -1, .y = 1, .z = 1 }, // 7
+        util::vector_3f{ .x = -1, .y = -1, .z = 1 } // 8
     };
 
     auto cube_faces = std::array<renderer::face, total_cube_faces>
