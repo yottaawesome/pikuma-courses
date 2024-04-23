@@ -3,6 +3,40 @@ import std;
 import shared;
 import util;
 import :triangle;
+import :mesh;
+
+namespace
+{
+    constexpr auto total_cube_vertices = 8;
+    constexpr auto total_cube_faces = 6 * 2;
+
+    auto cube_vertices = std::array<util::vector_3f, total_cube_vertices>{
+        util::vector_3f{ .x = -1, .y = -1, .z = -1 }, // 1
+            util::vector_3f{ .x = -1, .y = 1, .z = -1 }, // 2
+            util::vector_3f{ .x = 1, .y = 1, .z = -1 }, // 3
+            util::vector_3f{ .x = 1, .y = -1, .z = -1 }, // 4
+            util::vector_3f{ .x = 1, .y = 1, .z = 1 }, // 5
+            util::vector_3f{ .x = 1, .y = -1, .z = 1 }, // 6
+            util::vector_3f{ .x = -1, .y = 1, .z = 1 }, // 7
+            util::vector_3f{ .x = -1, .y = -1, .z = 1 } // 8
+    };
+
+    auto cube_faces = std::array<renderer::face, total_cube_faces>
+    {
+        renderer::face{ 1, 2, 3 },
+            renderer::face{ 1, 3, 4 },
+            renderer::face{ 4, 3, 5 },
+            renderer::face{ 4, 5, 6 },
+            renderer::face{ 6, 5, 7 },
+            renderer::face{ 6, 7, 8 },
+            renderer::face{ 8, 7, 2 },
+            renderer::face{ 8, 2, 1 },
+            renderer::face{ 2, 7, 5 },
+            renderer::face{ 2, 5, 3 },
+            renderer::face{ 6, 8, 1 },
+            renderer::face{ 6, 1, 4 }
+    };
+}
 
 export namespace main_app
 {
@@ -103,8 +137,11 @@ export namespace main_app
 
     std::array<util::vector_2f, number_of_points> projected_cube_points{};
 
-    util::vector_3f cube_rotation{};
-
     std::chrono::milliseconds previous_frame_time{ 0 };
     std::chrono::milliseconds elapsed{ 0 };
+
+    renderer::mesh cube_mesh{
+        .vertices{cube_vertices.begin(), cube_vertices.end()},
+        .faces{cube_faces.begin(), cube_faces.end()}
+    };
 }

@@ -67,27 +67,26 @@ void update(const std::chrono::milliseconds elapsed_time)
     main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
     main_app::elapsed += elapsed_time;
 
-    main_app::cube_rotation.x += 0.01f;
-    main_app::cube_rotation.y += 0.01f;
-    main_app::cube_rotation.z += 0.01f;
+    main_app::cube_mesh.rotation.x += 0.01f;
+    main_app::cube_mesh.rotation.y += 0.01f;
+    main_app::cube_mesh.rotation.z += 0.01f;
 
-    main_app::triangles_to_render.clear();
-    for (int i = 0; i < renderer::mesh_faces.size(); i++)
+    for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
-        renderer::face mesh_face = renderer::mesh_faces[i];
+        renderer::face mesh_face = main_app::cube_mesh.faces[i];
         util::vector_3f face_vertices[3];
-        face_vertices[0] = renderer::mesh_vertices[mesh_face.a - 1];
-        face_vertices[1] = renderer::mesh_vertices[mesh_face.b - 1];
-        face_vertices[2] = renderer::mesh_vertices[mesh_face.c - 1];
+        face_vertices[0] = main_app::cube_mesh.vertices[mesh_face.a - 1];
+        face_vertices[1] = main_app::cube_mesh.vertices[mesh_face.b - 1];
+        face_vertices[2] = main_app::cube_mesh.vertices[mesh_face.c - 1];
 
         renderer::triangle projected_triangle;
 
         for (int j = 0; j < 3; j++)
         {
             util::vector_3f transformed_vertex = face_vertices[j];
-            transformed_vertex = rotate_x(transformed_vertex, main_app::cube_rotation.x);
-            transformed_vertex = rotate_y(transformed_vertex, main_app::cube_rotation.y);
-            transformed_vertex = rotate_z(transformed_vertex, main_app::cube_rotation.z);
+            transformed_vertex = rotate_x(transformed_vertex, main_app::cube_mesh.rotation.x);
+            transformed_vertex = rotate_y(transformed_vertex, main_app::cube_mesh.rotation.y);
+            transformed_vertex = rotate_z(transformed_vertex, main_app::cube_mesh.rotation.z);
 
             //Translate the vertex away from the camera
             transformed_vertex.z -= main_app::camera_position.z;
@@ -127,6 +126,7 @@ void render(
     display::render_color_buffer(renderer, buffer, color_buffer_texture);
 
     buffer.fill(0xff000000);
+    main_app::triangles_to_render.clear();
 
     sdl::SDL_RenderPresent(renderer);
 }
