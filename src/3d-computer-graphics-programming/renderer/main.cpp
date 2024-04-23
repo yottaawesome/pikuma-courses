@@ -19,15 +19,20 @@ void process_input()
         case sdl::SDL_EventType::SDL_QUIT:
         {
             main_app::is_running = false;
+            break;
         }
-        break;
 
         case sdl::SDL_EventType::SDL_KEYDOWN:
         {
             if (eventInfo.key.keysym.sym == sdl::SDL_KeyCode::SDLK_ESCAPE)
                 main_app::is_running = false;
+            break;
         }
-        break;
+
+        case sdl::SDL_EventType::SDL_KEYUP:
+        {
+            break;
+        }
     }
 }
 
