@@ -1,9 +1,8 @@
-export module renderer:mesh;
+export module util:mesh;
 import shared;
-import util;
-import :triangle;
+import :primitives;
 
-export namespace renderer
+export namespace util
 {
     struct mesh
     {

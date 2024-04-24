@@ -147,8 +147,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer-display.ixx" />
     <ClCompile Include="renderer-main_app.ixx" />
-    <ClCompile Include="renderer-mesh.ixx" />
-    <ClCompile Include="renderer-triangle.ixx" />
     <ClCompile Include="renderer.ixx" />
   </ItemGroup>
   <ItemGroup>

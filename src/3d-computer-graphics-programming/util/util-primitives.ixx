@@ -93,4 +93,16 @@ export namespace util
 	{
 		return { v.value * 180.f / static_cast<float>(std::numbers::pi) };
 	}
+
+	struct face
+	{
+		int a = 0;
+		int b = 0;
+		int c = 0;
+	};
+
+	struct triangle
+	{
+		util::vector_2f points[3];
+	};
 }

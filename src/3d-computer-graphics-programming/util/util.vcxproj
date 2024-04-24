@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="util-mesh.ixx" />
     <ClCompile Include="util-buffer_2d.ixx" />
     <ClCompile Include="util-concepts.ixx" />
     <ClCompile Include="util-functions.ixx" />

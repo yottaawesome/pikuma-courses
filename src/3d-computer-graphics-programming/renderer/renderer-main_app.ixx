@@ -2,8 +2,6 @@ export module renderer:main_app;
 import std;
 import shared;
 import util;
-import :triangle;
-import :mesh;
 
 namespace
 {
@@ -21,20 +19,20 @@ namespace
         util::vector_3f{ .x = -1, .y = -1, .z = 1 } // 8
     };
 
-    auto cube_faces = std::array<renderer::face, total_cube_faces>
+    auto cube_faces = std::array<util::face, total_cube_faces>
     {
-        renderer::face{ 1, 2, 3 },
-        renderer::face{ 1, 3, 4 },
-        renderer::face{ 4, 3, 5 },
-        renderer::face{ 4, 5, 6 },
-        renderer::face{ 6, 5, 7 },
-        renderer::face{ 6, 7, 8 },
-        renderer::face{ 8, 7, 2 },
-        renderer::face{ 8, 2, 1 },
-        renderer::face{ 2, 7, 5 },
-        renderer::face{ 2, 5, 3 },
-        renderer::face{ 6, 8, 1 },
-        renderer::face{ 6, 1, 4 }
+        util::face{ 1, 2, 3 },
+        util::face{ 1, 3, 4 },
+        util::face{ 4, 3, 5 },
+        util::face{ 4, 5, 6 },
+        util::face{ 6, 5, 7 },
+        util::face{ 6, 7, 8 },
+        util::face{ 8, 7, 2 },
+        util::face{ 8, 2, 1 },
+        util::face{ 2, 7, 5 },
+        util::face{ 2, 5, 3 },
+        util::face{ 6, 8, 1 },
+        util::face{ 6, 1, 4 }
     };
 }
 
@@ -45,7 +43,7 @@ export namespace main_app
     constexpr int fps = 60;
     constexpr std::chrono::milliseconds frame_target_time{ 1000 / fps };
 
-    std::vector<renderer::triangle> triangles_to_render; // renderer::mesh_faces.size()
+    std::vector<util::triangle> triangles_to_render; // renderer::mesh_faces.size()
 
     std::unique_ptr<util::sdl_context> context =
         [] {
@@ -140,7 +138,7 @@ export namespace main_app
     std::chrono::milliseconds previous_frame_time{ 0 };
     std::chrono::milliseconds elapsed{ 0 };
 
-    renderer::mesh cube_mesh{
+    util::mesh cube_mesh{
         .vertices{cube_vertices.begin(), cube_vertices.end()},
         .faces{cube_faces.begin(), cube_faces.end()}
     };

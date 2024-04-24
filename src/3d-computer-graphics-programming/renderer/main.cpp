@@ -78,13 +78,13 @@ void update(const std::chrono::milliseconds elapsed_time)
 
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
-        renderer::face mesh_face = main_app::cube_mesh.faces[i];
+        util::face mesh_face = main_app::cube_mesh.faces[i];
         util::vector_3f face_vertices[3];
         face_vertices[0] = main_app::cube_mesh.vertices[mesh_face.a - 1];
         face_vertices[1] = main_app::cube_mesh.vertices[mesh_face.b - 1];
         face_vertices[2] = main_app::cube_mesh.vertices[mesh_face.c - 1];
 
-        renderer::triangle projected_triangle;
+        util::triangle projected_triangle;
 
         for (int j = 0; j < 3; j++)
         {
@@ -125,7 +125,7 @@ void render(
     //draw_pixel(0, 50, 0xffff0000, buffer);
     display::draw_dot_grid(10, 0xff464646, buffer);
 
-    for (renderer::triangle triangle : main_app::triangles_to_render)
+    for (util::triangle triangle : main_app::triangles_to_render)
         display::draw_triangle(triangle, 0xffffff00, buffer);
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);

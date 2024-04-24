@@ -2,7 +2,6 @@ export module renderer:display;
 import util;
 import shared;
 import :main_app;
-import :triangle;
 
 export namespace display
 {
@@ -111,7 +110,7 @@ export namespace display
     }
 
     void draw_triangle(
-        const renderer::triangle triangle,
+        const util::triangle triangle,
         const uint32_t color,
         util::color_buffer& buffer
     )
