@@ -37,14 +37,12 @@ export namespace util
         if (file.fail())
             throw std::runtime_error("Stream in bad state");
 
-        mesh returnValue;
         std::vector<std::string> vertexLines;
         std::vector<std::string> faceLines;
-        for (
-            const auto& fl : 
-                std::views::istream<file_line>(file) 
-                    | std::views::filter([](file_line& s) { return s.line.starts_with("v ") or s.line.starts_with("f "); })
-        )
+        auto filter = 
+            std::views::istream<file_line>(file) 
+            | std::views::filter([](file_line& s) { return s.line.starts_with("v ") or s.line.starts_with("f "); })
+        for (const auto& fl : filter)
         {
             if (fl.line.starts_with("v"))
                 vertexLines.push_back(fl.line);
@@ -52,12 +50,15 @@ export namespace util
                 faceLines.push_back(fl.line);
         }
 
+        mesh returnValue;
         std::ranges::for_each(
             vertexLines, 
             [&returnValue](const std::string& s) 
             {
-                std::vector ddd = std::ranges::to<std::vector<std::string>>(std::views::split(s, ' ') | std::views::drop(1));
-                returnValue.vertices.emplace_back(std::stof(ddd.at(0)), std::stof(ddd.at(1)), std::stof(ddd.at(2)));
+                std::vector splits = std::ranges::to<std::vector<std::string>>(std::views::split(s, ' ') | std::views::drop(1));
+                if (splits.size() != 3)
+                    throw std::runtime_error("Expected ddd to be size 3");
+                returnValue.vertices.emplace_back(std::stof(splits.at(0)), std::stof(splits.at(1)), std::stof(splits.at(2)));
             }
         );
 
@@ -65,15 +66,18 @@ export namespace util
             faceLines, 
             [&returnValue](const std::string& s) 
             {
-                std::vector<std::string> ddd = 
+                std::vector<std::string> splits = 
                     std::views::split(s, ' ') 
                     | std::views::drop(1) 
                     | std::ranges::to<std::vector<std::string>>();
 
+                if (splits.size() != 3)
+                    throw std::runtime_error("Expected splits to be size 3");
+
                 returnValue.faces.emplace_back(
-                    std::stof(std::ranges::to<std::vector<std::string>>(ddd.at(0) | std::views::split('/') | std::views::take(1)).at(0)),
-                    std::stof(std::ranges::to<std::vector<std::string>>(ddd.at(1) | std::views::split('/') | std::views::take(1)).at(0)), 
-                    std::stof(std::ranges::to<std::vector<std::string>>(ddd.at(2) | std::views::split('/') | std::views::take(1)).at(0))
+                    std::stof(std::ranges::to<std::vector<std::string>>(splits.at(0) | std::views::split('/') | std::views::take(1)).at(0)),
+                    std::stof(std::ranges::to<std::vector<std::string>>(splits.at(1) | std::views::split('/') | std::views::take(1)).at(0)), 
+                    std::stof(std::ranges::to<std::vector<std::string>>(splits.at(2) | std::views::split('/') | std::views::take(1)).at(0))
                 );
             }
         );
