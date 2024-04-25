@@ -57,7 +57,7 @@ export namespace util
             {
                 std::vector splits = std::ranges::to<std::vector<std::string>>(std::views::split(s, ' ') | std::views::drop(1));
                 if (splits.size() != 3)
-                    throw std::runtime_error("Expected ddd to be size 3");
+                    throw std::runtime_error("Expected splits to be size 3");
                 returnValue.vertices.emplace_back(std::stof(splits.at(0)), std::stof(splits.at(1)), std::stof(splits.at(2)));
             }
         );
