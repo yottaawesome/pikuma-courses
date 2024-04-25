@@ -75,9 +75,9 @@ export namespace util
                     throw std::runtime_error("Expected splits to be size 3");
 
                 returnValue.faces.emplace_back(
-                    std::stof(std::ranges::to<std::vector<std::string>>(splits.at(0) | std::views::split('/') | std::views::take(1)).at(0)),
-                    std::stof(std::ranges::to<std::vector<std::string>>(splits.at(1) | std::views::split('/') | std::views::take(1)).at(0)), 
-                    std::stof(std::ranges::to<std::vector<std::string>>(splits.at(2) | std::views::split('/') | std::views::take(1)).at(0))
+                    std::stoi(std::ranges::to<std::vector<std::string>>(splits.at(0) | std::views::split('/') | std::views::take(1)).at(0)),
+                    std::stoi(std::ranges::to<std::vector<std::string>>(splits.at(1) | std::views::split('/') | std::views::take(1)).at(0)), 
+                    std::stoi(std::ranges::to<std::vector<std::string>>(splits.at(2) | std::views::split('/') | std::views::take(1)).at(0))
                 );
             }
         );
