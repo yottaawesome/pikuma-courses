@@ -50,7 +50,7 @@ export namespace util
                 faceLines.push_back(fl.line);
 
         mesh returnValue;
-        for(std::string_view s : vertexLines)
+        for (std::string_view s : vertexLines)
         {
             std::vector splits = std::ranges::to<std::vector<std::string>>(std::views::split(s, ' ') | std::views::drop(1));
             if (splits.size() != 3)
