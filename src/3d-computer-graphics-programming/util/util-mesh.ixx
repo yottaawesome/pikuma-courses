@@ -39,9 +39,9 @@ export namespace util
 
         std::vector<std::string> vertexLines;
         std::vector<std::string> faceLines;
-        auto filter = 
-            std::views::istream<file_line>(file) 
-            | std::views::filter([](file_line& s) { return s.line.starts_with("v ") or s.line.starts_with("f "); })
+        auto filter =
+            std::views::istream<file_line>(file)
+            | std::views::filter([](file_line& s) { return s.line.starts_with("v ") or s.line.starts_with("f "); });
         for (const auto& fl : filter)
         {
             if (fl.line.starts_with("v"))
