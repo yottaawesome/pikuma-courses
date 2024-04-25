@@ -138,8 +138,5 @@ export namespace main_app
     std::chrono::milliseconds previous_frame_time{ 0 };
     std::chrono::milliseconds elapsed{ 0 };
 
-    util::mesh cube_mesh{
-        .vertices{cube_vertices.begin(), cube_vertices.end()},
-        .faces{cube_faces.begin(), cube_faces.end()}
-    };
+    util::mesh cube_mesh = util::load_obj_file("..\\assets\\cube.obj");
 }
