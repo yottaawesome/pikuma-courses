@@ -68,10 +68,12 @@ export namespace util
             if (splits.size() != 3)
                 throw std::runtime_error("Expected splits to be size 3");
 
+            auto getFace = std::views::split('/') | std::views::take(1) | std::views::join | std::ranges::to<std::string>();
+
             returnValue.faces.emplace_back(
-                std::stoi(std::ranges::to<std::vector<std::string>>(splits.at(0) | std::views::split('/') | std::views::take(1)).at(0)),
-                std::stoi(std::ranges::to<std::vector<std::string>>(splits.at(1) | std::views::split('/') | std::views::take(1)).at(0)), 
-                std::stoi(std::ranges::to<std::vector<std::string>>(splits.at(2) | std::views::split('/') | std::views::take(1)).at(0))
+                std::stoi(splits.at(0) | getFace),
+                std::stoi(splits.at(1) | getFace), 
+                std::stoi(splits.at(2) | getFace)
             );
         }
 
