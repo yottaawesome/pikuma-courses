@@ -52,29 +52,31 @@ export namespace util
         mesh returnValue;
         for (std::string_view s : vertexLines)
         {
-            std::vector splits = std::ranges::to<std::vector<std::string>>(std::views::split(s, ' ') | std::views::drop(1));
-            if (splits.size() != 3)
-                throw std::runtime_error("Expected splits to be size 3");
-            returnValue.vertices.emplace_back(std::stof(splits.at(0)), std::stof(splits.at(1)), std::stof(splits.at(2)));
+            std::vector splits = 
+                std::views::split(s, ' ') 
+                | std::views::drop(1) // drop 'v' prefix
+                | std::ranges::to<std::vector<std::string>>()
+                | std::views::transform([](const std::string& sv) { return std::stof(sv); })
+                | std::ranges::to<std::vector<float>>();
+            returnValue.vertices.emplace_back(splits.at(0), splits.at(1), splits.at(2));
         }
 
         for (std::string_view s : faceLines)
         {
-            std::vector<std::string> splits = 
-                std::views::split(s, ' ') 
-                | std::views::drop(1) 
-                | std::ranges::to<std::vector<std::string>>();
+            //auto getFace = std::views::split('/') | std::views::take(1) | std::views::join | std::ranges::to<std::string>();
+            std::vector<int> faceCoords =
+                std::views::split(s, ' ')
+                | std::views::drop(1) // drop 'f' prefix
+                | std::ranges::to<std::vector<std::string>>()
+                | std::views::take(3) // take first 3 triplets of x/y/z
+                | std::views::transform( // convert first element of x/y/z triplet to int
+                    [](std::string_view sv) 
+                    {
+                        return std::stoi(sv | std::views::split('/') | std::views::take(1) | std::views::join | std::ranges::to<std::string>()); 
+                    }) 
+                | std::ranges::to<std::vector<int>>();
 
-            if (splits.size() != 3)
-                throw std::runtime_error("Expected splits to be size 3");
-
-            auto getFace = std::views::split('/') | std::views::take(1) | std::views::join | std::ranges::to<std::string>();
-
-            returnValue.faces.emplace_back(
-                std::stoi(splits.at(0) | getFace),
-                std::stoi(splits.at(1) | getFace), 
-                std::stoi(splits.at(2) | getFace)
-            );
+            returnValue.faces.emplace_back(faceCoords.at(0), faceCoords.at(1), faceCoords.at(2));
         }
 
         return returnValue;
