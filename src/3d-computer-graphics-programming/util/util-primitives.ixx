@@ -30,6 +30,33 @@ export namespace util
 	{
 		float x = 0;
 		float y = 0;
+
+		float magnitude() const noexcept 
+		{ 
+			return std::sqrt(x*x+y*y); 
+		}
+
+		void normalise() noexcept
+		{
+			float multiplicand = 1.f / magnitude();
+			x *= multiplicand;
+			y *= multiplicand;
+		}
+
+		vector_2f to_normalised() const noexcept
+		{
+			vector_2f v{ *this };
+			v.normalise();
+			return v;
+		}
+
+		vector_2f to_rotated_z(const float angle) const noexcept
+		{
+			return {
+				x * std::cos(angle) - y * std::sin(angle),
+				x * std::sin(angle) + y * std::cos(angle)
+			};
+		}
 	};
 
 	struct vector_3f
@@ -37,6 +64,53 @@ export namespace util
 		float x = 0;
 		float y = 0;
 		float z = 0;
+		
+		float magnitude() const noexcept 
+		{ 
+			return std::sqrt(x*x+y*y+z*z); 
+		}
+		
+		void normalise() noexcept
+		{
+			const float multiplicand = 1.f / magnitude();
+			x *= multiplicand;
+			y *= multiplicand;
+			z *= multiplicand;
+		}
+
+		vector_3f to_normalised() const noexcept
+		{
+			vector_3f v{ *this };
+			v.normalise();
+			return v;
+		}
+
+		vector_3f to_rotated_x(const float angle) const noexcept
+		{
+			return {
+				x,
+				y * std::cos(angle) - z * std::sin(angle),
+				y * std::sin(angle) + z * std::cos(angle)
+			};
+		}
+
+		vector_3f to_rotated_y(const float angle) const noexcept
+		{
+			return {
+				x * std::cos(angle) - z * std::sin(angle),
+				y,
+				x * std::sin(angle) + z * std::cos(angle)
+			};
+		}
+
+		vector_3f to_rotated_z(const float angle) const noexcept
+		{
+			return {
+				x * std::cos(angle) - y * std::sin(angle),
+				x * std::sin(angle) + y * std::cos(angle),
+				z
+			};
+		}
 	};
 
 	vector_3f rotate_x(vector_3f v, float angle)
