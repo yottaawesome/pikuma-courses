@@ -1,4 +1,4 @@
-export module util:primitives;
+﻿export module util:primitives;
 import shared;
 
 export namespace util
@@ -85,7 +85,7 @@ export namespace util
 			return v;
 		}
 
-		vector_3f to_rotated_x(const float angle) const noexcept
+		vector_3f rotate_x(const float angle) const noexcept
 		{
 			return {
 				x,
@@ -94,7 +94,7 @@ export namespace util
 			};
 		}
 
-		vector_3f to_rotated_y(const float angle) const noexcept
+		vector_3f rotate_y(const float angle) const noexcept
 		{
 			return {
 				x * std::cos(angle) - z * std::sin(angle),
@@ -103,7 +103,7 @@ export namespace util
 			};
 		}
 
-		vector_3f to_rotated_z(const float angle) const noexcept
+		vector_3f rotate_z(const float angle) const noexcept
 		{
 			return {
 				x * std::cos(angle) - y * std::sin(angle),
@@ -111,34 +111,35 @@ export namespace util
 				z
 			};
 		}
+
+		vector_3f add(vector_3f other) const noexcept // commutative
+		{
+			return { x + other.x, y + other.y, z + other.z };
+		}
+
+		vector_3f subtract(vector_3f other) const noexcept
+		{
+			return { x - other.x, y - other.y, z - other.z };
+		}
+
+		// a · b = |a| × |b| × cos(θ)
+		float dot_product(vector_3f other) const noexcept
+		{
+			return x * other.x + y * other.y + z * other.z;
+		}
+
+		// P x Q = <PyQz - PzQy, PzQx - PxQz, PxQy - PyQx>
+		// |P x Q|^2 = |P|^2 × |Q|^2 × sin(θ)^2
+		// Anticommutative, not associative.
+		// The generated vector follows the right hand rule,
+		// if the right hand's fingers are aligned with P 
+		// and the palm is facing Q, then the thumb is aligned
+		// with the result.
+		vector_3f cross_product(vector_3f other) const noexcept
+		{
+			return { y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x };
+		}
 	};
-
-	vector_3f rotate_x(vector_3f v, float angle)
-	{
-		return {
-			v.x,
-			v.y * std::cos(angle) - v.z * std::sin(angle),
-			v.y * std::sin(angle) + v.z * std::cos(angle)
-		};
-	}
-
-	vector_3f rotate_y(vector_3f v, float angle)
-	{
-		return {
-			v.x * std::cos(angle) - v.z * std::sin(angle),
-			v.y,
-			v.x * std::sin(angle) + v.z * std::cos(angle)
-		};
-	}
-
-	vector_3f rotate_z(vector_3f v, float angle)
-	{
-		return {
-			v.x * std::cos(angle) - v.y * std::sin(angle),
-			v.x * std::sin(angle) + v.y * std::cos(angle),
-			v.z
-		};
-	}
 
 	struct radians final 
 	{ 

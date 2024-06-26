@@ -89,9 +89,9 @@ void update(const std::chrono::milliseconds elapsed_time)
         for (int j = 0; j < 3; j++)
         {
             util::vector_3f transformed_vertex = face_vertices[j];
-            transformed_vertex = rotate_x(transformed_vertex, main_app::cube_mesh.rotation.x);
-            transformed_vertex = rotate_y(transformed_vertex, main_app::cube_mesh.rotation.y);
-            transformed_vertex = rotate_z(transformed_vertex, main_app::cube_mesh.rotation.z);
+            transformed_vertex = transformed_vertex.rotate_x(main_app::cube_mesh.rotation.x);
+            transformed_vertex = transformed_vertex.rotate_y(main_app::cube_mesh.rotation.y);
+            transformed_vertex = transformed_vertex.rotate_z(main_app::cube_mesh.rotation.z);
 
             //Translate the vertex away from the camera
             transformed_vertex.z -= main_app::camera_position.z;
