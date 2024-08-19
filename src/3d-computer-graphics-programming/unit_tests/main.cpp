@@ -9,7 +9,8 @@ int main()
     testing::run(
         util_tests::buffer_2d_tests{},
         util_tests::sdl_context_tests{},
-        util_tests::functions_tests{}
+        util_tests::functions_tests{},
+        util_tests::primitive_tests{}
     );
     unit_tests::results::print_results();
 

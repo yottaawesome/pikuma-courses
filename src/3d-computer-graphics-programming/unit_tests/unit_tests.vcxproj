@@ -138,6 +138,7 @@
     <ClCompile Include="util_tests\unit_tests-buffer_2d.ixx" />
     <ClCompile Include="unit_tests-framework.ixx" />
     <ClCompile Include="unit_tests.ixx" />
+    <ClCompile Include="util_tests\unit_tests-primitives.ixx" />
     <ClCompile Include="util_tests\unit_tests-util.ixx" />
   </ItemGroup>
   <ItemGroup>

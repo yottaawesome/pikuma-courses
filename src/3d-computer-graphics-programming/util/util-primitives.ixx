@@ -64,6 +64,39 @@ export namespace util
 		float x = 0;
 		float y = 0;
 		float z = 0;
+
+		// ---------------------------------
+		// Vector dot product -- takes two vectors a and b and yields a scalar.
+		// Component formula: f(a, b) = a.x * b.x + a.y * b.y + a.z * b.z.
+		// Angle formula: f(a, b) = a · b = |a| × |b| × cos(θ)
+		// ---------------------------------
+		// f(a, b) < 0 where θ > 90
+		// f(a, b) = 0 where θ = 90
+		// f(a, b) > 0 where θ < 90
+		// Assuming unit vectors a, b, then:
+		// f(a, b) = 1 where where θ = 0
+		// f(a, b) = 0 where where θ = 90
+		// f(a, b) = -1 where where θ = 180
+		// ---------------------------------
+		static float dot_product(vector_3f a, vector_3f b)
+		{
+			return a.x * b.x + a.y * b.y + a.z * b.z;
+		}
+
+		// P x Q = <PyQz - PzQy, PzQx - PxQz, PxQy - PyQx>
+		// |P x Q|^2 = |P|^2 × |Q|^2 × sin(θ)^2
+		// Anticommutative, not associative.
+		// The generated vector follows the right hand rule,
+		// if the right hand's fingers are aligned with P 
+		// and the palm is facing Q, then the thumb is aligned
+		// with the result. For example, taking the cross-product
+		// of the x-axis vector (1,0,0) and the y-axis vector 
+		// (0,1,0) yields z-vector (0,0,1) with the positive 
+		// axis moving toward the viewer (DirectX uses the LHS).
+		static vector_3f cross_product(vector_3f a, vector_3f b)
+		{
+			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
+		}
 		
 		float magnitude() const noexcept 
 		{ 
@@ -122,22 +155,14 @@ export namespace util
 			return { x - other.x, y - other.y, z - other.z };
 		}
 
-		// a · b = |a| × |b| × cos(θ)
 		float dot_product(vector_3f other) const noexcept
 		{
-			return x * other.x + y * other.y + z * other.z;
+			return dot_product(*this, other);
 		}
 
-		// P x Q = <PyQz - PzQy, PzQx - PxQz, PxQy - PyQx>
-		// |P x Q|^2 = |P|^2 × |Q|^2 × sin(θ)^2
-		// Anticommutative, not associative.
-		// The generated vector follows the right hand rule,
-		// if the right hand's fingers are aligned with P 
-		// and the palm is facing Q, then the thumb is aligned
-		// with the result.
 		vector_3f cross_product(vector_3f other) const noexcept
 		{
-			return { y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x };
+			return cross_product(*this, other);
 		}
 	};
 
