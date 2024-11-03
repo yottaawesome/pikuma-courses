@@ -110,19 +110,26 @@ void update(const std::chrono::milliseconds elapsed_time)
         * after projection and uses the clockwise/counterclockwise 
         * order of the vertices to determine what is visible and 
         * what's not.
+        * 
+        * Note that backface culling is not the same as frustum
+        * culling.
         */
-        bool cull = [transformed_vertices]()
+        bool cullBackface = [transformed_vertices]()
         {
-            auto [a, b, c] = transformed_vertices;
-            //B-A
-            util::vector_3f vector_ab = b - a;
-            //C-A
-            util::vector_3f vector_ac = c - a;
-            auto ab_x_ac = util::vector_3f::cross_product(vector_ab, vector_ac).to_normalised();
-            auto camera_ray = main_app::camera_position - a;
-            return camera_ray.to_normalised().dot_product(ab_x_ac) < 0;
+            auto [vector_a, vector_b, vector_c] = transformed_vertices;
+            // B-A is A -> B
+            util::vector_3f vector_ab = vector_b - vector_a;
+            // C-A is A -> C
+            util::vector_3f vector_ac = vector_c - vector_a;
+            util::vector_3f ab_cross_ac =
+                util::vector_3f::cross_product(vector_ab, vector_ac);
+            ab_cross_ac.normalise();
+            // CamPosition - A is A -> CamPosition
+            util::vector_3f camera_ray = main_app::camera_position - vector_a;
+            camera_ray.normalise();
+            return util::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
         }();
-        if (cull)
+        if (cullBackface)
             continue;
 
         // Loop all three vertices
