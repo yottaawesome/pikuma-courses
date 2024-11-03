@@ -155,6 +155,11 @@ export namespace util
 			return { x - other.x, y - other.y, z - other.z };
 		}
 
+		vector_3f operator-(vector_3f other) const noexcept
+		{
+			return subtract(other);
+		}
+
 		float dot_product(vector_3f other) const noexcept
 		{
 			return dot_product(*this, other);

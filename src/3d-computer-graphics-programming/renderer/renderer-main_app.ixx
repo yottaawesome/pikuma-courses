@@ -116,7 +116,7 @@ export namespace main_app
         }(sdl_renderer, screen_dimensions);
 
     std::array<util::vector_3f, number_of_points> cube_points{};
-    util::vector_3f camera_position = { 0, 0, -5 };
+    util::vector_3f camera_position = { 0, 0, 0 };
 
     bool is_running =
         [](std::array<util::vector_3f, number_of_points>& cube_points, const util::sdl_window_unique_ptr& window)

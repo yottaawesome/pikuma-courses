@@ -86,18 +86,50 @@ void update(const std::chrono::milliseconds elapsed_time)
 
         util::triangle projected_triangle;
 
+        util::vector_3f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
-            util::vector_3f transformed_vertex = face_vertices[j];
-            transformed_vertex = transformed_vertex.rotate_x(main_app::cube_mesh.rotation.x);
-            transformed_vertex = transformed_vertex.rotate_y(main_app::cube_mesh.rotation.y);
-            transformed_vertex = transformed_vertex.rotate_z(main_app::cube_mesh.rotation.z);
+            util::vector_3f transformed = face_vertices[j];
+            transformed = transformed.rotate_x(main_app::cube_mesh.rotation.x);
+            transformed = transformed.rotate_y(main_app::cube_mesh.rotation.y);
+            transformed = transformed.rotate_z(main_app::cube_mesh.rotation.z);
 
             //Translate the vertex away from the camera
-            transformed_vertex.z -= main_app::camera_position.z;
+            //transformed.z -= main_app::camera_position.z;
+            transformed.z += 5;
+            transformed_vertices[j] = transformed;
+        }
 
+        /* Backface culling -- bypass rendering triangles that 
+        * are not facing the camera.
+        * Note:
+        * This is a naive implementation and modern graphics APIs 
+        * and 3D hardware approach back-face culling differently. 
+        * For example, OpenGL does not compare the normal of the 
+        * faces with the camera; instead, it does back-face culling 
+        * after projection and uses the clockwise/counterclockwise 
+        * order of the vertices to determine what is visible and 
+        * what's not.
+        */
+        bool cull = [transformed_vertices]()
+        {
+            auto [a, b, c] = transformed_vertices;
+            //B-A
+            util::vector_3f vector_ab = b - a;
+            //C-A
+            util::vector_3f vector_ac = c - a;
+            auto ab_x_ac = util::vector_3f::cross_product(vector_ab, vector_ac).to_normalised();
+            auto camera_ray = main_app::camera_position - a;
+            return camera_ray.to_normalised().dot_product(ab_x_ac) < 0;
+        }();
+        if (cull)
+            continue;
+
+        // Loop all three vertices
+        for(int j = 0; j < 3; j++)
+        {
             // Project the current vertex
-            util::vector_2f projected_point = project(transformed_vertex);
+            util::vector_2f projected_point = project(transformed_vertices[j]);
             
             // Scale and translate the projected points to the middle of the screen
             projected_point.x += main_app::screen_dimensions.width / 2;
