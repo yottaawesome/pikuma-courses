@@ -77,6 +77,16 @@ $$
 
 $c$ is the y-intercept value, it's the value where the line intercepts the y-axis. Positive values move the line up, while negative values move the line down.
 
+## Triangle midpoint formula
+
+**Triangle Rasterization** &sect; _Solution to the Triangle Midpoint_
+
+$$
+Mx = \dfrac{(x_2-x_0)(y_1-y_0)}{(y_2-y_0)} + x_0
+$$
+
+Given three triangles that constitute a face, sorted by increasing _y_, find the midpoint $(x, y)$.
+
 ## Additional resources
 
 * [Markdown and LaTeX introduction](https://ashki23.github.io/markdown-latex.html)
