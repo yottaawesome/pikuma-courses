@@ -78,7 +78,7 @@ export namespace util
 		// f(a, b) = 0 where where θ = 90
 		// f(a, b) = -1 where where θ = 180
 		// ---------------------------------
-		static float dot_product(vector_3f a, vector_3f b)
+		static float dot_product(vector_3f a, vector_3f b) noexcept
 		{
 			return a.x * b.x + a.y * b.y + a.z * b.z;
 		}
@@ -93,9 +93,14 @@ export namespace util
 		// of the x-axis vector (1,0,0) and the y-axis vector 
 		// (0,1,0) yields z-vector (0,0,1) with the positive 
 		// axis moving toward the viewer (DirectX uses the LHS).
-		static vector_3f cross_product(vector_3f a, vector_3f b)
+		static vector_3f cross_product(vector_3f a, vector_3f b) noexcept
 		{
 			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
+		}
+
+		static vector_3f scale(vector_3f a, float scale) noexcept
+		{
+			return { a.x * scale, a.y * scale, a.z * scale };
 		}
 		
 		float magnitude() const noexcept 
@@ -155,11 +160,6 @@ export namespace util
 			return { x - other.x, y - other.y, z - other.z };
 		}
 
-		vector_3f operator-(vector_3f other) const noexcept
-		{
-			return subtract(other);
-		}
-
 		float dot_product(vector_3f other) const noexcept
 		{
 			return dot_product(*this, other);
@@ -168,6 +168,39 @@ export namespace util
 		vector_3f cross_product(vector_3f other) const noexcept
 		{
 			return cross_product(*this, other);
+		}
+
+		vector_3f operator+(vector_3f other) const noexcept
+		{
+			return add(other);
+		}
+
+		vector_3f operator+=(vector_3f other) noexcept
+		{
+			*this = add(other);
+			return *this;
+		}
+
+		vector_3f operator-(vector_3f other) const noexcept
+		{
+			return subtract(other);
+		}
+
+		vector_3f operator-=(vector_3f other) noexcept
+		{
+			*this = subtract(other);
+			return *this;
+		}
+
+		vector_3f operator*(vector_3f other) const noexcept
+		{
+			return cross_product(*this, other);
+		}
+
+		vector_3f operator*=(vector_3f other) noexcept
+		{
+			*this = cross_product(*this, other);
+			return *this;
 		}
 	};
 
