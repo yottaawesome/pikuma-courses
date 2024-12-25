@@ -5,6 +5,7 @@
 // With subsystem:windows, you need to use WinMain() and not regular main(), but 
 // the define is not required.
 
+import std;
 import librenderer;
 
 void process_input()
@@ -66,7 +67,7 @@ void update(const std::chrono::milliseconds elapsed_time)
     // elapsed milliseconds.
     std::chrono::milliseconds time_to_wait = main_app::frame_target_time - elapsed_time;
     if (time_to_wait.count() > 0 and time_to_wait <= main_app::frame_target_time)
-        sdl::SDL_Delay(static_cast<uint32_t>(time_to_wait.count()));
+        sdl::SDL_Delay(static_cast<std::uint32_t>(time_to_wait.count()));
     main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
     main_app::elapsed += elapsed_time;
 
