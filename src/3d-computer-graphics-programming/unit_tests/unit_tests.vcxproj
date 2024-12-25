@@ -142,18 +142,12 @@
     <ClCompile Include="util_tests\unit_tests-util.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\renderer\renderer.vcxproj">
-      <Project>{6288b483-de99-4fa4-9fec-e3ec38fdc282}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\shared\shared.vcxproj">
-      <Project>{0822ec73-f5a7-4e61-b114-88496a85723e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\util\util.vcxproj">
-      <Project>{3b9ff44c-62fc-4b27-ab40-e193bc4f0691}</Project>
-    </ProjectReference>
+    <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="vcpkg.json" />
+    <ProjectReference Include="..\librenderer\librenderer.vcxproj">
+      <Project>{77374f3e-d256-4aba-9b36-89ef1d8eeadb}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

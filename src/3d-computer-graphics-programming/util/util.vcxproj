@@ -19,19 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="util-mesh.ixx" />
-    <ClCompile Include="util-buffer_2d.ixx" />
-    <ClCompile Include="util-concepts.ixx" />
-    <ClCompile Include="util-functions.ixx" />
-    <ClCompile Include="util-primitives.ixx" />
-    <ClCompile Include="util.ixx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\shared\shared.vcxproj">
-      <Project>{0822ec73-f5a7-4e61-b114-88496a85723e}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="vcpkg.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

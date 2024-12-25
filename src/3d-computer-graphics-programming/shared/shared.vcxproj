@@ -148,11 +148,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="shared.sdl.ixx" />
-    <ClCompile Include="shared.ixx" />
-    <ClCompile Include="shared.win32.ixx" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="vcpkg.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

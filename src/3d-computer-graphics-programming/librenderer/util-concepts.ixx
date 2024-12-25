@@ -35,9 +35,6 @@ export namespace util::concepts
 
 			else if constexpr (TBehaviour == tuple_for_each_behaviour::as_all)
 				return (std::invoke(func, std::get<Is>(tuple)), ...);
-
-			else
-				static_assert(false_type<TBehaviour>, "Unknown TBehaviour value.");
 		}(
 			std::forward<TTuple>(tuple), 
 			std::forward<TFunc>(func), 
