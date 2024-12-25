@@ -5,9 +5,7 @@
 // With subsystem:windows, you need to use WinMain() and not regular main(), but 
 // the define is not required.
 
-import shared;
-import util;
-import renderer;
+import librenderer;
 
 void process_input()
 {

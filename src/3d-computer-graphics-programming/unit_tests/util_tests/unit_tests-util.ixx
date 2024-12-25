@@ -1,6 +1,5 @@
 export module unit_tests:util;
-import util;
-import shared;
+import librenderer;
 import :framework;
 
 export namespace unit_tests::util_tests

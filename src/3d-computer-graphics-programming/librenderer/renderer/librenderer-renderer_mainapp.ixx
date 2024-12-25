@@ -1,7 +1,7 @@
-export module renderer:main_app;
+export module librenderer:renderer_mainapp;
 import std;
-import shared;
-import util;
+import :shared;
+import :util;
 
 namespace
 {

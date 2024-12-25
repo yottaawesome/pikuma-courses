@@ -1,6 +1,6 @@
-export module util:mesh;
-import shared;
-import :primitives;
+export module librenderer:util_mesh;
+import :shared;
+import :util_primitives;
 
 export namespace util
 {

@@ -1,6 +1,5 @@
 export module unit_tests:primitives;
-import std;
-import util;
+import librenderer;
 import :framework;
 
 export namespace unit_tests::util_tests

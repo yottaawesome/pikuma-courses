@@ -1,5 +1,5 @@
-﻿export module util:primitives;
-import shared;
+﻿export module librenderer:util_primitives;
+import :shared;
 
 export namespace util
 {

@@ -1,5 +1,4 @@
-import std;
-import shared;
+import librenderer;
 import unit_tests;
 
 int main()

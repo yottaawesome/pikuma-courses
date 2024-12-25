@@ -1,7 +1,7 @@
-export module util:buffer_2d;
+export module librenderer:util_buffer_2d;
 import std;
 import std.compat;
-import :functions;
+import :util_functions;
 
 export namespace util
 {

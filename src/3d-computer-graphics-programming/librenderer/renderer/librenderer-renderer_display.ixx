@@ -1,7 +1,7 @@
-export module renderer:display;
-import util;
-import shared;
-import :main_app;
+export module librenderer:renderer_display;
+import :util;
+import :shared;
+import :renderer_mainapp;
 
 export namespace display
 {

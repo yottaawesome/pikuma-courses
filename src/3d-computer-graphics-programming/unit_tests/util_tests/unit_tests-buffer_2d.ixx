@@ -1,7 +1,5 @@
 export module unit_tests:buffer_2d;
-import std;
-import std.compat;
-import util;
+import librenderer;
 import :framework;
 
 export namespace unit_tests::util_tests

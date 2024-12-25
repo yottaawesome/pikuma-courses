@@ -1,4 +1,4 @@
-export module util:concepts;
+export module librenderer:util_concepts;
 import std;
 
 // for general utility concepts and templates

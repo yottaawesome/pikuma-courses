@@ -22,18 +22,19 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="renderer-display.ixx" />
-    <ClCompile Include="renderer-main_app.ixx" />
-    <ClCompile Include="renderer.ixx" />
-    <ClCompile Include="shared.ixx" />
-    <ClCompile Include="shared.sdl.ixx" />
-    <ClCompile Include="shared.win32.ixx" />
-    <ClCompile Include="util-buffer_2d.ixx" />
-    <ClCompile Include="util-concepts.ixx" />
-    <ClCompile Include="util-functions.ixx" />
-    <ClCompile Include="util-mesh.ixx" />
-    <ClCompile Include="util-primitives.ixx" />
-    <ClCompile Include="util.ixx" />
+    <ClCompile Include="librenderer.ixx" />
+    <ClCompile Include="renderer\librenderer-renderer_display.ixx" />
+    <ClCompile Include="renderer\librenderer-renderer_mainapp.ixx" />
+    <ClCompile Include="renderer\librenderer-renderer.ixx" />
+    <ClCompile Include="shared\librenderer-shared.ixx" />
+    <ClCompile Include="shared\librenderer-shared_sdl.ixx" />
+    <ClCompile Include="shared\librenderer-shared_win32.ixx" />
+    <ClCompile Include="util\librenderer-util_buffer_2d.ixx" />
+    <ClCompile Include="util\librenderer-util_concepts.ixx" />
+    <ClCompile Include="util\librenderer-util_functions.ixx" />
+    <ClCompile Include="util\librenderer-util_mesh.ixx" />
+    <ClCompile Include="util\librenderer-util_primitives.ixx" />
+    <ClCompile Include="util\librenderer-util.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
