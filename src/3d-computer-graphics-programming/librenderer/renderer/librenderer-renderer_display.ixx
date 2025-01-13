@@ -140,4 +140,37 @@ export namespace display
             buffer
         ); // and back to 2 -> 0
     }
+
+    // TODO
+    void fill_flat_bottom_triangle(util::triangle tri, uint32_t color)
+    {
+
+    }
+
+    void fill_flat_top_triangle(util::triangle tri, uint32_t color)
+    {
+
+    }
+
+    void draw_filled_triangle(
+        util::triangle triangle,
+        uint32_t color,
+        util::color_buffer& buffer
+    )
+    {
+        // Sort by ascending y-coordinate
+        std::ranges::sort(triangle.points, [](auto a, auto b) { return a.y < b.y; });
+        // Find midpoint coordinates
+        int My = triangle.points[1].y;
+        int Mx =
+            (((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x;
+        fill_flat_bottom_triangle(
+            { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My)} },
+            color
+        );
+        fill_flat_top_triangle(
+            { {triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My), triangle.points[2].x, triangle.points[2].y} },
+            color
+        );
+    }
 }

@@ -150,8 +150,8 @@ void update(const std::chrono::milliseconds elapsed_time)
 }
 
 void render(
-    sdl::SDL_Renderer* renderer, 
-    sdl::SDL_Texture* color_buffer_texture, 
+    sdl::SDL_Renderer* renderer,
+    sdl::SDL_Texture* color_buffer_texture,
     util::color_buffer& buffer
 )
 {
@@ -163,8 +163,16 @@ void render(
     //draw_pixel(0, 50, 0xffff0000, buffer);
     display::draw_dot_grid(10, 0xff464646, buffer);
 
-    for (util::triangle triangle : main_app::triangles_to_render)
-        display::draw_triangle(triangle, 0xffffff00, buffer);
+    if constexpr (true)
+    {
+        for (util::triangle triangle : main_app::triangles_to_render)
+            display::draw_triangle(triangle, 0xffffff00, buffer);
+    }
+    else
+    {
+        // TODO
+        display::draw_filled_triangle({ {300,100,50,400,500,700} }, 0xff00ff00, buffer);
+    }
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);
 
