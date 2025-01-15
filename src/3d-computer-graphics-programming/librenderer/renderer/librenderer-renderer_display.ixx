@@ -149,7 +149,7 @@ export namespace display
         float x_start = tri.points[0].x;
         float x_end = tri.points[0].x;
 
-        for (int y = tri.points[0].y; y < tri.points[2].y; y++)
+        for (int y = tri.points[0].y; y <= tri.points[2].y; y++)
         {
             draw_line(x_start, y, x_end, y, color, buffer);
             x_start += inv_slope_1;
@@ -160,7 +160,18 @@ export namespace display
     // TODO
     void fill_flat_top_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
     {
+        float inv_slope_1 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
+        float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[1].x) / (tri.points[2].y - tri.points[1].y);
 
+        float x_start = tri.points[2].x;
+        float x_end = tri.points[2].x;
+
+        for (int y = tri.points[2].y; y >= tri.points[0].y; y--)
+        {
+            draw_line(x_start, y, x_end, y, color, buffer);
+            x_start -= inv_slope_1;
+            x_end -= inv_slope_2;
+        }
     }
 
     void draw_filled_triangle(
@@ -171,19 +182,42 @@ export namespace display
     {
         // Sort by ascending y-coordinate
         std::ranges::sort(triangle.points, [](auto a, auto b) { return a.y < b.y; });
-        // Find midpoint coordinates
-        int My = triangle.points[1].y;
-        int Mx =
-            (((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x;
-        fill_flat_bottom_triangle(
-            { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My)} },
-            color,
-            buffer
-        );
-        fill_flat_top_triangle(
-            { {triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My), triangle.points[2].x, triangle.points[2].y} },
-            color,
-            buffer
-        );
+        
+        if (triangle.points[1].y == triangle.points[2].y)
+        {
+            // Simply darw flat-bottom triangle
+            fill_flat_bottom_triangle(
+                { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y} },
+                color,
+                buffer
+            );
+            return;
+        }
+        else if (triangle.points[0].y == triangle.points[1].y)
+        {
+            // Simply darw flat-top triangle
+            fill_flat_top_triangle(
+                { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y} },
+                color,
+                buffer
+            );
+        }
+        else
+        {
+            // Find midpoint coordinates
+            int My = triangle.points[1].y;
+            int Mx =
+                (((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x;
+            fill_flat_bottom_triangle(
+                { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My)} },
+                color,
+                buffer
+            );
+            fill_flat_top_triangle(
+                { {triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My), triangle.points[2].x, triangle.points[2].y} },
+                color,
+                buffer
+            );
+        }
     }
 }

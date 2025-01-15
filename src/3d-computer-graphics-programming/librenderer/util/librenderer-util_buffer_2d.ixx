@@ -37,17 +37,20 @@ export namespace util
             T* raw_buffer()      noexcept { return m_buffer.data(); }
 
             void set(
-                const uint64_t row,
-                const uint64_t column,
+                uint64_t row,
+                uint64_t column,
                 const T value
             ) noexcept(util::is_release())
             {
                 if constexpr (util::is_debug()) // for debugging only
                 {
                     if (row >= m_height)
-                        throw std::runtime_error(std::format("Invalid row {}", row));
+                        row = m_height - 1;
+                        //throw std::runtime_error(std::format("Invalid row {}", row));
                     if (column >= m_width)
-                        throw std::runtime_error(std::format("Invalid width {}", column));
+                        column = m_width - 1;
+
+                        //throw std::runtime_error(std::format("Invalid width {}", column));
                 }
                 m_buffer[row * m_width + column] = value;
             }

@@ -79,8 +79,8 @@ export namespace main_app
                     nullptr,
                     sdl::sdl_windowpos_centered,
                     sdl::sdl_windowpos_centered,
-                    screen_dimensions.width,
-                    screen_dimensions.height,
+                    screen_dimensions.width-100,
+                    screen_dimensions.height-100,
                     sdl::SDL_WindowFlags::SDL_WINDOW_BORDERLESS
                 )
             );
@@ -127,8 +127,8 @@ export namespace main_app
                     for (float z = -1; z <= 1; z += 0.25)
                         cube_points[count++] = util::vector_3f{ x, y, z };
 
-            if (sdl::SDL_SetWindowFullscreen(window.get(), sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN))
-                throw std::runtime_error(util::print_last_error());
+            //if (sdl::SDL_SetWindowFullscreen(window.get(), sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN))
+                //throw std::runtime_error(util::print_last_error());
 
             return true;
         }(cube_points, window);
