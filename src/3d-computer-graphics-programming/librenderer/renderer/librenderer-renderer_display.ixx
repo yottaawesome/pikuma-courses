@@ -141,13 +141,24 @@ export namespace display
         ); // and back to 2 -> 0
     }
 
-    // TODO
-    void fill_flat_bottom_triangle(util::triangle tri, uint32_t color)
+    void fill_flat_bottom_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
     {
+        float inv_slope_1 = static_cast<float>(tri.points[1].x - tri.points[0].x) / (tri.points[1].y - tri.points[0].y);
+        float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
 
+        float x_start = tri.points[0].x;
+        float x_end = tri.points[0].x;
+
+        for (int y = tri.points[0].y; y < tri.points[2].y; y++)
+        {
+            draw_line(x_start, y, x_end, y, color, buffer);
+            x_start += inv_slope_1;
+            x_end += inv_slope_2;
+        }
     }
 
-    void fill_flat_top_triangle(util::triangle tri, uint32_t color)
+    // TODO
+    void fill_flat_top_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
     {
 
     }
@@ -166,11 +177,13 @@ export namespace display
             (((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x;
         fill_flat_bottom_triangle(
             { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My)} },
-            color
+            color,
+            buffer
         );
         fill_flat_top_triangle(
             { {triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My), triangle.points[2].x, triangle.points[2].y} },
-            color
+            color,
+            buffer
         );
     }
 }
