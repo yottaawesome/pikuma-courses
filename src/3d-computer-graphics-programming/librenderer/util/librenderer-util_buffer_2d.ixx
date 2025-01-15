@@ -45,12 +45,11 @@ export namespace util
                 if constexpr (util::is_debug()) // for debugging only
                 {
                     if (row >= m_height)
-                        row = m_height - 1;
-                        //throw std::runtime_error(std::format("Invalid row {}", row));
+                        //row = m_height - 1;
+                        throw std::runtime_error(std::format("Invalid row {}", row));
                     if (column >= m_width)
-                        column = m_width - 1;
-
-                        //throw std::runtime_error(std::format("Invalid width {}", column));
+                        //column = m_width - 1;
+                        throw std::runtime_error(std::format("Invalid width {}", column));
                 }
                 m_buffer[row * m_width + column] = value;
             }

@@ -149,11 +149,20 @@ export namespace display
         float x_start = tri.points[0].x;
         float x_end = tri.points[0].x;
 
+        // While looping, you may end up with extreme slopes that can
+        // cause huge lines to be drawn. Here, we correct for this.
+        float max_width = std::abs(tri.points[2].x - tri.points[1].x);
         for (int y = tri.points[0].y; y <= tri.points[2].y; y++)
         {
             draw_line(x_start, y, x_end, y, color, buffer);
             x_start += inv_slope_1;
             x_end += inv_slope_2;
+
+            if (std::abs(x_end - x_start) > max_width)
+            {
+                x_start = tri.points[1].x;
+                x_end = tri.points[2].x;
+            }
         }
     }
 

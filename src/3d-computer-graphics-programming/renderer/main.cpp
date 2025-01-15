@@ -165,8 +165,8 @@ void render(
 
     for (util::triangle triangle : main_app::triangles_to_render)
     {
-        display::draw_filled_triangle(triangle, 0xff00ff00, buffer);
-        display::draw_triangle(triangle, 0xffffff00, buffer);
+        display::draw_filled_triangle(triangle, 0xffADD8E6, buffer);
+        display::draw_triangle(triangle, 0xff000000, buffer);
     }
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);
