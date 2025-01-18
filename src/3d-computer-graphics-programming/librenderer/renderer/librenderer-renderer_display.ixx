@@ -11,7 +11,7 @@ export namespace display
         return true;
     }
 
-    void draw_line_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_line_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)
         {
@@ -29,19 +29,19 @@ export namespace display
         }
     }
 
-    void draw_dot_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_dot_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
             for (uint32_t column = 0; column < buffer.width(); column += 10)
                 buffer.set(row, column, color);
     }
 
-    void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, util::color_buffer& buffer)
     {
         buffer.set(x, y, color);
     }
 
-    void draw_rect(
+    constexpr void draw_rect(
         const uint32_t x,
         const uint32_t y,
         const uint32_t width,
@@ -76,7 +76,7 @@ export namespace display
     }
 
     // DDA algorithm
-    void draw_line(
+    constexpr void draw_line(
         const int x0,
         const int y0,
         const int x1,
@@ -109,7 +109,7 @@ export namespace display
         }
     }
 
-    void draw_triangle(
+    constexpr void draw_triangle(
         const util::triangle triangle,
         const uint32_t color,
         util::color_buffer& buffer
@@ -151,10 +151,10 @@ export namespace display
 
         // While looping, you may end up with extreme slopes that can
         // cause huge lines to be drawn. Here, we correct for this.
-        float max_width = std::abs(tri.points[2].x - tri.points[1].x);
-        for (int y = tri.points[0].y; y <= tri.points[2].y; y++)
+        float max_width = std::abs(tri.points[2].x - tri.points[1].x); // prevents constexpr
+        for (int y = static_cast<int>(tri.points[0].y); y <= tri.points[2].y; y++)
         {
-            draw_line(x_start, y, x_end, y, color, buffer);
+            draw_line(static_cast<int>(x_start), static_cast<int>(y), static_cast<int>(x_end), static_cast<int>(y), color, buffer);
             x_start += inv_slope_1;
             x_end += inv_slope_2;
 
@@ -166,8 +166,7 @@ export namespace display
         }
     }
 
-    // TODO
-    void fill_flat_top_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
         float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[1].x) / (tri.points[2].y - tri.points[1].y);
@@ -175,15 +174,15 @@ export namespace display
         float x_start = tri.points[2].x;
         float x_end = tri.points[2].x;
 
-        for (int y = tri.points[2].y; y >= tri.points[0].y; y--)
+        for (int y = static_cast<int>(tri.points[2].y); y >= tri.points[0].y; y--)
         {
-            draw_line(x_start, y, x_end, y, color, buffer);
+            draw_line(static_cast<int>(x_start), static_cast<int>(y), static_cast<int>(x_end), static_cast<int>(y), color, buffer);
             x_start -= inv_slope_1;
             x_end -= inv_slope_2;
         }
     }
 
-    void draw_filled_triangle(
+    constexpr void draw_filled_triangle(
         util::triangle triangle,
         uint32_t color,
         util::color_buffer& buffer
@@ -214,9 +213,8 @@ export namespace display
         else
         {
             // Find midpoint coordinates
-            int My = triangle.points[1].y;
-            int Mx =
-                (((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x;
+            int My = static_cast<int>(triangle.points[1].y);
+            int Mx = static_cast<int>((((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x);
             fill_flat_bottom_triangle(
                 { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My)} },
                 color,
