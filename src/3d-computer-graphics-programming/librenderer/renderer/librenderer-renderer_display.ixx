@@ -5,13 +5,7 @@ import :renderer_mainapp;
 
 export namespace display
 {
-    bool initialize_window()
-    {
-        // Nothing to do -- setup logic moved to main_app.
-        return true;
-    }
-
-    constexpr void draw_line_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_line_grid(const std::int32_t step, const std::uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)
         {
@@ -29,24 +23,24 @@ export namespace display
         }
     }
 
-    constexpr void draw_dot_grid(const int32_t step, const uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_dot_grid(const std::int32_t step, const std::uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
             for (uint32_t column = 0; column < buffer.width(); column += 10)
                 buffer.set(row, column, color);
     }
 
-    constexpr void draw_pixel(const uint32_t x, const uint32_t y, const uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_pixel(const std::uint32_t x, const std::uint32_t y, const std::uint32_t color, util::color_buffer& buffer)
     {
         buffer.set(x, y, color);
     }
 
     constexpr void draw_rect(
-        const uint32_t x,
-        const uint32_t y,
-        const uint32_t width,
-        const uint32_t height,
-        const uint32_t color,
+        const std::uint32_t x,
+        const std::uint32_t y,
+        const std::uint32_t width,
+        const std::uint32_t height,
+        const std::uint32_t color,
         util::color_buffer& buffer
     )
     {
@@ -81,7 +75,7 @@ export namespace display
         const int y0,
         const int x1,
         const int y1,
-        const uint32_t color,
+        const std::uint32_t color,
         util::color_buffer& buffer
     )
     {
@@ -111,7 +105,7 @@ export namespace display
 
     constexpr void draw_triangle(
         const util::triangle triangle,
-        const uint32_t color,
+        const std::uint32_t color,
         util::color_buffer& buffer
     )
     {
@@ -141,7 +135,7 @@ export namespace display
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
+    void fill_flat_bottom_triangle(util::triangle tri, std::uint32_t color, util::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.points[1].x - tri.points[0].x) / (tri.points[1].y - tri.points[0].y);
         float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
@@ -166,7 +160,7 @@ export namespace display
         }
     }
 
-    constexpr void fill_flat_top_triangle(util::triangle tri, uint32_t color, util::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(util::triangle tri, std::uint32_t color, util::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
         float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[1].x) / (tri.points[2].y - tri.points[1].y);
@@ -184,7 +178,7 @@ export namespace display
 
     constexpr void draw_filled_triangle(
         util::triangle triangle,
-        uint32_t color,
+        std::uint32_t color,
         util::color_buffer& buffer
     )
     {
@@ -194,8 +188,13 @@ export namespace display
         if (triangle.points[1].y == triangle.points[2].y)
         {
             // Simply darw flat-bottom triangle
-            fill_flat_bottom_triangle(
-                { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y} },
+            fill_flat_bottom_triangle({ 
+                    .points{
+                        triangle.points[0].x, triangle.points[0].y, 
+                        triangle.points[1].x, triangle.points[1].y, 
+                        triangle.points[2].x, triangle.points[2].y
+                    } 
+                },
                 color,
                 buffer
             );
@@ -204,8 +203,13 @@ export namespace display
         else if (triangle.points[0].y == triangle.points[1].y)
         {
             // Simply darw flat-top triangle
-            fill_flat_top_triangle(
-                { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, triangle.points[2].x, triangle.points[2].y} },
+            fill_flat_top_triangle({
+                    .points{
+                        triangle.points[0].x, triangle.points[0].y, 
+                        triangle.points[1].x, triangle.points[1].y, 
+                        triangle.points[2].x, triangle.points[2].y
+                    } 
+                },
                 color,
                 buffer
             );
@@ -215,13 +219,23 @@ export namespace display
             // Find midpoint coordinates
             int My = static_cast<int>(triangle.points[1].y);
             int Mx = static_cast<int>((((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x);
-            fill_flat_bottom_triangle(
-                { {triangle.points[0].x, triangle.points[0].y, triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My)} },
+            fill_flat_bottom_triangle({ 
+                    .points{ 
+                        triangle.points[0].x, triangle.points[0].y, 
+                        triangle.points[1].x, triangle.points[1].y, 
+                        static_cast<float>(Mx), static_cast<float>(My)
+                    } 
+                },
                 color,
                 buffer
             );
-            fill_flat_top_triangle(
-                { {triangle.points[1].x, triangle.points[1].y, static_cast<float>(Mx), static_cast<float>(My), triangle.points[2].x, triangle.points[2].y} },
+            fill_flat_top_triangle({ 
+                    .points{
+                        triangle.points[1].x, triangle.points[1].y, 
+                        static_cast<float>(Mx), static_cast<float>(My), 
+                        triangle.points[2].x, triangle.points[2].y
+                    } 
+                },
                 color,
                 buffer
             );
