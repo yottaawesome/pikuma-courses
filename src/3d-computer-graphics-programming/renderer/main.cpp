@@ -180,7 +180,7 @@ void render(
 //int main(int argc, char* argv[]) // use this on subsystem:console
 int WinMain(int argc, char* argv[])
 {
-    using 
+    using
         std::chrono::milliseconds, 
         std::chrono::high_resolution_clock, 
         std::chrono::duration_cast;
