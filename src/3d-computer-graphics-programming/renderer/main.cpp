@@ -133,23 +133,24 @@ void update(const std::chrono::milliseconds elapsed_time)
         * Note that backface culling is not the same as frustum
         * culling.
         */
-        bool cullBackface = [transformed_vertices]()
-        {
-            if (main_app::render_settings.culling_mode != main_app::cull_mode::enabled)
-                return false;
-            auto [vector_a, vector_b, vector_c] = transformed_vertices;
-            // B-A is A -> B
-            util::vector_3f vector_ab = vector_b - vector_a;
-            // C-A is A -> C
-            util::vector_3f vector_ac = vector_c - vector_a;
-            util::vector_3f ab_cross_ac =
-                util::vector_3f::cross_product(vector_ab, vector_ac);
-            ab_cross_ac.normalise();
-            // CamPosition - A is A -> CamPosition
-            util::vector_3f camera_ray = main_app::camera_position - vector_a;
-            camera_ray.normalise();
-            return util::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
-        }();
+        bool cullBackface = 
+            main_app::render_settings.culling_mode == main_app::cull_mode::enabled 
+            and [transformed_vertices]()
+            {
+            
+                auto [vector_a, vector_b, vector_c] = transformed_vertices;
+                // B-A is A -> B
+                util::vector_3f vector_ab = vector_b - vector_a;
+                // C-A is A -> C
+                util::vector_3f vector_ac = vector_c - vector_a;
+                util::vector_3f ab_cross_ac =
+                    util::vector_3f::cross_product(vector_ab, vector_ac);
+                ab_cross_ac.normalise();
+                // CamPosition - A is A -> CamPosition
+                util::vector_3f camera_ray = main_app::camera_position - vector_a;
+                camera_ray.normalise();
+                return util::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
+            }();
         if (cullBackface)
             continue;
 
@@ -190,18 +191,14 @@ void render(
         if (
             main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
             or main_app::render_settings.rendering_mode == main_app::render_mode::filled
-        )
-        {
-            display::draw_filled_triangle(triangle, 0xffADD8E6, buffer);
-        }
+        ) display::draw_filled_triangle(triangle, 0xffADD8E6, buffer);
+
         if (
             main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
             or main_app::render_settings.rendering_mode == main_app::render_mode::wireframe
             or main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot
-        )
-        {
-            display::draw_triangle(triangle, 0xff000000, buffer);
-        }
+        ) display::draw_triangle(triangle, 0xff000000, buffer);
+
         if (main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot)
         {
             display::draw_pixel(triangle.points[0].y, triangle.points[0].x, 0xFF0000, buffer);

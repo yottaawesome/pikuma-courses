@@ -237,6 +237,7 @@ export namespace util
 		int a = 0;
 		int b = 0;
 		int c = 0;
+		std::uint32_t color = 0xffadd8e6;
 	};
 
 	struct triangle
