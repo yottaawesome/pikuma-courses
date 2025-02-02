@@ -30,7 +30,27 @@ void process_input()
 
         case sdl::SDL_EventType::SDL_KEYUP:
         {
-            break;
+            switch (eventInfo.key.keysym.sym)
+            {
+            case sdl::SDL_KeyCode::SDLK_1:
+                main_app::render_settings.rendering_mode = main_app::render_mode::wireframe_with_dot;
+                break;
+            case sdl::SDL_KeyCode::SDLK_2:
+                main_app::render_settings.rendering_mode = main_app::render_mode::wireframe;
+                break;
+            case sdl::SDL_KeyCode::SDLK_3:
+                main_app::render_settings.rendering_mode = main_app::render_mode::filled;
+                break;
+            case sdl::SDL_KeyCode::SDLK_4:
+                main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
+                break;
+            case sdl::SDL_KeyCode::SDLK_c:
+                main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
+                break;
+            case sdl::SDL_KeyCode::SDLK_d:
+                main_app::render_settings.culling_mode = main_app::cull_mode::disabled;
+                break;
+            }
         }
     }
 }
@@ -115,6 +135,8 @@ void update(const std::chrono::milliseconds elapsed_time)
         */
         bool cullBackface = [transformed_vertices]()
         {
+            if (main_app::render_settings.culling_mode != main_app::cull_mode::enabled)
+                return false;
             auto [vector_a, vector_b, vector_c] = transformed_vertices;
             // B-A is A -> B
             util::vector_3f vector_ab = vector_b - vector_a;
@@ -165,8 +187,27 @@ void render(
 
     for (util::triangle triangle : main_app::triangles_to_render)
     {
-        display::draw_filled_triangle(triangle, 0xffADD8E6, buffer);
-        display::draw_triangle(triangle, 0xff000000, buffer);
+        if (
+            main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
+            or main_app::render_settings.rendering_mode == main_app::render_mode::filled
+        )
+        {
+            display::draw_filled_triangle(triangle, 0xffADD8E6, buffer);
+        }
+        if (
+            main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
+            or main_app::render_settings.rendering_mode == main_app::render_mode::wireframe
+            or main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot
+        )
+        {
+            display::draw_triangle(triangle, 0xff000000, buffer);
+        }
+        if (main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot)
+        {
+            display::draw_pixel(triangle.points[0].y, triangle.points[0].x, 0xFF0000, buffer);
+            display::draw_pixel(triangle.points[1].y, triangle.points[1].x, 0xFF0000, buffer);
+            display::draw_pixel(triangle.points[2].y, triangle.points[2].x, 0xFF0000, buffer);
+        }
     }
 
     display::render_color_buffer(renderer, buffer, color_buffer_texture);

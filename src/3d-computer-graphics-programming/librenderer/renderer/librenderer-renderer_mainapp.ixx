@@ -139,4 +139,23 @@ export namespace main_app
     std::chrono::milliseconds elapsed{ 0 };
 
     util::mesh cube_mesh = util::load_obj_file("..\\assets\\cube.obj");
+
+    enum class render_mode
+    {
+        wireframe_with_dot,
+        wireframe,
+        filled,
+        filled_wireframe
+    };
+    enum class cull_mode
+    {
+        enabled,
+        disabled
+    };
+
+    struct renderer_settings
+    {
+        render_mode rendering_mode = render_mode::filled_wireframe;
+        cull_mode culling_mode = cull_mode::enabled;
+    } render_settings;
 }
