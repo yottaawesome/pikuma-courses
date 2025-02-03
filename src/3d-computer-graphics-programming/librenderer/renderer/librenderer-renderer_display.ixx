@@ -5,6 +5,15 @@ import :renderer_mainapp;
 
 export namespace display
 {
+    enum class colors
+    {
+        red = 0xffff0000,
+        green = 0xff00ff00,
+        blue = 0xff0000ff,
+        white = 0xffffffff,
+        black = 0xff000000
+    };
+
     constexpr void draw_line_grid(const std::int32_t step, const std::uint32_t color, util::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)

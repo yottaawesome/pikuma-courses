@@ -103,7 +103,6 @@ void update(const std::chrono::milliseconds elapsed_time)
         face_vertices[1] = main_app::cube_mesh.vertices[mesh_face.b - 1];
         face_vertices[2] = main_app::cube_mesh.vertices[mesh_face.c - 1];
 
-        util::triangle projected_triangle;
 
         util::vector_3f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
@@ -155,6 +154,7 @@ void update(const std::chrono::milliseconds elapsed_time)
             continue;
 
         // Loop all three vertices
+        util::triangle projected_triangle{ .color = mesh_face.color };
         for(int j = 0; j < 3; j++)
         {
             // Project the current vertex
@@ -191,7 +191,7 @@ void render(
         if (
             main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
             or main_app::render_settings.rendering_mode == main_app::render_mode::filled
-        ) display::draw_filled_triangle(triangle, 0xffADD8E6, buffer);
+        ) display::draw_filled_triangle(triangle, triangle.color, buffer);
 
         if (
             main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
@@ -201,9 +201,9 @@ void render(
 
         if (main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot)
         {
-            display::draw_pixel(triangle.points[0].y, triangle.points[0].x, 0xFF0000, buffer);
-            display::draw_pixel(triangle.points[1].y, triangle.points[1].x, 0xFF0000, buffer);
-            display::draw_pixel(triangle.points[2].y, triangle.points[2].x, 0xFF0000, buffer);
+            display::draw_pixel(triangle.points[0].y, triangle.points[0].x, 0xffff0000, buffer);
+            display::draw_pixel(triangle.points[1].y, triangle.points[1].x, 0xffff0000, buffer);
+            display::draw_pixel(triangle.points[2].y, triangle.points[2].x, 0xffff0000, buffer);
         }
     }
 
