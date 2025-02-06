@@ -5,7 +5,7 @@ import :renderer_mainapp;
 
 export namespace display
 {
-    enum class colors
+    enum class colors : std::uint32_t
     {
         red = 0xffff0000,
         green = 0xff00ff00,

@@ -42,8 +42,11 @@ export namespace util
             std::views::istream<file_line>(file)
             | std::views::filter([](file_line& s) { return s.line.starts_with("v ") or s.line.starts_with("f "); });
 
+
+        constexpr std::array colors{ 0xffff0000, 0xff00ff00, 0xff0000ff };
+
         mesh returnValue;
-        for (const auto& fl : filter)
+        for (int i = 0; const auto& fl : filter)
         {
             if (fl.line.starts_with("v"))
             {
@@ -70,7 +73,11 @@ export namespace util
                         }) 
                     | std::ranges::to<std::vector<int>>();
 
-                returnValue.faces.emplace_back(faceCoords.at(0), faceCoords.at(1), faceCoords.at(2));
+                // For every two faces, increment the colour index
+                auto color_index = i % colors.size();
+                returnValue.faces.emplace_back(faceCoords.at(0), faceCoords.at(1), faceCoords.at(2), colors[color_index]);
+                if(returnValue.faces.size() % 2 == 0)
+                    i++;
             }
         }
 
