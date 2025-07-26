@@ -109,6 +109,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,6 +126,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,11 +136,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="unit_tests-framework.ixx" />
+    <ClCompile Include="framework.ixx" />
     <ClCompile Include="unit_tests.ixx" />
-    <ClCompile Include="unit_tests-primitives.ixx" />
-    <ClCompile Include="unit_tests-util.ixx" />
+    <ClCompile Include="unit_tests\primitives.ixx" />
+    <ClCompile Include="unit_tests\util.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />

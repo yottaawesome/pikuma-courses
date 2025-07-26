@@ -22,22 +22,22 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lib\librenderer-lib.ixx" />
-    <ClCompile Include="librenderer-raii.ixx" />
+    <ClCompile Include="lib\lib.ixx" />
+    <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
-    <ClCompile Include="math\librenderer-math.ixx" />
-    <ClCompile Include="renderer\librenderer-mesh.ixx" />
-    <ClCompile Include="renderer\librenderer-display.ixx" />
-    <ClCompile Include="main_app\librenderer-mainapp.ixx" />
-    <ClCompile Include="renderer\librenderer-renderer.ixx" />
-    <ClCompile Include="lib\librenderer-sdl.ixx" />
-    <ClCompile Include="lib\librenderer-win32.ixx" />
-    <ClCompile Include="math\librenderer-buffer_2d.ixx" />
-    <ClCompile Include="concepts\librenderer-concepts.ixx" />
-    <ClCompile Include="util\librenderer-util.ixx" />
-    <ClCompile Include="util\librenderer-functions.ixx" />
-    <ClCompile Include="util\librenderer-fileline.ixx" />
-    <ClCompile Include="math\librenderer-primitives.ixx" />
+    <ClCompile Include="math\math.ixx" />
+    <ClCompile Include="renderer\mesh.ixx" />
+    <ClCompile Include="renderer\display.ixx" />
+    <ClCompile Include="main_app\mainapp.ixx" />
+    <ClCompile Include="renderer\renderer.ixx" />
+    <ClCompile Include="lib\sdl.ixx" />
+    <ClCompile Include="lib\win32.ixx" />
+    <ClCompile Include="math\buffer_2d.ixx" />
+    <ClCompile Include="concepts\concepts.ixx" />
+    <ClCompile Include="util\util.ixx" />
+    <ClCompile Include="util\functions.ixx" />
+    <ClCompile Include="util\fileline.ixx" />
+    <ClCompile Include="math\primitives.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
