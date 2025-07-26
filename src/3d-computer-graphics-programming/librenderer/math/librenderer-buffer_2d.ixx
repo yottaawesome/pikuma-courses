@@ -1,9 +1,8 @@
-export module librenderer:util_buffer_2d;
+export module librenderer:buffer_2d;
 import std;
-import std.compat;
-import :util_functions;
+import :util;
 
-export namespace util
+export namespace math
 {
     template<typename T>
     concept is_arithmetic = std::is_arithmetic_v<T>;
@@ -22,7 +21,7 @@ export namespace util
             m_buffer(std::vector<T>(width * height))
         {}
 
-        constexpr T& operator[](const uint64_t index) noexcept
+        constexpr T& operator[](const std::uint64_t index) noexcept
         {
             return m_buffer[index];
         }
@@ -33,8 +32,8 @@ export namespace util
         constexpr T* raw_buffer()      noexcept { return m_buffer.data(); }
 
         constexpr void set(
-            uint64_t row,
-            uint64_t column,
+            std::uint64_t row,
+            std::uint64_t column,
             const T value
         ) noexcept(util::is_release())
         {
@@ -55,15 +54,15 @@ export namespace util
             std::ranges::fill(m_buffer, value);
         }
 
-        constexpr uint32_t pitch() const noexcept
+        constexpr std::uint32_t pitch() const noexcept
         {
             // this is the number of bytes in each row
-            return m_width * sizeof(uint32_t);
+            return m_width * sizeof(std::uint32_t);
         }
 
     private:
-        uint32_t m_width = 0;
-        uint32_t m_height = 0;
+        std::uint32_t m_width = 0;
+        std::uint32_t m_height = 0;
         std::vector<T> m_buffer = std::vector<T>(m_width * m_height);
     };
 
@@ -75,23 +74,23 @@ export namespace util
 
 static_assert(
     []{
-        util::buffer_2d<std::uint32_t> buffer;
+        math::buffer_2d<std::uint32_t> buffer;
         return buffer.width() == 0 and buffer.height() == 0;
     }(), "Default constructed buffer is expected to be zero width and height.");
 static_assert(
     [] {
-        util::buffer_2d<uint32_t> buffer{ 200, 300 };
+        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         return buffer.width() == 200 and buffer.height() == 300;
     }(), "A buffer constructed with arguments 200 and 300 should have width and height of 200 and 300 respectively.");
 static_assert(
     [] {
-        util::buffer_2d<uint32_t> buffer{ 200, 300 };
+        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         buffer.set(0, 1, 45);
         return buffer.raw_buffer()[1] == 45;
     }(), "A set() operation did not modify the expected pixel to the correct value.");
 static_assert(
     [] {
-        util::buffer_2d<uint32_t> buffer{ 200, 300 };
+        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         buffer.set(1, 1, 45);
         return buffer.raw_buffer()[200 + 1] == 45;
     }(), "A set() operation did not modify the expected pixel to the correct value.");

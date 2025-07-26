@@ -22,19 +22,22 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\librenderer-lib.ixx" />
+    <ClCompile Include="librenderer-raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
-    <ClCompile Include="renderer\librenderer-renderer_display.ixx" />
-    <ClCompile Include="renderer\librenderer-renderer_mainapp.ixx" />
+    <ClCompile Include="math\librenderer-math.ixx" />
+    <ClCompile Include="renderer\librenderer-mesh.ixx" />
+    <ClCompile Include="renderer\librenderer-display.ixx" />
+    <ClCompile Include="main_app\librenderer-mainapp.ixx" />
     <ClCompile Include="renderer\librenderer-renderer.ixx" />
-    <ClCompile Include="shared\librenderer-shared.ixx" />
-    <ClCompile Include="shared\librenderer-shared_sdl.ixx" />
-    <ClCompile Include="shared\librenderer-shared_win32.ixx" />
-    <ClCompile Include="util\librenderer-util_buffer_2d.ixx" />
-    <ClCompile Include="util\librenderer-util_concepts.ixx" />
-    <ClCompile Include="util\librenderer-util_functions.ixx" />
-    <ClCompile Include="util\librenderer-util_mesh.ixx" />
-    <ClCompile Include="util\librenderer-util_primitives.ixx" />
+    <ClCompile Include="lib\librenderer-sdl.ixx" />
+    <ClCompile Include="lib\librenderer-win32.ixx" />
+    <ClCompile Include="math\librenderer-buffer_2d.ixx" />
+    <ClCompile Include="concepts\librenderer-concepts.ixx" />
     <ClCompile Include="util\librenderer-util.ixx" />
+    <ClCompile Include="util\librenderer-functions.ixx" />
+    <ClCompile Include="util\librenderer-fileline.ixx" />
+    <ClCompile Include="math\librenderer-primitives.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -136,6 +139,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -156,6 +160,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>

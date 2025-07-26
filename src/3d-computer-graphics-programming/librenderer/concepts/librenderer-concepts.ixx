@@ -1,8 +1,8 @@
-export module librenderer:util_concepts;
+export module librenderer:concepts;
 import std;
 
 // for general utility concepts and templates
-export namespace util::concepts
+export namespace concepts
 {
 	template<typename T>
 	struct false_type : std::false_type {};

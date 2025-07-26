@@ -55,7 +55,7 @@ void process_input()
     }
 }
 
-util::vector_2f project(util::vector_3f vec)
+math::vector_2f project(math::vector_3f vec)
 {
     /*
     * Perspective divide (perspective projection lecture):
@@ -97,17 +97,17 @@ void update(const std::chrono::milliseconds elapsed_time)
 
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
-        util::face mesh_face = main_app::cube_mesh.faces[i];
-        util::vector_3f face_vertices[3];
+        math::face mesh_face = main_app::cube_mesh.faces[i];
+        math::vector_3f face_vertices[3];
         face_vertices[0] = main_app::cube_mesh.vertices[mesh_face.a - 1];
         face_vertices[1] = main_app::cube_mesh.vertices[mesh_face.b - 1];
         face_vertices[2] = main_app::cube_mesh.vertices[mesh_face.c - 1];
 
 
-        util::vector_3f transformed_vertices[3];
+        math::vector_3f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
-            util::vector_3f transformed = face_vertices[j];
+            math::vector_3f transformed = face_vertices[j];
             transformed = transformed.rotate_x(main_app::cube_mesh.rotation.x);
             transformed = transformed.rotate_y(main_app::cube_mesh.rotation.y);
             transformed = transformed.rotate_z(main_app::cube_mesh.rotation.z);
@@ -139,26 +139,26 @@ void update(const std::chrono::milliseconds elapsed_time)
             
                 auto [vector_a, vector_b, vector_c] = transformed_vertices;
                 // B-A is A -> B
-                util::vector_3f vector_ab = vector_b - vector_a;
+                math::vector_3f vector_ab = vector_b - vector_a;
                 // C-A is A -> C
-                util::vector_3f vector_ac = vector_c - vector_a;
-                util::vector_3f ab_cross_ac =
-                    util::vector_3f::cross_product(vector_ab, vector_ac);
+                math::vector_3f vector_ac = vector_c - vector_a;
+                math::vector_3f ab_cross_ac =
+                    math::vector_3f::cross_product(vector_ab, vector_ac);
                 ab_cross_ac.normalise();
                 // CamPosition - A is A -> CamPosition
-                util::vector_3f camera_ray = main_app::camera_position - vector_a;
+                math::vector_3f camera_ray = main_app::camera_position - vector_a;
                 camera_ray.normalise();
-                return util::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
+                return math::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
             }();
         if (cullBackface)
             continue;
 
         // Loop all three vertices
-        util::triangle projected_triangle{ .color = mesh_face.color };
+        math::triangle projected_triangle{ .color = mesh_face.color };
         for(int j = 0; j < 3; j++)
         {
             // Project the current vertex
-            util::vector_2f projected_point = project(transformed_vertices[j]);
+            math::vector_2f projected_point = project(transformed_vertices[j]);
             
             // Scale and translate the projected points to the middle of the screen
             projected_point.x += main_app::screen_dimensions.width / 2;
@@ -175,7 +175,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 void render(
     sdl::SDL_Renderer* renderer,
     sdl::SDL_Texture* color_buffer_texture,
-    util::color_buffer& buffer
+    math::color_buffer& buffer
 )
 {
     //sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -186,7 +186,7 @@ void render(
     //draw_pixel(0, 50, 0xffff0000, buffer);
     display::draw_dot_grid(10, 0xff464646, buffer);
 
-    for (util::triangle triangle : main_app::triangles_to_render)
+    for (math::triangle triangle : main_app::triangles_to_render)
     {
         if (
             main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe

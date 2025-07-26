@@ -1,7 +1,7 @@
-﻿export module librenderer:util_primitives;
+﻿export module librenderer:primitives;
 import std;
 
-export namespace util
+export namespace math
 {
 	struct point_2d final
 	{
@@ -242,7 +242,7 @@ export namespace util
 
 	struct triangle
 	{
-		util::vector_2f points[3];
+		vector_2f points[3];
 		std::uint32_t color = 0xffffffff;
 	};
 }

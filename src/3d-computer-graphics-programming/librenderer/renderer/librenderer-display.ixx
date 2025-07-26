@@ -1,7 +1,6 @@
-export module librenderer:renderer_display;
-import :util;
-import :shared;
-import :renderer_mainapp;
+export module librenderer:display;
+import std;
+import :math;
 
 export namespace display
 {
@@ -14,7 +13,7 @@ export namespace display
         black = 0xff000000
     };
 
-    constexpr void draw_line_grid(const std::int32_t step, const std::uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_line_grid(const std::int32_t step, const std::uint32_t color, math::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)
         {
@@ -32,14 +31,14 @@ export namespace display
         }
     }
 
-    constexpr void draw_dot_grid(const std::int32_t step, const std::uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_dot_grid(const std::int32_t step, const std::uint32_t color, math::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
             for (uint32_t column = 0; column < buffer.width(); column += 10)
                 buffer.set(row, column, color);
     }
 
-    constexpr void draw_pixel(const std::uint32_t x, const std::uint32_t y, const std::uint32_t color, util::color_buffer& buffer)
+    constexpr void draw_pixel(const std::uint32_t x, const std::uint32_t y, const std::uint32_t color, math::color_buffer& buffer)
     {
         buffer.set(x, y, color);
     }
@@ -50,7 +49,7 @@ export namespace display
         const std::uint32_t width,
         const std::uint32_t height,
         const std::uint32_t color,
-        util::color_buffer& buffer
+        math::color_buffer& buffer
     )
     {
         for (uint32_t row = y; row < y + width and row < buffer.height(); row++)
@@ -60,7 +59,7 @@ export namespace display
 
     void render_color_buffer(
         sdl::SDL_Renderer* renderer,
-        util::color_buffer& buffer,
+        math::color_buffer& buffer,
         sdl::SDL_Texture* color_buffer_texture
     )
     {
@@ -85,7 +84,7 @@ export namespace display
         const int x1,
         const int y1,
         const std::uint32_t color,
-        util::color_buffer& buffer
+        math::color_buffer& buffer
     )
     {
         int delta_x = x1 - x0;
@@ -113,9 +112,9 @@ export namespace display
     }
 
     constexpr void draw_triangle(
-        const util::triangle triangle,
+        const math::triangle triangle,
         const std::uint32_t color,
-        util::color_buffer& buffer
+        math::color_buffer& buffer
     )
     {
         draw_line(
@@ -144,7 +143,7 @@ export namespace display
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(util::triangle tri, std::uint32_t color, util::color_buffer& buffer)
+    void fill_flat_bottom_triangle(math::triangle tri, std::uint32_t color, math::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.points[1].x - tri.points[0].x) / (tri.points[1].y - tri.points[0].y);
         float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
@@ -169,7 +168,7 @@ export namespace display
         }
     }
 
-    constexpr void fill_flat_top_triangle(util::triangle tri, std::uint32_t color, util::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(math::triangle tri, std::uint32_t color, math::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
         float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[1].x) / (tri.points[2].y - tri.points[1].y);
@@ -186,9 +185,9 @@ export namespace display
     }
 
     constexpr void draw_filled_triangle(
-        util::triangle triangle,
+        math::triangle triangle,
         std::uint32_t color,
-        util::color_buffer& buffer
+        math::color_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate
