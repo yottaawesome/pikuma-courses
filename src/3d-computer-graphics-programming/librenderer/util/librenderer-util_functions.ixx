@@ -4,7 +4,7 @@ import :shared;
 
 export namespace util
 {
-    inline consteval bool is_debug() noexcept
+    inline consteval auto is_debug() noexcept -> bool
     {
 #ifdef _DEBUG
         return true;
@@ -13,85 +13,56 @@ export namespace util
 #endif // _DEBUG
     }
 
-    inline consteval bool is_release() noexcept
+    inline consteval auto is_release() noexcept -> bool
     {
         return not is_debug();
     }
 
-    inline void print_debug_string(const std::string_view msg)
+    template<typename...TArgs>
+    inline auto print_debug_string(std::format_string<TArgs...> fmt, TArgs&&...args) -> std::string
     {
-        win32::OutputDebugStringA(std::format("{}\n", msg).c_str());
+        auto error = std::format("{}\n", std::format(fmt, std::forward<TArgs>(args)...));
+        win32::OutputDebugStringA(error.c_str());
+        return error;
     }
 
-    std::string print_last_error(const std::source_location location = std::source_location::current())
+    auto print_last_error(const std::source_location location = std::source_location::current()) -> std::string
     {
-        std::string msg = std::format(
+        return print_debug_string(
             "SDL failed [{}] at {}:{}:{}\n",
             sdl::SDL_GetError(),
             location.file_name(),
             location.function_name(),
             location.line()
         );
-        win32::OutputDebugStringA(
-            msg.c_str()
-        );
-        return msg;
     }
 
-    struct sdl_window_deleter
+    template<auto VDeleteFn>
+    struct deleter
     {
-        void operator()(sdl::SDL_Window* window) { sdl::SDL_DestroyWindow(window); }
-    };
-    using sdl_window_unique_ptr = std::unique_ptr<sdl::SDL_Window, sdl_window_deleter>;
-
-    struct sdl_renderer_deleter
-    {
-        void operator()(sdl::SDL_Renderer* renderer) { sdl::SDL_DestroyRenderer(renderer); }
-    };
-    using sdl_renderer_unique_ptr = std::unique_ptr<sdl::SDL_Renderer, sdl_renderer_deleter>;
-
-    struct sdl_texture_deleter
-    {
-        void operator()(sdl::SDL_Texture* p) 
+        static void operator()(auto resource)
         {
-            sdl::SDL_DestroyTexture(p);
+            VDeleteFn(resource);
         }
     };
-    using sdl_texture_unique_ptr = std::unique_ptr<sdl::SDL_Texture, sdl_texture_deleter>;
+    using sdl_window_unique_ptr = std::unique_ptr<sdl::SDL_Window, deleter<sdl::SDL_DestroyWindow>>;
+    using sdl_renderer_unique_ptr = std::unique_ptr<sdl::SDL_Renderer, deleter<sdl::SDL_DestroyRenderer>>;
+    using sdl_texture_unique_ptr = std::unique_ptr<sdl::SDL_Texture, deleter<sdl::SDL_DestroyTexture>>;
 
-    class sdl_context final
+    struct sdl_context final
     {
-        public:
-            ~sdl_context()
-            {
-                if (init_successful)
-                    sdl::SDL_Quit();
-            }
+        ~sdl_context()
+        {
+            sdl::SDL_Quit();
+        }
 
-            sdl_context(const sdl_context&) = delete;
-            sdl_context& operator=(sdl_context&&) = delete;
-            sdl_context(sdl_context&& other) 
-                : init_successful{ other.init_successful }
-            {
-                other.init_successful = false;
-            }
+        sdl_context(const sdl_context&) = delete;
+        sdl_context& operator=(sdl_context&&) = delete;
 
-            sdl_context(int flags) 
-                : init_successful{ sdl::SDL_Init(sdl::sdl_init_everything) == 0 }
-            {}
-
-        public:
-            operator bool() const noexcept
-            {
-                return init_successful;
-            }
-
-            bool successful() const noexcept
-            {
-                return init_successful;
-            }
-
-        private:
-            bool init_successful = false;
+        sdl_context(int flags) 
+        {
+            if (sdl::SDL_Init(sdl::sdl_init_everything) != 0)
+                throw std::runtime_error("Failed initialisation of SDL2.");
+        }
     };
 }

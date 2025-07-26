@@ -13,7 +13,6 @@ export namespace unit_tests::util_tests
 					"Test basic constructor",
 					[]{
 						util::sdl_context sdl{sdl::sdl_init_everything};
-						assert::is_true(sdl.successful());
 					}
 				}
 			);

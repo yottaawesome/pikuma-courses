@@ -1,6 +1,5 @@
 export module unit_tests:framework;
 import std;
-import std.compat;
 
 namespace unit_tests::results
 {
@@ -60,7 +59,7 @@ export namespace unit_tests::testing
 	// Our basic test type. This is defined more out of utility than
 	// necessity, as the testable concept (defined below) doesn't
 	// technically require a type to be a template of this type.
-	template<std::invocable T, invocable_or_nullptr P = nullptr_t>
+	template<std::invocable T, invocable_or_nullptr P = std::nullptr_t>
 	struct test
 	{
 		std::string name;

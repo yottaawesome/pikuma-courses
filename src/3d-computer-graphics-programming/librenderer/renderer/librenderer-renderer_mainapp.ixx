@@ -45,13 +45,7 @@ export namespace main_app
 
     std::vector<util::triangle> triangles_to_render; // renderer::mesh_faces.size()
 
-    std::unique_ptr<util::sdl_context> context =
-        [] {
-            auto ptr = std::make_unique<util::sdl_context>(sdl::sdl_init_everything);
-            if (not ptr->successful())
-                throw std::runtime_error(util::print_last_error());
-            return ptr;
-        }();
+    std::unique_ptr<util::sdl_context> context = std::make_unique<util::sdl_context>(sdl::sdl_init_everything);
 
     util::basic_rectangle screen_dimensions =
         []() -> util::basic_rectangle
