@@ -196,18 +196,13 @@ void render(
 
     for (math::triangle triangle : main_app::triangles_to_render)
     {
-        if (
-            main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
-            or main_app::render_settings.rendering_mode == main_app::render_mode::filled
-        ) display::draw_filled_triangle(triangle, triangle.color, buffer);
+        if (main_app::render_settings.should_draw_filled_triangles()) 
+            display::draw_filled_triangle(triangle, triangle.color, buffer);
 
-        if (
-            main_app::render_settings.rendering_mode == main_app::render_mode::filled_wireframe
-            or main_app::render_settings.rendering_mode == main_app::render_mode::wireframe
-            or main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot
-        ) display::draw_triangle(triangle, 0xff000000, buffer);
+        if (main_app::render_settings.should_draw_triangles()) 
+            display::draw_triangle(triangle, 0xff000000, buffer);
 
-        if (main_app::render_settings.rendering_mode == main_app::render_mode::wireframe_with_dot)
+        if (main_app::render_settings.should_draw_points())
         {
             display::draw_pixel(triangle.points[0].y, triangle.points[0].x, 0xffff0000, buffer);
             display::draw_pixel(triangle.points[1].y, triangle.points[1].x, 0xffff0000, buffer);

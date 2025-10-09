@@ -154,5 +154,22 @@ export namespace main_app
     {
         render_mode rendering_mode = render_mode::filled_wireframe;
         cull_mode culling_mode = cull_mode::enabled;
+        auto should_draw_filled_triangles(this const renderer_settings& self) -> bool
+        {
+            return self.rendering_mode == render_mode::filled
+                or self.rendering_mode == render_mode::filled_wireframe;
+		}
+
+        auto should_draw_triangles(this const renderer_settings& self) -> bool
+        {
+            return self.rendering_mode == main_app::render_mode::filled_wireframe
+                or self.rendering_mode == main_app::render_mode::wireframe
+                or self.rendering_mode == main_app::render_mode::wireframe_with_dot;
+		}
+
+        auto should_draw_points(this const renderer_settings& self) -> bool
+        {
+            return self.rendering_mode == main_app::render_mode::wireframe_with_dot;
+        }
     } render_settings;
 }
