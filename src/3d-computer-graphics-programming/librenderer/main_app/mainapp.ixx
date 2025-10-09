@@ -50,24 +50,41 @@ export namespace main_app
 
     std::unique_ptr<raii::sdl_context> context = std::make_unique<raii::sdl_context>(sdl::sdl_init_everything);
 
-    math::basic_rectangle screen_dimensions =
-        []() -> math::basic_rectangle
+	struct window_dimension_t 
+    {
+		auto width() const noexcept -> std::uint32_t
         {
-            sdl::SDL_DisplayMode mode;
-            // https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
-            if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
-                throw std::runtime_error(util::print_last_error());
-            return {
-                .width = static_cast<uint32_t>(mode.w),
-                .height = static_cast<uint32_t>(mode.h)
-            };
-        }();
+            static std::uint32_t value = 
+                [] static
+                {
+                    sdl::SDL_DisplayMode mode;
+                    // https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
+                    if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
+                        throw std::runtime_error(util::print_last_error());
+                    return static_cast<uint32_t>(mode.w) - 100;
+                }();
+            return value;
+        }
+        auto height() const noexcept -> std::uint32_t
+        {
+            static std::uint32_t value =
+                [] static
+                {
+                    sdl::SDL_DisplayMode mode;
+                    // https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
+                    if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
+                        throw std::runtime_error(util::print_last_error());
+                    return static_cast<uint32_t>(mode.h) - 100;
+                }();
+            return value;
+        }
+    } constexpr window_dimensions;
 
     math::color_buffer main_buffer =
-        { screen_dimensions.width, screen_dimensions.height };
+        { window_dimensions.width(), window_dimensions.height()};
 
     raii::sdl_window_unique_ptr window =
-        [](const math::basic_rectangle& screen_dimensions)
+        []
         {
             // Create a window
             // https://wiki.libsdl.org/SDL2/SDL_CreateWindow
@@ -76,15 +93,15 @@ export namespace main_app
                     nullptr,
                     sdl::sdl_windowpos_centered,
                     sdl::sdl_windowpos_centered,
-                    screen_dimensions.width-100,
-                    screen_dimensions.height-100,
+                    window_dimensions.width(),
+                    window_dimensions.height(),
                     sdl::SDL_WindowFlags::SDL_WINDOW_BORDERLESS
                 )
             );
             if (not window)
                 throw std::runtime_error(util::print_last_error());
             return window;
-        }(screen_dimensions);
+        }();
 
     raii::sdl_renderer_unique_ptr sdl_renderer =
         [](const raii::sdl_window_unique_ptr& window)
@@ -98,19 +115,18 @@ export namespace main_app
         }(window);
 
     raii::sdl_texture_unique_ptr color_buffer_texture =
-        [](raii::sdl_renderer_unique_ptr& renderer, const math::basic_rectangle& screen_dimensions)
+        []
         {
-            return raii::sdl_texture_unique_ptr(
-                sdl::SDL_CreateTexture
-                (
-                    renderer.get(),
+            return raii::sdl_texture_unique_ptr{
+                sdl::SDL_CreateTexture(
+                    sdl_renderer.get(),
                     sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_ARGB8888,
                     sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
-                    screen_dimensions.width,
-                    screen_dimensions.height
+                    window_dimensions.width(),
+                    window_dimensions.height()
                 )
-            );
-        }(sdl_renderer, screen_dimensions);
+            };
+        }();
 
     std::array<math::vector_3f, number_of_points> cube_points{};
     math::vector_3f camera_position = { 0, 0, 0 };

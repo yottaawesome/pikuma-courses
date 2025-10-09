@@ -159,8 +159,8 @@ void update(const std::chrono::milliseconds elapsed_time)
             math::vector_2f projected_point = project(transformed_vertices[j]);
             
             // Scale and translate the projected points to the middle of the screen
-            projected_point.x += main_app::screen_dimensions.width / 2;
-            projected_point.y += main_app::screen_dimensions.height / 2;
+            projected_point.x += main_app::window_dimensions.width() / 2;
+            projected_point.y += main_app::window_dimensions.height() / 2;
 
             projected_triangle.points[j] = projected_point;
         }
