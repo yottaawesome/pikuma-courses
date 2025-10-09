@@ -103,7 +103,6 @@ void update(const std::chrono::milliseconds elapsed_time)
         face_vertices[1] = main_app::cube_mesh.vertices[mesh_face.b - 1];
         face_vertices[2] = main_app::cube_mesh.vertices[mesh_face.c - 1];
 
-
         math::vector_3f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
@@ -134,22 +133,21 @@ void update(const std::chrono::milliseconds elapsed_time)
         */
         bool cullBackface = 
             main_app::render_settings.culling_mode == main_app::cull_mode::enabled 
-            and [transformed_vertices]()
-            {
-            
-                auto [vector_a, vector_b, vector_c] = transformed_vertices;
-                // B-A is A -> B
-                math::vector_3f vector_ab = vector_b - vector_a;
-                // C-A is A -> C
-                math::vector_3f vector_ac = vector_c - vector_a;
-                math::vector_3f ab_cross_ac =
-                    math::vector_3f::cross_product(vector_ab, vector_ac);
-                ab_cross_ac.normalise();
-                // CamPosition - A is A -> CamPosition
-                math::vector_3f camera_ray = main_app::camera_position - vector_a;
-                camera_ray.normalise();
-                return math::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
-            }();
+            and [transformed_vertices] -> bool
+                {
+                    auto [vector_a, vector_b, vector_c] = transformed_vertices;
+                    // B-A is A -> B
+                    math::vector_3f vector_ab = vector_b - vector_a;
+                    // C-A is A -> C
+                    math::vector_3f vector_ac = vector_c - vector_a;
+                    math::vector_3f ab_cross_ac =
+                        math::vector_3f::cross_product(vector_ab, vector_ac);
+                    ab_cross_ac.normalise();
+                    // CamPosition - A is A -> CamPosition
+                    math::vector_3f camera_ray = main_app::camera_position - vector_a;
+                    camera_ray.normalise();
+                    return math::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
+                }();
         if (cullBackface)
             continue;
 
@@ -166,10 +164,20 @@ void update(const std::chrono::milliseconds elapsed_time)
 
             projected_triangle.points[j] = projected_point;
         }
+        projected_triangle.average_depth =
+            (transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.f;
 
         // Save the projected triangle in the array of triangles to render
         main_app::triangles_to_render.push_back(projected_triangle);
     }
+	// Painter's algorithm -- sort triangles by average depth from back to front.
+    std::sort(
+        main_app::triangles_to_render.begin(), 
+        main_app::triangles_to_render.end(),
+        [](const math::triangle& t1, const math::triangle& t2) static
+        {
+            return t1.average_depth > t2.average_depth;
+		});
 }
 
 void render(
