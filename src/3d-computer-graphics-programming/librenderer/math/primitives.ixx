@@ -20,7 +20,7 @@ export namespace math
 		point_2d origin{};
 		std::uint32_t width = 0;
 		std::uint32_t height = 0;
-		bool is_in_point_space(const point_2d point) const noexcept
+		auto is_in_point_space(point_2d point) const noexcept -> bool
 		{
 			return (origin.x + width < point.x) and (origin.y + height < point.y);
 		}
@@ -31,30 +31,28 @@ export namespace math
 		float x = 0;
 		float y = 0;
 
-		float magnitude() const noexcept 
+		auto magnitude(this const vector_2f& self) noexcept -> float
 		{ 
-			return std::sqrt(x*x+y*y); 
+			return std::sqrt(self.x*self.x + self.y*self.y);
 		}
 
-		void normalise() noexcept
+		void normalise(this vector_2f& self) noexcept
 		{
-			float multiplicand = 1.f / magnitude();
-			x *= multiplicand;
-			y *= multiplicand;
+			float multiplicand = 1.f / self.magnitude();
+			self.x *= multiplicand;
+			self.y *= multiplicand;
 		}
 
-		vector_2f to_normalised() const noexcept
+		auto to_normalised(this vector_2f self) noexcept -> vector_2f
 		{
-			vector_2f v{ *this };
-			v.normalise();
-			return v;
+			return (self.normalise(), self);
 		}
 
-		vector_2f to_rotated_z(const float angle) const noexcept
+		auto to_rotated_z(this const vector_2f& self, float angle) noexcept -> vector_2f
 		{
 			return {
-				x * std::cos(angle) - y * std::sin(angle),
-				x * std::sin(angle) + y * std::cos(angle)
+				self.x * std::cos(angle) - self.y * std::sin(angle),
+				self.x * std::sin(angle) + self.y * std::cos(angle)
 			};
 		}
 	};
@@ -78,7 +76,7 @@ export namespace math
 		// f(a, b) = 0 where where θ = 90
 		// f(a, b) = -1 where where θ = 180
 		// ---------------------------------
-		static float dot_product(vector_3f a, vector_3f b) noexcept
+		static auto dot_product(vector_3f a, vector_3f b) noexcept -> float
 		{
 			return a.x * b.x + a.y * b.y + a.z * b.z;
 		}
@@ -93,114 +91,110 @@ export namespace math
 		// of the x-axis vector (1,0,0) and the y-axis vector 
 		// (0,1,0) yields z-vector (0,0,1) with the positive 
 		// axis moving toward the viewer (DirectX uses the LHS).
-		static vector_3f cross_product(vector_3f a, vector_3f b) noexcept
+		static auto cross_product(vector_3f a, vector_3f b) noexcept -> vector_3f
 		{
 			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 		}
 
-		static vector_3f scale(vector_3f a, float scale) noexcept
+		static auto scale(vector_3f a, float scale) noexcept -> vector_3f
 		{
 			return { a.x * scale, a.y * scale, a.z * scale };
 		}
 		
-		float magnitude() const noexcept 
+		auto magnitude(this const vector_3f& self) noexcept -> float
 		{ 
-			return std::sqrt(x*x+y*y+z*z); 
+			return std::sqrt(self.x*self.x + self.y*self.y + self.z*self.z);
 		}
 		
-		void normalise() noexcept
+		void normalise(this vector_3f& self) noexcept
 		{
-			const float multiplicand = 1.f / magnitude();
-			x *= multiplicand;
-			y *= multiplicand;
-			z *= multiplicand;
+			float multiplicand = 1.f / self.magnitude();
+			self.x *= multiplicand;
+			self.y *= multiplicand;
+			self.z *= multiplicand;
 		}
 
-		vector_3f to_normalised() const noexcept
+		auto to_normalised(this vector_3f v) noexcept -> vector_3f
 		{
-			vector_3f v{ *this };
-			v.normalise();
-			return v;
+			return (v.normalise(), v);
 		}
 
-		vector_3f rotate_x(const float angle) const noexcept
+		auto rotate_x(this const vector_3f& self, float angle) noexcept -> vector_3f
 		{
 			return {
-				x,
-				y * std::cos(angle) - z * std::sin(angle),
-				y * std::sin(angle) + z * std::cos(angle)
+				self.x,
+				self.y * std::cos(angle) - self.z * std::sin(angle),
+				self.y * std::sin(angle) + self.z * std::cos(angle)
 			};
 		}
 
-		vector_3f rotate_y(const float angle) const noexcept
+		auto rotate_y(this const vector_3f& self, float angle) noexcept -> vector_3f
 		{
 			return {
-				x * std::cos(angle) - z * std::sin(angle),
-				y,
-				x * std::sin(angle) + z * std::cos(angle)
+				self.x * std::cos(angle) - self.z * std::sin(angle),
+				self.y,
+				self.x * std::sin(angle) + self.z * std::cos(angle)
 			};
 		}
 
-		vector_3f rotate_z(const float angle) const noexcept
+		auto rotate_z(this const vector_3f& self, float angle) noexcept -> vector_3f
 		{
 			return {
-				x * std::cos(angle) - y * std::sin(angle),
-				x * std::sin(angle) + y * std::cos(angle),
-				z
+				self.x * std::cos(angle) - self.y * std::sin(angle),
+				self.x * std::sin(angle) + self.y * std::cos(angle),
+				self.z
 			};
 		}
 
-		vector_3f add(vector_3f other) const noexcept // commutative
+		auto add(this const vector_3f& self, vector_3f other) noexcept -> vector_3f // commutative
 		{
-			return { x + other.x, y + other.y, z + other.z };
+			return { self.x + other.x, self.y + other.y, self.z + other.z };
 		}
 
-		vector_3f subtract(vector_3f other) const noexcept
+		auto subtract(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
 		{
-			return { x - other.x, y - other.y, z - other.z };
+			return { self.x - other.x, self.y - other.y, self.z - other.z };
 		}
 
-		float dot_product(vector_3f other) const noexcept
+		auto dot_product(this const vector_3f& self, vector_3f other) noexcept -> float
 		{
-			return dot_product(*this, other);
+			return self.dot_product(self, other);
 		}
 
-		vector_3f cross_product(vector_3f other) const noexcept
+		auto cross_product(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
 		{
-			return cross_product(*this, other);
+			return self.cross_product(self, other);
 		}
 
-		vector_3f operator+(vector_3f other) const noexcept
+		auto operator+(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
 		{
-			return add(other);
+			return self.add(other);
 		}
 
-		vector_3f operator+=(vector_3f other) noexcept
+		auto operator+=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
 		{
-			*this = add(other);
-			return *this;
+			self = self.add(other);
+			return self;
 		}
 
-		vector_3f operator-(vector_3f other) const noexcept
+		auto operator-(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
 		{
-			return subtract(other);
+			return self.subtract(other);
 		}
 
-		vector_3f operator-=(vector_3f other) noexcept
+		auto operator-=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
 		{
-			*this = subtract(other);
-			return *this;
+			return (self = self.subtract(other), self);
 		}
 
-		vector_3f operator*(vector_3f other) const noexcept
+		auto operator*(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
 		{
-			return cross_product(*this, other);
+			return self.cross_product(self, other);
 		}
 
-		vector_3f operator*=(vector_3f other) noexcept
+		auto operator*=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
 		{
-			*this = cross_product(*this, other);
-			return *this;
+			return (self = self.cross_product(self, other), self);
 		}
 	};
 
@@ -209,7 +203,7 @@ export namespace math
 		float value = 0; 
 		operator float() const noexcept { return value; }
 		auto operator<=>(const radians&) const = default;
-		bool operator==(float rhs) const noexcept { return value == rhs; }
+		auto operator==(float rhs) const noexcept -> bool { return value == rhs; }
 	};
 
 	struct degrees final 
@@ -217,17 +211,17 @@ export namespace math
 		float value = 0;
 		operator float() const noexcept { return value; }
 		auto operator<=>(const degrees&) const = default;
-		bool operator==(float rhs) const noexcept { return value == rhs; }
+		auto operator==(float rhs) const noexcept -> bool { return value == rhs; }
 	};
 
 	bool operator==(const degrees&, const radians&) = delete;
 	
-	radians convert(degrees v) noexcept
+	auto convert(degrees v) noexcept -> radians
 	{
 		return { v.value * static_cast<float>(std::numbers::pi) / 180.f };
 	}
 
-	degrees convert(radians v) noexcept
+	auto convert(radians v) noexcept -> degrees
 	{
 		return { v.value * 180.f / static_cast<float>(std::numbers::pi) };
 	}
