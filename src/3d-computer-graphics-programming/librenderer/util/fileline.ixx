@@ -9,12 +9,10 @@ export namespace util
         std::string line;
         size_t line_number = 0;
  
-        friend std::istream &operator>>(std::istream &s, file_line& fl)
+        friend auto operator>>(std::istream &s, file_line& fl) -> std::istream&
         {
             std::getline(s, fl.line);
- 
             ++fl.line_number;
- 
             return s;
         }
     };

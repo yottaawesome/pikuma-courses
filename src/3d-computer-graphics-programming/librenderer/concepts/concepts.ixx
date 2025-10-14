@@ -13,6 +13,9 @@ export namespace concepts
 	template<typename TRequired, typename...TToTest>
 	concept all_of = (std::same_as<TRequired, TToTest> and ...);
 
+	template<typename TRequired, typename...TToTest>
+	concept none_of = not one_of<TRequired, TToTest...>;
+
 	enum class tuple_for_each_behaviour
 	{
 		as_and,
@@ -41,4 +44,7 @@ export namespace concepts
 			std::make_index_sequence<TTuple>{}
 		);
 	}
+
+	template<typename T>
+	concept is_arithmetic = std::is_arithmetic_v<T>;
 }

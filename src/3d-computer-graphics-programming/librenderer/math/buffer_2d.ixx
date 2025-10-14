@@ -1,60 +1,59 @@
 export module librenderer:buffer_2d;
 import std;
 import :util;
+import :concepts;
 
 export namespace math
 {
-    template<typename T>
-    concept is_arithmetic = std::is_arithmetic_v<T>;
-
     // represents a 2D buffer of an underlying numeric type.
-    template<is_arithmetic T>
+    template<concepts::is_arithmetic T>
     struct buffer_2d final
     {
         using backing_type = T;
 
         constexpr buffer_2d() = default;
 
-        constexpr buffer_2d(const T width, const T height)
+        constexpr buffer_2d(T width, T height)
             : m_width(width),
             m_height(height),
             m_buffer(std::vector<T>(width * height))
         {}
 
-        constexpr T& operator[](const std::uint64_t index) noexcept
+        constexpr auto operator[](this auto&& self, const std::uint64_t index) noexcept -> decltype(auto)
         {
-            return m_buffer[index];
+            return std::forward_like<decltype(self)>(m_buffer[index]);
         }
 
-        constexpr T width()            const noexcept { return m_width; }
-        constexpr T height()           const noexcept { return m_height; }
-        constexpr T total_elements()   const noexcept { return m_buffer.size(); }
-        constexpr T* raw_buffer()      noexcept { return m_buffer.data(); }
+        constexpr auto width()          const noexcept  -> T    { return m_width; }
+        constexpr auto height()         const noexcept  -> T    { return m_height; }
+        constexpr auto total_elements() const noexcept  -> T    { return m_buffer.size(); }
+        constexpr auto raw_buffer()     noexcept        -> T*   { return m_buffer.data(); }
 
-        constexpr void set(
-            std::uint64_t row,
-            std::uint64_t column,
-            const T value
-        ) noexcept(util::is_release())
+        constexpr void set(std::uint64_t row, std::uint64_t column, T value) noexcept(util::is_release)
         {
-            if constexpr (util::is_debug()) // for debugging only
-            {
-                if (row >= m_height)
-                    //row = m_height - 1;
-                    throw std::runtime_error(std::format("Invalid row {}", row));
-                if (column >= m_width)
-                    //column = m_width - 1;
-                    throw std::runtime_error(std::format("Invalid width {}", column));
-            }
+            check_bounds(row, column);
             m_buffer[row * m_width + column] = value;
         }
+
+		constexpr auto operator[](this auto&& self, std::uint64_t row, std::uint64_t column) noexcept -> decltype(auto)
+        {
+            self.check_bounds(row, column);
+            return std::forward_like<decltype(self)>(self.m_buffer[row * self.m_width + column]);
+		}
+
+        constexpr void check_bounds(this auto&& self, std::uint64_t row, std::uint64_t column)
+        {
+            if constexpr (util::is_debug) // for debugging only
+				if (row >= self.m_height or column >= self.m_width)
+				    throw std::runtime_error(std::format("Index out of bounds {}:{} against {}:{}", row, column, self.m_width, self.m_height));
+		}
 
         constexpr void fill(const T value = 0) noexcept
         {
             std::ranges::fill(m_buffer, value);
         }
 
-        constexpr std::uint32_t pitch() const noexcept
+		constexpr auto pitch() const noexcept -> std::uint32_t
         {
             // this is the number of bytes in each row
             return m_width * sizeof(std::uint32_t);
@@ -92,5 +91,11 @@ static_assert(
     [] {
         math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         buffer.set(1, 1, 45);
+        return buffer.raw_buffer()[200 + 1] == 45;
+    }(), "A set() operation did not modify the expected pixel to the correct value.");
+static_assert(
+    [] {
+        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
+        buffer[1,1] = 45;
         return buffer.raw_buffer()[200 + 1] == 45;
     }(), "A set() operation did not modify the expected pixel to the correct value.");

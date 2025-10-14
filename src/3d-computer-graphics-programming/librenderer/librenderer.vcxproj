@@ -22,8 +22,9 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="degreesradians.ixx" />
+    <ClCompile Include="math\degreesradians.ixx" />
     <ClCompile Include="lib\lib.ixx" />
+    <ClCompile Include="math\matrix.ixx" />
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
     <ClCompile Include="math\math.ixx" />

@@ -15,6 +15,8 @@ export namespace renderer
         std::vector<math::vector_3f> vertices;
         std::vector<math::face> faces;
         math::vector_3f rotation;
+        math::vector_3f scale{1,1,1};
+        math::vector_3f translation;
 
         [[nodiscard("Loading a mesh and immediately discarding it is pointless.")]]
         static auto from_file(const std::filesystem::path& p) -> mesh

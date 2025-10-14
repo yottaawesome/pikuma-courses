@@ -204,9 +204,15 @@ void render(
 
         if (main_app::render_settings.should_draw_points())
         {
-            display::draw_pixel(triangle.points[0].y, triangle.points[0].x, 0xffff0000, buffer);
-            display::draw_pixel(triangle.points[1].y, triangle.points[1].x, 0xffff0000, buffer);
-            display::draw_pixel(triangle.points[2].y, triangle.points[2].x, 0xffff0000, buffer);
+            [](auto&& buffer, auto&&...point) static
+            {
+                (display::draw_pixel(
+                    static_cast<std::uint32_t>(point.y),
+                    static_cast<std::uint32_t>(point.x),
+                    0xffff0000,
+                    buffer
+                ), ...);
+            }(buffer, triangle.points[0], triangle.points[1], triangle.points[2]);
         }
     }
 

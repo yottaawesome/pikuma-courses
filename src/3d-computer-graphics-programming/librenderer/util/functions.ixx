@@ -5,22 +5,17 @@ import :sdl;
 
 export namespace util
 {
-    inline consteval auto is_debug() noexcept -> bool
-    {
+    constexpr bool is_debug =
 #ifdef _DEBUG
-        return true;
+        true;
 #else
-        return false;
+        false;
 #endif // _DEBUG
-    }
 
-    inline consteval auto is_release() noexcept -> bool
-    {
-        return not is_debug();
-    }
+    constexpr bool is_release = not is_debug;
 
     template<typename...TArgs>
-    inline auto print_debug_string(std::format_string<TArgs...> fmt, TArgs&&...args) -> std::string
+    auto print_debug_string(std::format_string<TArgs...> fmt, TArgs&&...args) -> std::string
     {
         auto error = std::format("{}\n", std::format(fmt, std::forward<TArgs>(args)...));
         win32::OutputDebugStringA(error.c_str());
