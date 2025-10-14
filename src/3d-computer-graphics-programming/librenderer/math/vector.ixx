@@ -3,6 +3,82 @@ import std;
 
 export namespace math
 {
+	template<typename T>
+	concept x_component = requires(T t){ t.x; };
+	template<typename T, typename V>
+	concept x_components = x_component<T> and x_component<V>;
+	template<typename T, typename V>
+	concept one_has_x_component = x_component<T> or x_component<V>;
+	template<typename T, typename V>
+	concept incompatible_x = not x_components<T, V> and one_has_x_component<T, V>;
+
+	template<typename T>
+	concept y_component = requires(T t) { t.y; };
+	template<typename T, typename V>
+	concept y_components = y_component<T> and y_component<V>;
+	template<typename T, typename V>
+	concept one_has_y_component = y_component<T> or y_component<V>;
+	template<typename T, typename V>
+	concept incompatible_y = not y_components<T, V> and one_has_y_component<T, V>;
+
+	template<typename T>
+	concept z_component = requires(T t) { t.z; };
+	template<typename T, typename V>
+	concept z_components = z_component<T> and z_component<V>;
+	template<typename T, typename V>
+	concept one_has_z_component = z_component<T> or z_component<V>;
+	template<typename T, typename V>
+	concept incompatible_z = not z_components<T, V> and one_has_z_component<T, V>;
+
+	template<typename T>
+	concept w_component = requires(T t) { t.w; };
+	template<typename T, typename V>
+	concept w_components = w_component<T> and w_component<V>;
+	template<typename T, typename V>
+	concept one_has_w_component = w_component<T> or w_component<V>;
+	template<typename T, typename V>
+	concept incompatible_w = not w_components<T, V> and one_has_w_component<T, V>;
+
+	template<typename T>
+	concept vector_like = 
+		x_component<T> 
+		or y_component<T> 
+		or z_component<T> 
+		or w_component<T>;
+
+	template<typename U, typename V>
+	concept matching_vector_dimensions = 
+		[]
+		{
+			U u{}; V v{};
+			if constexpr (incompatible_x<U, V>)
+				return false;
+			if constexpr (incompatible_y<U, V>)
+				return false;
+			if constexpr (incompatible_z<U, V>)
+				return false;
+			if constexpr (incompatible_w<U, V>)
+				return false;
+			return vector_like<U> and vector_like<V>;
+		}();
+
+	template<vector_like T, vector_like V>
+	auto dot_product(const T& a, const V& b) noexcept -> float
+	{
+		static_assert(matching_vector_dimensions<decltype(a), decltype(b)>, "a and b must have matching vector components");
+
+		float x = 0, y = 0, z = 0, w = 0;
+		if constexpr (x_components<T, V>) 
+			x = a.x * b.x;
+		if constexpr (y_components<T, V>)
+			x = a.y * b.y;
+		if constexpr (z_components<T, V>)
+			x = a.z * b.z;
+		if constexpr (w_components<T, V>)
+			w = a.w * b.w;
+		return x + y + z + w;
+	}
+
 	struct vector_2f
 	{
 		float x = 0;
@@ -172,6 +248,18 @@ export namespace math
 		auto operator*=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
 		{
 			return (self = self.cross_product(self, other), self);
+		}
+	};
+
+	struct vector_4f
+	{
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		float w = 1; // homogenous coordinate
+		auto to_vector_3f(this const vector_4f& self) noexcept -> vector_3f
+		{
+			return { self.x, self.y, self.z };
 		}
 	};
 }

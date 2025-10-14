@@ -40,7 +40,7 @@
     <ClCompile Include="util\functions.ixx" />
     <ClCompile Include="util\fileline.ixx" />
     <ClCompile Include="math\primitives.ixx" />
-    <ClCompile Include="vector.ixx" />
+    <ClCompile Include="math\vector.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

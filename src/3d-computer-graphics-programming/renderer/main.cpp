@@ -91,6 +91,13 @@ void update(const std::chrono::milliseconds elapsed_time)
     main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
     main_app::elapsed += elapsed_time;
 
+	main_app::cube_mesh.scale.x += 0.001;
+    math::matrix4x4_f m = math::scale(
+        main_app::cube_mesh.scale.x,
+        main_app::cube_mesh.scale.y,
+        main_app::cube_mesh.scale.z
+    );
+
     main_app::cube_mesh.rotation.x += 0.01f;
     main_app::cube_mesh.rotation.y += 0.01f;
     main_app::cube_mesh.rotation.z += 0.01f;
@@ -107,6 +114,9 @@ void update(const std::chrono::milliseconds elapsed_time)
         for (int j = 0; j < 3; j++)
         {
             math::vector_3f transformed = face_vertices[j];
+
+			// Use a matrix to scale our original vertex.
+
             transformed = transformed.rotate_x(main_app::cube_mesh.rotation.x);
             transformed = transformed.rotate_y(main_app::cube_mesh.rotation.y);
             transformed = transformed.rotate_z(main_app::cube_mesh.rotation.z);
