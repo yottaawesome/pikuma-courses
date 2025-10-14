@@ -6,3 +6,5 @@ export import :sdl;
 export import :win32;
 export import :concepts;
 export import :mainapp;
+export import :vector;
+export import :degreesradians;

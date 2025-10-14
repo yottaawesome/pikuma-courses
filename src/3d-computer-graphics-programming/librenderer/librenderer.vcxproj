@@ -22,6 +22,7 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="degreesradians.ixx" />
     <ClCompile Include="lib\lib.ixx" />
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
@@ -38,6 +39,7 @@
     <ClCompile Include="util\functions.ixx" />
     <ClCompile Include="util\fileline.ixx" />
     <ClCompile Include="math\primitives.ixx" />
+    <ClCompile Include="vector.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

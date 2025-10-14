@@ -11,7 +11,7 @@ namespace
     constexpr auto total_cube_vertices = 8;
     constexpr auto total_cube_faces = 6 * 2;
 
-    auto cube_vertices = std::array<math::vector_3f, total_cube_vertices>{
+    std::array<math::vector_3f, total_cube_vertices> cube_vertices{
         math::vector_3f{ .x = -1, .y = -1, .z = -1 }, // 1
         math::vector_3f{ .x = -1, .y = 1, .z = -1 }, // 2
         math::vector_3f{ .x = 1, .y = 1, .z = -1 }, // 3
@@ -22,8 +22,7 @@ namespace
         math::vector_3f{ .x = -1, .y = -1, .z = 1 } // 8
     };
 
-    auto cube_faces = std::array<math::face, total_cube_faces>
-    {
+    std::array<math::face, total_cube_faces> cube_faces{
         math::face{ 1, 2, 3 },
         math::face{ 1, 3, 4 },
         math::face{ 4, 3, 5 },
@@ -151,7 +150,7 @@ export namespace main_app
     std::chrono::milliseconds previous_frame_time{ 0 };
     std::chrono::milliseconds elapsed{ 0 };
 
-    renderer::mesh cube_mesh = renderer::load_obj_file("..\\assets\\cube.obj");
+    renderer::mesh cube_mesh{ "..\\assets\\cube.obj" };
 
     enum class render_mode
     {
