@@ -198,9 +198,9 @@ export namespace display
             // Simply darw flat-bottom triangle
             fill_flat_bottom_triangle({ 
                     .points{
-                        triangle.points[0].x, triangle.points[0].y, 
-                        triangle.points[1].x, triangle.points[1].y, 
-                        triangle.points[2].x, triangle.points[2].y
+                        { triangle.points[0].x, triangle.points[0].y },
+                        { triangle.points[1].x, triangle.points[1].y },
+                        { triangle.points[2].x, triangle.points[2].y }
                     } 
                 },
                 color,
@@ -213,9 +213,9 @@ export namespace display
             // Simply darw flat-top triangle
             fill_flat_top_triangle({
                     .points{
-                        triangle.points[0].x, triangle.points[0].y, 
-                        triangle.points[1].x, triangle.points[1].y, 
-                        triangle.points[2].x, triangle.points[2].y
+                       { triangle.points[0].x, triangle.points[0].y },
+                       { triangle.points[1].x, triangle.points[1].y },
+                       { triangle.points[2].x, triangle.points[2].y }
                     } 
                 },
                 color,
@@ -228,10 +228,10 @@ export namespace display
             int My = static_cast<int>(triangle.points[1].y);
             int Mx = static_cast<int>((((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x);
             fill_flat_bottom_triangle({ 
-                    .points{ 
-                        triangle.points[0].x, triangle.points[0].y, 
-                        triangle.points[1].x, triangle.points[1].y, 
-                        static_cast<float>(Mx), static_cast<float>(My)
+                    .points{
+                        { triangle.points[0].x, triangle.points[0].y},
+                        {triangle.points[1].x, triangle.points[1].y},
+                        {static_cast<float>(Mx), static_cast<float>(My)}
                     } 
                 },
                 color,
@@ -239,9 +239,9 @@ export namespace display
             );
             fill_flat_top_triangle({ 
                     .points{
-                        triangle.points[1].x, triangle.points[1].y, 
-                        static_cast<float>(Mx), static_cast<float>(My), 
-                        triangle.points[2].x, triangle.points[2].y
+                        {triangle.points[1].x, triangle.points[1].y},
+                        {static_cast<float>(Mx), static_cast<float>(My)},
+                        {triangle.points[2].x, triangle.points[2].y}
                     } 
                 },
                 color,

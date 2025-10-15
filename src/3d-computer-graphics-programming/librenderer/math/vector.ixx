@@ -4,110 +4,112 @@ import std;
 export namespace math
 {
 	template<typename T>
-	concept x_component = requires(T t){ t.x; };
-	template<typename T, typename V>
-	concept x_components = x_component<T> and x_component<V>;
-	template<typename T, typename V>
-	concept one_has_x_component = x_component<T> or x_component<V>;
-	template<typename T, typename V>
-	concept incompatible_x = not x_components<T, V> and one_has_x_component<T, V>;
-
+	concept vector1_like = requires(T v) { { v.x } -> std::convertible_to<float>; };
 	template<typename T>
-	concept y_component = requires(T t) { t.y; };
-	template<typename T, typename V>
-	concept y_components = y_component<T> and y_component<V>;
-	template<typename T, typename V>
-	concept one_has_y_component = y_component<T> or y_component<V>;
-	template<typename T, typename V>
-	concept incompatible_y = not y_components<T, V> and one_has_y_component<T, V>;
-
+	concept vector2_like = requires(T v) 
+	{ 
+		{ v.x } -> std::convertible_to<float>;
+		{ v.y } -> std::convertible_to<float>;
+	};
 	template<typename T>
-	concept z_component = requires(T t) { t.z; };
-	template<typename T, typename V>
-	concept z_components = z_component<T> and z_component<V>;
-	template<typename T, typename V>
-	concept one_has_z_component = z_component<T> or z_component<V>;
-	template<typename T, typename V>
-	concept incompatible_z = not z_components<T, V> and one_has_z_component<T, V>;
-
+	concept vector3_like = requires(T v)
+	{
+		{ v.x } -> std::convertible_to<float>;
+		{ v.y } -> std::convertible_to<float>;
+		{ v.z } -> std::convertible_to<float>;
+	};
 	template<typename T>
-	concept w_component = requires(T t) { t.w; };
-	template<typename T, typename V>
-	concept w_components = w_component<T> and w_component<V>;
-	template<typename T, typename V>
-	concept one_has_w_component = w_component<T> or w_component<V>;
-	template<typename T, typename V>
-	concept incompatible_w = not w_components<T, V> and one_has_w_component<T, V>;
+	concept vector4_like = requires(T v)
+	{
+		{ v.x } -> std::convertible_to<float>;
+		{ v.y } -> std::convertible_to<float>;
+		{ v.z } -> std::convertible_to<float>;
+		{ v.w } -> std::convertible_to<float>;
+	};
 
 	template<typename T>
 	concept vector_like = 
-		x_component<T> 
-		or y_component<T> 
-		or z_component<T> 
-		or w_component<T>;
+		vector1_like<T> or vector2_like<T> or vector3_like<T> or vector4_like<T>;
 
-	template<typename U, typename V>
-	concept matching_vector_dimensions = 
-		[]
-		{
-			U u{}; V v{};
-			if constexpr (incompatible_x<U, V>)
-				return false;
-			if constexpr (incompatible_y<U, V>)
-				return false;
-			if constexpr (incompatible_z<U, V>)
-				return false;
-			if constexpr (incompatible_w<U, V>)
-				return false;
-			return vector_like<U> and vector_like<V>;
-		}();
+	template<typename T, typename U>
+	concept dot_product_defined =
+		(vector1_like<T> and vector1_like<U>)
+		or (vector2_like<T> and vector2_like<U>)
+		or (vector3_like<T> and vector3_like<U>)
+		or (vector4_like<T> and vector4_like<U>);
 
 	template<vector_like T, vector_like V>
 	auto dot_product(const T& a, const V& b) noexcept -> float
 	{
-		static_assert(matching_vector_dimensions<decltype(a), decltype(b)>, "a and b must have matching vector components");
+		static_assert(dot_product_defined<decltype(a), decltype(b)>, "a and b must be vectors of matching dimension.");
 
-		float x = 0, y = 0, z = 0, w = 0;
-		if constexpr (x_components<T, V>) 
-			x = a.x * b.x;
-		if constexpr (y_components<T, V>)
-			x = a.y * b.y;
-		if constexpr (z_components<T, V>)
-			x = a.z * b.z;
-		if constexpr (w_components<T, V>)
-			w = a.w * b.w;
-		return x + y + z + w;
+		float result = 0;
+		if constexpr (vector1_like<T>) 
+			result += a.x * b.x;
+		if constexpr (vector2_like<T>)
+			result += a.y * b.y;
+		if constexpr (vector3_like<T>)
+			result += a.z * b.z;
+		if constexpr (vector4_like<T>)
+			result += a.w * b.w;
+		return result;
 	}
 
-	struct vector_2f
+	struct vector_skills
 	{
-		float x = 0;
-		float y = 0;
-
-		auto magnitude(this const vector_2f& self) noexcept -> float
+		constexpr auto dot_product(this auto&& self, auto&& other) noexcept -> float
 		{
-			return std::sqrt(self.x * self.x + self.y * self.y);
+			return math::dot_product(self, other);
 		}
 
-		void normalise(this vector_2f& self) noexcept
+		constexpr auto magnitude(this vector_like auto&& self) noexcept -> float
+		{
+			if constexpr (vector1_like<decltype(self)>)
+				return std::sqrt(self.x * self.x);
+			if constexpr (vector2_like<decltype(self)>)
+				return std::sqrt(self.x * self.x + self.y * self.y);
+			if constexpr (vector3_like<decltype(self)>)
+				return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
+			if constexpr (vector4_like<decltype(self)>)
+				return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w);
+		}
+
+		constexpr void normalise(this auto&& self) noexcept
 		{
 			float multiplicand = 1.f / self.magnitude();
-			self.x *= multiplicand;
-			self.y *= multiplicand;
+			if constexpr (requires { self.x; })
+				self.x *= multiplicand;
+			if constexpr (requires { self.y; })
+				self.y *= multiplicand;
+			if constexpr (requires { self.z; })
+				self.z *= multiplicand;
+			if constexpr (requires { self.w; })
+				self.w *= multiplicand;
 		}
 
-		auto to_normalised(this vector_2f self) noexcept -> vector_2f
+		auto to_normalised(this auto self) noexcept -> auto
 		{
 			return (self.normalise(), self);
 		}
 
-		auto to_rotated_z(this const vector_2f& self, float angle) noexcept -> vector_2f
+		auto to_rotated_z(this const auto& self, float angle) noexcept -> auto
 		{
-			return {
-				self.x * std::cos(angle) - self.y * std::sin(angle),
-				self.x * std::sin(angle) + self.y * std::cos(angle)
-			};
+			decltype(auto) result = self; // preserve type
+			result.x = self.x * std::cos(angle) - self.y * std::sin(angle);
+			result.y = self.x * std::sin(angle) + self.y * std::cos(angle);
+			if constexpr (requires { result.z; })
+				result.z = 1; // no change
+			return result;
 		}
+	};
+
+	struct vector_2f : vector_skills
+	{
+		float x = 0;
+		float y = 0;
+
+		constexpr vector_2f() = default;
+		constexpr vector_2f(float x, float y) : x(x), y(y) {}
 	};
 
 	struct vector_3f
