@@ -128,7 +128,7 @@ export namespace main_app
         }();
 
     std::array<math::vector_3f, number_of_points> cube_points{};
-    math::vector_3f camera_position = { 0, 0, 0 };
+    math::vector_3f camera_position;
 
     bool is_running =
         [](std::array<math::vector_3f, number_of_points>& cube_points, const raii::sdl_window_unique_ptr& window)
@@ -137,7 +137,7 @@ export namespace main_app
             for (float x = -1; x <= 1; x += 0.25)
                 for (float y = -1; y <= 1; y += 0.25)
                     for (float z = -1; z <= 1; z += 0.25)
-                        cube_points[count++] = math::vector_3f{ x, y, z };
+                        cube_points[count++] = math::vector_3f{ .x=x, .y=y, .z=z };
 
             //if (sdl::SDL_SetWindowFullscreen(window.get(), sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN))
                 //throw std::runtime_error(util::print_last_error());

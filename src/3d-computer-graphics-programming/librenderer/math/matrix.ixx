@@ -18,6 +18,12 @@ export namespace math
 				Values[i / VColumns][i % VColumns] = values[i];*/
 		}
 
+		constexpr auto operator[](this auto&& self, std::uint32_t row) 
+			noexcept -> decltype(auto)
+		{
+			return std::forward_like<decltype(self)>(self.Values[row]);
+		}
+
 		constexpr auto operator[](
 			this auto&& self,
 			std::uint32_t row,
@@ -53,6 +59,10 @@ export namespace math
 			return self;
 		}
 
+		// Need to consider floating point precision issues here.
+		constexpr auto operator==(const matrix& other) const noexcept -> bool = default;
+		constexpr auto operator!=(const matrix& other) const noexcept -> bool = default;
+
 		TArithmetic Values[VRows][VColumns]{};
 	};
 
@@ -86,10 +96,16 @@ export namespace math
 		[]{
 			matrix4x4_f mat{ Identity4 };
 			auto scaled = 4 * mat;
-			if (scaled[0, 0] != 4)
-				return false;
 			mat *= 4;
-			if (mat[0, 0] != 4)
+			matrix4x4_f expected{
+				4,	0,	0,	0,
+				0,	4,	0,	0,
+				0,	0,	4,	0,
+				0,	0,	0,	4
+			};
+			if (mat != expected)
+				return false;
+			if (scaled != expected)
 				return false;
 			return true;
 		}(),

@@ -6,26 +6,14 @@ export namespace math
 	template<typename T>
 	concept vector1_like = requires(T v) { { v.x } -> std::convertible_to<float>; };
 	template<typename T>
-	concept vector2_like = requires(T v) 
-	{ 
-		{ v.x } -> std::convertible_to<float>;
-		{ v.y } -> std::convertible_to<float>;
-	};
+	concept vector2_like = 
+		vector1_like<T> and requires(T v) { { v.y } -> std::convertible_to<float>; };
 	template<typename T>
-	concept vector3_like = requires(T v)
-	{
-		{ v.x } -> std::convertible_to<float>;
-		{ v.y } -> std::convertible_to<float>;
-		{ v.z } -> std::convertible_to<float>;
-	};
+	concept vector3_like = 
+		vector2_like<T> and requires(T v) { { v.z } -> std::convertible_to<float>; };
 	template<typename T>
-	concept vector4_like = requires(T v)
-	{
-		{ v.x } -> std::convertible_to<float>;
-		{ v.y } -> std::convertible_to<float>;
-		{ v.z } -> std::convertible_to<float>;
-		{ v.w } -> std::convertible_to<float>;
-	};
+	concept vector4_like = 
+		vector3_like<T> and requires(T v) { { v.w } -> std::convertible_to<float>; };
 
 	template<typename T>
 	concept vector_like = 
@@ -38,230 +26,253 @@ export namespace math
 		or (vector3_like<T> and vector3_like<U>)
 		or (vector4_like<T> and vector4_like<U>);
 
+	// ---------------------------------
+	// Vector dot product -- takes two vectors a and b and yields a scalar.
+	// Component formula: f(a, b) = a.x * b.x + a.y * b.y + a.z * b.z.
+	// Angle formula: f(a, b) = a · b = |a| × |b| × cos(θ)
+	// ---------------------------------
+	// f(a, b) < 0 where θ > 90
+	// f(a, b) = 0 where θ = 90
+	// f(a, b) > 0 where θ < 90
+	// Assuming unit vectors a, b, then:
+	// f(a, b) = 1 where where θ = 0
+	// f(a, b) = 0 where where θ = 90
+	// f(a, b) = -1 where where θ = 180
+	// ---------------------------------
 	template<vector_like T, vector_like V>
 	auto dot_product(const T& a, const V& b) noexcept -> float
 	{
 		static_assert(dot_product_defined<decltype(a), decltype(b)>, "a and b must be vectors of matching dimension.");
 
-		float result = 0;
-		if constexpr (vector1_like<T>) 
-			result += a.x * b.x;
+		if constexpr (vector3_like<T> or vector4_like<T>)
+			return a.x * b.x + a.y * b.y + a.z * b.z;
 		if constexpr (vector2_like<T>)
-			result += a.y * b.y;
-		if constexpr (vector3_like<T>)
-			result += a.z * b.z;
-		if constexpr (vector4_like<T>)
-			result += a.w * b.w;
-		return result;
+			return a.x * b.x + a.y * b.y;
+		if constexpr (vector1_like<T>) 
+			return a.x * b.x;
 	}
 
-	struct vector_skills
+	constexpr auto magnitude(vector_like auto&& v) noexcept -> float
 	{
-		constexpr auto dot_product(this auto&& self, auto&& other) noexcept -> float
+		if constexpr (vector4_like<decltype(v)>)
+			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+		if constexpr (vector3_like<decltype(v)>)
+			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+		if constexpr (vector2_like<decltype(v)>)
+			return std::sqrt(v.x * v.x + v.y * v.y);
+		if constexpr (vector1_like<decltype(v)>)
+			return std::sqrt(v.x * v.x);
+	}
+
+	constexpr auto normalise(vector_like auto& v) noexcept
+	{
+		float multiplicand = 1.f / v.magnitude();
+		if constexpr (requires { v.x; })
+			v.x *= multiplicand;
+		if constexpr (requires { v.y; })
+			v.y *= multiplicand;
+		if constexpr (requires { v.z; })
+			v.z *= multiplicand;
+		/*if constexpr (requires { v.w; })
+			v.w *= multiplicand;*/
+	}
+
+	auto add(const vector_like auto& v, const vector_like auto& u) 
+		noexcept -> std::remove_cvref_t<decltype(v)> // commutative
+	{
+		static_assert(dot_product_defined<decltype(v), decltype(u)>, "a and b must be vectors of matching dimension.");
+
+		if constexpr (vector3_like<decltype(v)> or vector4_like<decltype(v)>)
+			return { .x = v.x + u.x, .y = v.y + u.y, .z = v.z + u.z };
+		else if constexpr (vector2_like<decltype(v)>)
+			return { .x = v.x + u.x, .y = v.y + u.y };
+		else if constexpr (vector1_like<decltype(v)>)
+			return { .x = v.x + u.x };
+	}
+
+	auto subtract(const vector_like auto& v, const vector_like auto& u) 
+		noexcept -> std::remove_cvref_t<decltype(v)>
+	{
+		if constexpr (vector3_like<decltype(v)> or vector4_like<decltype(v)>)
+			return { .x = v.x - u.x, .y = v.y - u.y, .z = v.z - u.z };
+		else if constexpr (vector2_like<decltype(v)>)
+			return { .x = v.x - u.x, .y = v.y - u.y };
+		else if constexpr (vector1_like<decltype(v)>)
+			return { .x = v.x - u.x };
+	}
+
+	auto scale(const vector_like auto& vector, float scale) 
+		noexcept -> std::remove_cvref_t<decltype(vector)>
+	{
+		if constexpr (vector3_like<decltype(vector)> or vector4_like<decltype(vector)>)
+			return { .x = vector.x * scale, .y = vector.y * scale, .z = vector.z * scale };
+		else if constexpr (vector2_like<decltype(vector)>)
+			return { .x = vector.x * scale, .y = vector.y * scale };
+		else if constexpr (vector1_like<decltype(vector)>)
+			return { .x = vector.x * scale };
+	}
+
+	// P x Q = <PyQz - PzQy, PzQx - PxQz, PxQy - PyQx>
+	// |P x Q|^2 = |P|^2 × |Q|^2 × sin(θ)^2
+	// Anticommutative, not associative.
+	// The generated vector follows the right hand rule,
+	// if the right hand's fingers are aligned with P 
+	// and the palm is facing Q, then the thumb is aligned
+	// with the result. For example, taking the cross-product
+	// of the x-axis vector (1,0,0) and the y-axis vector 
+	// (0,1,0) yields z-vector (0,0,1) with the positive 
+	// axis moving toward the viewer (DirectX uses the LHS).
+	constexpr auto cross_product(vector3_like auto a, vector3_like auto b) 
+		noexcept -> std::remove_cvref_t<decltype(a)>
+	{
+		return {
+			.x = a.y * b.z - a.z * b.y,
+			.y = a.z * b.x - a.x * b.z,
+			.z = a.x * b.y - a.y * b.x
+		};
+	}
+
+	struct euclidean_vector
+	{
+		constexpr auto dot_product(this auto&& self, auto&& other) 
+			noexcept -> float
 		{
 			return math::dot_product(self, other);
 		}
 
-		constexpr auto magnitude(this vector_like auto&& self) noexcept -> float
+		constexpr auto magnitude(this vector_like auto&& self) 
+			noexcept -> float
 		{
-			if constexpr (vector1_like<decltype(self)>)
-				return std::sqrt(self.x * self.x);
-			if constexpr (vector2_like<decltype(self)>)
-				return std::sqrt(self.x * self.x + self.y * self.y);
-			if constexpr (vector3_like<decltype(self)>)
-				return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
-			if constexpr (vector4_like<decltype(self)>)
-				return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w);
+			return math::magnitude(self);
 		}
 
 		constexpr void normalise(this auto&& self) noexcept
 		{
-			float multiplicand = 1.f / self.magnitude();
-			if constexpr (requires { self.x; })
-				self.x *= multiplicand;
-			if constexpr (requires { self.y; })
-				self.y *= multiplicand;
-			if constexpr (requires { self.z; })
-				self.z *= multiplicand;
-			if constexpr (requires { self.w; })
-				self.w *= multiplicand;
+			math::normalise(self);
 		}
 
-		auto to_normalised(this auto self) noexcept -> auto
+		constexpr auto to_normalised(this auto self) noexcept -> auto
 		{
-			return (self.normalise(), self);
+			return (math::normalise(self), self);
 		}
 
-		auto to_rotated_z(this const auto& self, float angle) noexcept -> auto
+		constexpr auto add(this const auto& self, const vector_like auto& other) 
+			noexcept -> auto
 		{
-			decltype(auto) result = self; // preserve type
-			result.x = self.x * std::cos(angle) - self.y * std::sin(angle);
-			result.y = self.x * std::sin(angle) + self.y * std::cos(angle);
-			if constexpr (requires { result.z; })
-				result.z = 1; // no change
-			return result;
+			return math::add(self, other);
 		}
-	};
 
-	struct vector_2f : vector_skills
-	{
-		float x = 0;
-		float y = 0;
-
-		constexpr vector_2f() = default;
-		constexpr vector_2f(float x, float y) : x(x), y(y) {}
-	};
-
-	struct vector_3f
-	{
-		float x = 0;
-		float y = 0;
-		float z = 0;
-
-		// ---------------------------------
-		// Vector dot product -- takes two vectors a and b and yields a scalar.
-		// Component formula: f(a, b) = a.x * b.x + a.y * b.y + a.z * b.z.
-		// Angle formula: f(a, b) = a · b = |a| × |b| × cos(θ)
-		// ---------------------------------
-		// f(a, b) < 0 where θ > 90
-		// f(a, b) = 0 where θ = 90
-		// f(a, b) > 0 where θ < 90
-		// Assuming unit vectors a, b, then:
-		// f(a, b) = 1 where where θ = 0
-		// f(a, b) = 0 where where θ = 90
-		// f(a, b) = -1 where where θ = 180
-		// ---------------------------------
-		static auto dot_product(vector_3f a, vector_3f b) noexcept -> float
+		constexpr auto subtract(this const auto& self, const vector_like auto& other) 
+			noexcept -> auto
 		{
-			return a.x * b.x + a.y * b.y + a.z * b.z;
+			return math::subtract(self, other);
 		}
 
-		// P x Q = <PyQz - PzQy, PzQx - PxQz, PxQy - PyQx>
-		// |P x Q|^2 = |P|^2 × |Q|^2 × sin(θ)^2
-		// Anticommutative, not associative.
-		// The generated vector follows the right hand rule,
-		// if the right hand's fingers are aligned with P 
-		// and the palm is facing Q, then the thumb is aligned
-		// with the result. For example, taking the cross-product
-		// of the x-axis vector (1,0,0) and the y-axis vector 
-		// (0,1,0) yields z-vector (0,0,1) with the positive 
-		// axis moving toward the viewer (DirectX uses the LHS).
-		static auto cross_product(vector_3f a, vector_3f b) noexcept -> vector_3f
-		{
-			return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
-		}
-
-		static auto scale(vector_3f a, float scale) noexcept -> vector_3f
-		{
-			return { a.x * scale, a.y * scale, a.z * scale };
-		}
-
-		auto magnitude(this const vector_3f& self) noexcept -> float
-		{
-			return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
-		}
-
-		void normalise(this vector_3f& self) noexcept
-		{
-			float multiplicand = 1.f / self.magnitude();
-			self.x *= multiplicand;
-			self.y *= multiplicand;
-			self.z *= multiplicand;
-		}
-
-		auto to_normalised(this vector_3f v) noexcept -> vector_3f
-		{
-			return (v.normalise(), v);
-		}
-
-		auto rotate_x(this const vector_3f& self, float angle) noexcept -> vector_3f
-		{
-			return {
-				self.x,
-				self.y * std::cos(angle) - self.z * std::sin(angle),
-				self.y * std::sin(angle) + self.z * std::cos(angle)
-			};
-		}
-
-		auto rotate_y(this const vector_3f& self, float angle) noexcept -> vector_3f
-		{
-			return {
-				self.x * std::cos(angle) - self.z * std::sin(angle),
-				self.y,
-				self.x * std::sin(angle) + self.z * std::cos(angle)
-			};
-		}
-
-		auto rotate_z(this const vector_3f& self, float angle) noexcept -> vector_3f
-		{
-			return {
-				self.x * std::cos(angle) - self.y * std::sin(angle),
-				self.x * std::sin(angle) + self.y * std::cos(angle),
-				self.z
-			};
-		}
-
-		auto add(this const vector_3f& self, vector_3f other) noexcept -> vector_3f // commutative
-		{
-			return { self.x + other.x, self.y + other.y, self.z + other.z };
-		}
-
-		auto subtract(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
-		{
-			return { self.x - other.x, self.y - other.y, self.z - other.z };
-		}
-
-		auto dot_product(this const vector_3f& self, vector_3f other) noexcept -> float
-		{
-			return self.dot_product(self, other);
-		}
-
-		auto cross_product(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
-		{
-			return self.cross_product(self, other);
-		}
-
-		auto operator+(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
+		constexpr auto operator+(this const auto& self, const vector_like auto& other)
+			noexcept -> auto
 		{
 			return self.add(other);
 		}
 
-		auto operator+=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
+		constexpr auto operator+=(this auto& self, vector_like auto other) 
+			noexcept -> auto&
 		{
 			self = self.add(other);
 			return self;
 		}
 
-		auto operator-(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
+		constexpr auto operator-(this const auto& self, vector_like auto other) 
+			noexcept -> auto
 		{
 			return self.subtract(other);
 		}
+	};
 
-		auto operator-=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
+	struct vector_2f : euclidean_vector
+	{
+		float x = 0;
+		float y = 0;
+		
+		constexpr auto to_rotated_z(this const auto& self, float angle) 
+			noexcept -> vector_2f
+		{
+			return {
+				.x = self.x * std::cos(angle) - self.y * std::sin(angle),
+				.y = self.x * std::sin(angle) + self.y * std::cos(angle)
+			};
+		}
+
+		auto operator-=(this auto& self, vector_like auto other) noexcept -> auto&
 		{
 			return (self = self.subtract(other), self);
 		}
 
-		auto operator*(this const vector_3f& self, vector_3f other) noexcept -> vector_3f
+		auto operator*(this const auto& self, vector_like auto other) noexcept -> auto
 		{
 			return self.cross_product(self, other);
 		}
 
-		auto operator*=(this vector_3f& self, vector_3f other) noexcept -> vector_3f&
+		auto operator*=(this auto& self, vector_like auto other) noexcept -> auto&
 		{
 			return (self = self.cross_product(self, other), self);
 		}
 	};
 
-	struct vector_4f
+	struct three_space_euclidean_vector
+	{
+		constexpr auto rotate_x(this const auto& self, float angle) 
+			noexcept -> std::remove_cvref_t<decltype(self)>
+		{
+			return {
+				.x = self.x,
+				.y = self.y * std::cos(angle) - self.z * std::sin(angle),
+				.z = self.y * std::sin(angle) + self.z * std::cos(angle)
+			};
+		}
+
+		constexpr auto rotate_y(this const auto& self, float angle) 
+			noexcept -> std::remove_cvref_t<decltype(self)>
+		{
+			return {
+				.x = self.x * std::cos(angle) - self.z * std::sin(angle),
+				.y = self.y,
+				.z = self.x * std::sin(angle) + self.z * std::cos(angle)
+			};
+		}
+
+		constexpr auto rotate_z(this const auto& self, float angle) noexcept 
+			-> std::remove_cvref_t<decltype(self)>
+		{
+			return {
+				.x = self.x * std::cos(angle) - self.y * std::sin(angle),
+				.y = self.x * std::sin(angle) + self.y * std::cos(angle),
+				.z = self.z
+			};
+		}
+
+		constexpr auto cross_product(this const auto& self, auto other)
+			noexcept -> auto
+		{
+			return math::cross_product(self, other);
+		}
+	};
+
+	struct vector_3f : euclidean_vector, three_space_euclidean_vector
+	{
+		float x = 0;
+		float y = 0;
+		float z = 0;
+	};
+
+	struct vector_4f : euclidean_vector, three_space_euclidean_vector
 	{
 		float x = 0;
 		float y = 0;
 		float z = 0;
 		float w = 1; // homogenous coordinate
-		auto to_vector_3f(this const vector_4f& self) noexcept -> vector_3f
+		constexpr auto to_vector_3f(this const vector_4f& self) noexcept -> vector_3f
 		{
-			return { self.x, self.y, self.z };
+			return { .x = self.x, .y = self.y, .z = self.z };
 		}
 	};
 }

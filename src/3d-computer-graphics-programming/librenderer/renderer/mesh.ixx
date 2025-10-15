@@ -15,7 +15,7 @@ export namespace renderer
         std::vector<math::vector_3f> vertices;
         std::vector<math::face> faces;
         math::vector_3f rotation;
-        math::vector_3f scale{1,1,1};
+        math::vector_3f scale{.x=1,.y=1,.z=1};
         math::vector_3f translation;
 
         [[nodiscard("Loading a mesh and immediately discarding it is pointless.")]]
@@ -47,7 +47,11 @@ export namespace renderer
                         | std::views::transform(
                             [](const std::string& sv) -> float { return std::stof(sv); })
                         | std::ranges::to<std::vector<float>>();
-                    returnValue.vertices.emplace_back(splits.at(0), splits.at(1), splits.at(2));
+                    returnValue.vertices.push_back({
+                        .x = splits.at(0),
+                        .y = splits.at(1),
+                        .z = splits.at(2)
+                    });
                 }
                 else
                 {

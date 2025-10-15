@@ -74,8 +74,8 @@ math::vector_2f project(math::vector_3f vec)
     * divide.
     */
     return { 
-        main_app::fov_factor * vec.x / vec.z,
-        main_app::fov_factor * vec.y / vec.z
+        .x = main_app::fov_factor * vec.x / vec.z,
+        .y = main_app::fov_factor * vec.y / vec.z
     };
 }
 
@@ -151,12 +151,12 @@ void update(const std::chrono::milliseconds elapsed_time)
                     // C-A is A -> C
                     math::vector_3f vector_ac = vector_c - vector_a;
                     math::vector_3f ab_cross_ac =
-                        math::vector_3f::cross_product(vector_ab, vector_ac);
+                        math::cross_product(vector_ab, vector_ac);
                     ab_cross_ac.normalise();
                     // CamPosition - A is A -> CamPosition
                     math::vector_3f camera_ray = main_app::camera_position - vector_a;
                     camera_ray.normalise();
-                    return math::vector_3f::dot_product(camera_ray, ab_cross_ac) < 0;
+                    return math::dot_product(camera_ray, ab_cross_ac) < 0;
                 }();
         if (cullBackface)
             continue;
