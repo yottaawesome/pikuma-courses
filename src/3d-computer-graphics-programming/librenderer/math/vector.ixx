@@ -84,9 +84,9 @@ export namespace math
 
 		if constexpr (vector3_like<decltype(v)> or vector4_like<decltype(v)>)
 			return { .x = v.x + u.x, .y = v.y + u.y, .z = v.z + u.z };
-		else if constexpr (vector2_like<decltype(v)>)
+		if constexpr (vector2_like<decltype(v)>)
 			return { .x = v.x + u.x, .y = v.y + u.y };
-		else if constexpr (vector1_like<decltype(v)>)
+		if constexpr (vector1_like<decltype(v)>)
 			return { .x = v.x + u.x };
 	}
 
@@ -95,9 +95,9 @@ export namespace math
 	{
 		if constexpr (vector3_like<decltype(v)> or vector4_like<decltype(v)>)
 			return { .x = v.x - u.x, .y = v.y - u.y, .z = v.z - u.z };
-		else if constexpr (vector2_like<decltype(v)>)
+		if constexpr (vector2_like<decltype(v)>)
 			return { .x = v.x - u.x, .y = v.y - u.y };
-		else if constexpr (vector1_like<decltype(v)>)
+		if constexpr (vector1_like<decltype(v)>)
 			return { .x = v.x - u.x };
 	}
 
@@ -106,9 +106,9 @@ export namespace math
 	{
 		if constexpr (vector3_like<decltype(vector)> or vector4_like<decltype(vector)>)
 			return { .x = vector.x * scale, .y = vector.y * scale, .z = vector.z * scale };
-		else if constexpr (vector2_like<decltype(vector)>)
+		if constexpr (vector2_like<decltype(vector)>)
 			return { .x = vector.x * scale, .y = vector.y * scale };
-		else if constexpr (vector1_like<decltype(vector)>)
+		if constexpr (vector1_like<decltype(vector)>)
 			return { .x = vector.x * scale };
 	}
 
@@ -185,6 +185,17 @@ export namespace math
 			noexcept -> auto
 		{
 			return self.subtract(other);
+		}
+
+		constexpr auto operator==(this const auto& self, vector_like auto other) 
+			noexcept -> bool
+		{
+			if constexpr (vector3_like<decltype(self)> or vector4_like<decltype(self)>)
+				return self.x == other.x and self.y == other.y and self.z == other.z;
+			if constexpr (vector2_like<decltype(self)>)
+				return self.x == other.x and self.y == other.y;
+			if constexpr (vector1_like<decltype(self)>)
+				return self.x == other.x;
 		}
 	};
 
