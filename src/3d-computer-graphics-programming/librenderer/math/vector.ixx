@@ -241,6 +241,14 @@ export namespace math
 			};
 		}
 
+		constexpr auto rotate_x_in_place(this auto& self, float angle) noexcept
+		{
+			auto newY = self.y * std::cos(angle) - self.z * std::sin(angle);
+			auto newZ = self.y * std::sin(angle) + self.z * std::cos(angle);
+			self.y = newY;
+			self.z = newZ;
+		}
+
 		constexpr auto rotate_y(this const auto& self, float angle) 
 			noexcept -> std::remove_cvref_t<decltype(self)>
 		{
@@ -251,6 +259,14 @@ export namespace math
 			};
 		}
 
+		constexpr void rotate_y_in_place(this auto& self, float angle) noexcept
+		{
+			auto newX = self.x * std::cos(angle) - self.z * std::sin(angle);
+			auto newZ = self.x * std::sin(angle) + self.z * std::cos(angle);
+			self.x = newX;
+			self.z = newZ;
+		}
+
 		constexpr auto rotate_z(this const auto& self, float angle) noexcept 
 			-> std::remove_cvref_t<decltype(self)>
 		{
@@ -259,6 +275,14 @@ export namespace math
 				.y = self.x * std::sin(angle) + self.y * std::cos(angle),
 				.z = self.z
 			};
+		}
+
+		constexpr void rotate_z_in_place(this auto& self, float angle) noexcept
+		{
+			auto newX = self.x * std::cos(angle) - self.y * std::sin(angle);
+			auto newY = self.x * std::sin(angle) + self.y * std::cos(angle);
+			self.x = newX;
+			self.y = newY;
 		}
 
 		constexpr auto cross_product(this const auto& self, auto other)
