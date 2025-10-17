@@ -55,7 +55,7 @@ void process_input()
     }
 }
 
-math::vector_2f project(math::vector_3f vec)
+math::vector_2f project(math::vector_4f vec)
 {
     /*
     * Perspective divide (perspective projection lecture):
@@ -106,7 +106,7 @@ void update(const std::chrono::milliseconds elapsed_time)
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
         math::face mesh_face = main_app::cube_mesh.faces[i];
-        math::vector_3f face_vertices[3]{
+        math::vector_4f face_vertices[3]{
             main_app::cube_mesh.vertices[mesh_face.a - 1],
             main_app::cube_mesh.vertices[mesh_face.b - 1],
             main_app::cube_mesh.vertices[mesh_face.c - 1]
@@ -146,18 +146,18 @@ void update(const std::chrono::milliseconds elapsed_time)
         */
         bool cullBackface = 
             main_app::render_settings.culling_mode == main_app::cull_mode::enabled 
-            and [transformed_vertices] -> bool
+            and [&transformed_vertices] -> bool
                 {
-                    auto [vector_a, vector_b, vector_c] = transformed_vertices;
+                    const auto& [vector_a, vector_b, vector_c] = transformed_vertices;
                     // B-A is A -> B
-                    math::vector_3f vector_ab = vector_b - vector_a;
+                    math::vector_4f vector_ab = vector_b - vector_a;
                     // C-A is A -> C
-                    math::vector_3f vector_ac = vector_c - vector_a;
-                    math::vector_3f ab_cross_ac =
+                    math::vector_4f vector_ac = vector_c - vector_a;
+                    math::vector_4f ab_cross_ac =
                         math::cross_product(vector_ab, vector_ac);
                     ab_cross_ac.normalise();
                     // CamPosition - A is A -> CamPosition
-                    math::vector_3f camera_ray = main_app::camera_position - vector_a;
+                    math::vector_4f camera_ray = main_app::camera_position - vector_a;
                     camera_ray.normalise();
                     return math::dot_product(camera_ray, ab_cross_ac) < 0;
                 }();
