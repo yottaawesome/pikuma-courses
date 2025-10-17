@@ -12,7 +12,7 @@ export namespace renderer
         {
 			*this = from_file(p);
         }
-        std::vector<math::vector_3f> vertices;
+        std::vector<math::vector_4f> vertices;
         std::vector<math::face> faces;
         math::vector_4f rotation;
         math::vector_4f scale{.x=1,.y=1,.z=1};

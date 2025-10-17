@@ -11,15 +11,15 @@ namespace
     constexpr auto total_cube_vertices = 8;
     constexpr auto total_cube_faces = 6 * 2;
 
-    std::array<math::vector_3f, total_cube_vertices> cube_vertices{
-        math::vector_3f{ .x = -1, .y = -1, .z = -1 }, // 1
-        math::vector_3f{ .x = -1, .y = 1, .z = -1 }, // 2
-        math::vector_3f{ .x = 1, .y = 1, .z = -1 }, // 3
-        math::vector_3f{ .x = 1, .y = -1, .z = -1 }, // 4
-        math::vector_3f{ .x = 1, .y = 1, .z = 1 }, // 5
-        math::vector_3f{ .x = 1, .y = -1, .z = 1 }, // 6
-        math::vector_3f{ .x = -1, .y = 1, .z = 1 }, // 7
-        math::vector_3f{ .x = -1, .y = -1, .z = 1 } // 8
+    std::array<math::vector_4f, total_cube_vertices> cube_vertices{
+        math::vector_4f{ .x = -1, .y = -1, .z = -1 }, // 1
+        math::vector_4f{ .x = -1, .y = 1, .z = -1 }, // 2
+        math::vector_4f{ .x = 1, .y = 1, .z = -1 }, // 3
+        math::vector_4f{ .x = 1, .y = -1, .z = -1 }, // 4
+        math::vector_4f{ .x = 1, .y = 1, .z = 1 }, // 5
+        math::vector_4f{ .x = 1, .y = -1, .z = 1 }, // 6
+        math::vector_4f{ .x = -1, .y = 1, .z = 1 }, // 7
+        math::vector_4f{ .x = -1, .y = -1, .z = 1 } // 8
     };
 
     std::array<math::face, total_cube_faces> cube_faces{
@@ -51,7 +51,7 @@ export namespace main_app
 
 	struct window_dimension_t 
     {
-		auto width() const noexcept -> std::uint32_t
+		auto width(this const auto&) noexcept -> std::uint32_t
         {
             static std::uint32_t value = 
                 [] static
@@ -64,7 +64,7 @@ export namespace main_app
                 }();
             return value;
         }
-        auto height() const noexcept -> std::uint32_t
+        auto height(this const auto&) noexcept -> std::uint32_t
         {
             static std::uint32_t value =
                 [] static
