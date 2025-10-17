@@ -144,6 +144,14 @@ export namespace math
 			}
 		{ }
 
+		// Note that we use a left-handed coordinate system, but this performs 
+		// the same direction of rotation as a right-handed system would with 
+		// the same matrix. If we wanted to be strictly correct with a 
+		// left-handed coordinate system, we would flip the sign of sine terms 
+		// of each of the below rotation matrices. However, the course does 
+		// not do this, so I've left it as is to be consistent with the course. 
+		// The relevant lecture notes discussing this can be found at 3D Matrix 
+		// Transformations > 3D Direction and Handedness.
 		constexpr rotation_matrix(x_rotation x_rot) noexcept
 			: matrix4x4_f{
 				0,  0,						0,						0,
@@ -153,6 +161,9 @@ export namespace math
 			}
 		{ }
 
+		// Flipping the sine terms switches the direction of rotation.
+		// It's kept this way to be consistent with the counter-clockwise
+		// rotation of the other matrices.
 		constexpr rotation_matrix(y_rotation y_rot) noexcept
 			: matrix4x4_f{
 				std::cos(y_rot.angle),	0,	std::sin(y_rot.angle),	0,

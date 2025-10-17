@@ -115,6 +115,7 @@ void update(const std::chrono::milliseconds elapsed_time)
         math::vector_4f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
+			// These need to be applied in the correct order: scale, rotate, translate.
             // Use a matrix to scale our original vertex.
             math::vector_4f transformed = scaleMatrix * face_vertices[j];
 
