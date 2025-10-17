@@ -110,20 +110,18 @@ void update(const std::chrono::milliseconds elapsed_time)
             main_app::cube_mesh.vertices[mesh_face.c - 1]
 		};
 
+        math::rotation_matrix rotationMatrix { main_app::cube_mesh.rotation };
+
         math::vector_4f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
             // Use a matrix to scale our original vertex.
             math::vector_4f transformed = scaleMatrix * face_vertices[j];
 
-            transformed.rotate_xyz_in_place(
-                main_app::cube_mesh.rotation.x,
-                main_app::cube_mesh.rotation.y,
-                main_app::cube_mesh.rotation.z
-            );
+			// Rotate the vertex around the origin
+            transformed = rotationMatrix * transformed;
 
             //Translate the vertex away from the camera
-            //transformed.z -= main_app::camera_position.z;
             transformed = translation * transformed;
             transformed_vertices[j] = transformed;
         }

@@ -76,6 +76,7 @@ export namespace math
 		0,0,0,1
 	};
 
+	// translation is not a linear transformation, but an affine transformation.
 	struct translate_matrix : matrix4x4_f
 	{
 		constexpr translate_matrix(const vector3_like auto& translation) noexcept
@@ -112,6 +113,61 @@ export namespace math
 				0,	sy, 0,	0,
 				0,	0,	sz, 0,
 				0,	0,	0,	1
+			}
+		{ }
+	};
+
+	struct x_rotation { float angle = 0; };
+	struct y_rotation { float angle = 0; };
+	struct z_rotation { float angle = 0; };
+
+	struct rotation_matrix : matrix4x4_f
+	{
+		constexpr rotation_matrix() noexcept
+			: matrix4x4_f{ Identity4 }
+		{ }
+
+		constexpr rotation_matrix(float angle) noexcept
+			: rotation_matrix(angle, angle, angle)
+		{ }
+
+		constexpr rotation_matrix(const vector4_like auto& rotation) noexcept
+			: rotation_matrix(rotation.x, rotation.y, rotation.z)
+		{ }
+
+		constexpr rotation_matrix(float x_angle, float y_angle, float z_angle) noexcept
+			: matrix4x4_f{
+				std::cos(y_angle) * std::cos(z_angle),																-std::cos(y_angle) * std::sin(z_angle),																std::sin(y_angle),						0,
+				std::sin(x_angle) * std::sin(y_angle) * std::cos(z_angle) + std::cos(x_angle) * std::sin(z_angle),	-std::sin(x_angle) * std::sin(y_angle) * std::sin(z_angle) + std::cos(x_angle) * std::cos(z_angle),	-std::sin(x_angle) * std::cos(y_angle), 0,
+				-std::cos(x_angle) * std::sin(y_angle) * std::cos(z_angle) + std::sin(x_angle) * std::sin(z_angle),	std::cos(x_angle) * std::sin(y_angle) * std::sin(z_angle) + std::sin(x_angle) * std::cos(z_angle),	std::cos(x_angle) * std::cos(y_angle),	0,
+				0,																									0,																									0,										1
+			}
+		{ }
+
+		constexpr rotation_matrix(x_rotation x_rot) noexcept
+			: matrix4x4_f{
+				0,  0,						0,						0,
+				0,	std::cos(x_rot.angle),  -std::sin(x_rot.angle),	0,
+				0,	std::sin(x_rot.angle),	std::cos(x_rot.angle),  0,
+				0,	0,						0,						1
+			}
+		{ }
+
+		constexpr rotation_matrix(y_rotation y_rot) noexcept
+			: matrix4x4_f{
+				std::cos(y_rot.angle),	0,	std::sin(y_rot.angle),	0,
+				0,						1,	0,						0,
+				-std::sin(y_rot.angle), 0,	std::cos(y_rot.angle),	0,
+				0,						0,	0,						1
+			}
+		{ }
+
+		constexpr rotation_matrix(z_rotation z_rot) noexcept
+			: matrix4x4_f{
+				std::cos(z_rot.angle),	-std::sin(z_rot.angle),	0, 0,
+				std::sin(z_rot.angle),	std::cos(z_rot.angle),	0, 0,
+				0,						0,						1, 0,
+				0,						0,						0, 1
 			}
 		{ }
 	};
