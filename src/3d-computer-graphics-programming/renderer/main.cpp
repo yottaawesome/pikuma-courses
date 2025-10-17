@@ -94,12 +94,13 @@ void update(const std::chrono::milliseconds elapsed_time)
 	// Change to > 0 to make the cube progressively bigger.
 	main_app::cube_mesh.additively_scale_by(0);
     math::scale_matrix scaleMatrix { main_app::cube_mesh.scale };
-	main_app::cube_mesh.translation.z = 15;
+	main_app::cube_mesh.translation.z = 5;
     math::translate_matrix translation { main_app::cube_mesh.translation };
 
     main_app::cube_mesh.rotation.x += 0.01f;
     main_app::cube_mesh.rotation.y += 0.01f;
     main_app::cube_mesh.rotation.z += 0.01f;
+    math::rotation_matrix rotationMatrix{ main_app::cube_mesh.rotation };
 
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
@@ -110,21 +111,18 @@ void update(const std::chrono::milliseconds elapsed_time)
             main_app::cube_mesh.vertices[mesh_face.c - 1]
 		};
 
-        math::rotation_matrix rotationMatrix { main_app::cube_mesh.rotation };
-
         math::vector_4f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
-			// These need to be applied in the correct order: scale, rotate, translate.
-            // Use a matrix to scale our original vertex.
-            math::vector_4f transformed = scaleMatrix * face_vertices[j];
-
-			// Rotate the vertex around the origin
-            transformed = rotationMatrix * transformed;
-
-            //Translate the vertex away from the camera
-            transformed = translation * transformed;
-            transformed_vertices[j] = transformed;
+			// These need to be applied in the correct order: 
+            // scale, rotate, translate.
+            // Scale our original vertex, then rotate, then 
+            // the vertex away from the camera. The matrix 
+            // translate*rotate*scale is called the world 
+            // matrix and is responsible for placing the
+            // mesh in its correct position in the 3D world.
+            transformed_vertices[j] = 
+                translation * rotationMatrix * scaleMatrix * face_vertices[j];
         }
 
         /* Backface culling -- bypass rendering triangles that 

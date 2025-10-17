@@ -5,6 +5,16 @@ import :vector;
 
 export namespace math
 {
+	// Linear transformation matrices define a space as 
+	// an orthogonal basis with respect to the origin.
+	// Affine tranformation matrices are not in 
+	// reference to an origin.
+
+	// Interesting note: the result of a shear in 3D is
+	// a translation in 2D. This actually holds for all
+	// dimensions: a shear in N dimensions results in a
+	// translation in N-1 dimensions.
+
 	template<concepts::is_arithmetic TArithmetic, std::uint32_t VRows, std::uint32_t VColumns>
 	struct matrix
 	{
@@ -52,6 +62,16 @@ export namespace math
 			return self;
 		}
 
+		constexpr auto operator*(this matrix self, const matrix& other) noexcept -> matrix
+		{
+			matrix result{};
+			for (std::uint32_t r = 0; r < VRows; ++r)
+				for (std::uint32_t c = 0; c < VColumns; ++c)
+					for (std::uint32_t k = 0; k < VColumns; ++k)
+						result.Values[r][c] += self.Values[r][k] * other.Values[k][c];
+			return result;
+		}
+
 		constexpr auto operator*=(this matrix& self, TArithmetic scalar) noexcept -> matrix&
 		{
 			for (std::uint32_t r = 0; r < VRows; ++r)
@@ -97,6 +117,7 @@ export namespace math
 		{ }
 	};
 
+	// linear transformation
 	struct scale_matrix : matrix4x4_f
 	{
 		constexpr scale_matrix(const vector_4f& scale) noexcept
@@ -121,6 +142,7 @@ export namespace math
 	struct y_rotation { float angle = 0; };
 	struct z_rotation { float angle = 0; };
 
+	// linear transformation
 	struct rotation_matrix : matrix4x4_f
 	{
 		constexpr rotation_matrix() noexcept
@@ -220,4 +242,11 @@ export namespace math
 			.w = self[3][0] * other.x + self[3][1] * other.y + self[3][2] * other.z + self[3][3] * other.w
 		};
 	}
+
+	// Projection matrices have three main goals.
+	// * Aspect ratio: adjust x and y values based on the screen width and height.
+	// * Field of view: adjust x and y values based on the desired FOV.
+	// * Normalization: adjust x, y, and z values to be in the range [-1,1]. This
+	// is the image space that the projected coordinates will be mapped to, and is
+	// also referred to as normalized device coordinates (NDC).
 }
