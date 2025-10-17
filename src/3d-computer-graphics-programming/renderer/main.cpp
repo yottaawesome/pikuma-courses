@@ -92,12 +92,10 @@ void update(const std::chrono::milliseconds elapsed_time)
     main_app::elapsed += elapsed_time;
 
 	// Change to > 0 to make the cube progressively bigger.
-	main_app::cube_mesh.additively_scale_by(0.005);
-    math::matrix4x4_f scaleMatrix = math::scale(
-        main_app::cube_mesh.scale.x,
-        main_app::cube_mesh.scale.y,
-        main_app::cube_mesh.scale.z
-    );
+	main_app::cube_mesh.additively_scale_by(0);
+    math::scale_matrix scaleMatrix { main_app::cube_mesh.scale };
+	main_app::cube_mesh.translation.z = 15;
+    math::translate_matrix translation { main_app::cube_mesh.translation };
 
     main_app::cube_mesh.rotation.x += 0.01f;
     main_app::cube_mesh.rotation.y += 0.01f;
@@ -126,7 +124,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 
             //Translate the vertex away from the camera
             //transformed.z -= main_app::camera_position.z;
-            transformed.z += 5;
+            transformed = translation * transformed;
             transformed_vertices[j] = transformed;
         }
 

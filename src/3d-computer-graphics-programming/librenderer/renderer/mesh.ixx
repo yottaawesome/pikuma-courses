@@ -18,7 +18,7 @@ export namespace renderer
         math::vector_4f scale{.x=1,.y=1,.z=1};
         math::vector_4f translation;
 
-        constexpr auto additively_scale_by(float s) noexcept
+        constexpr void additively_scale_by(float s) noexcept
         {
             scale.x += s;
             scale.y += s;

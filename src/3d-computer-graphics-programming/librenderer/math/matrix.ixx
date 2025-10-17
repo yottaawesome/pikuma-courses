@@ -76,15 +76,45 @@ export namespace math
 		0,0,0,1
 	};
 
-	constexpr auto scale(float sx, float sy, float sz) -> matrix4x4_f
+	struct translate_matrix : matrix4x4_f
 	{
-		return matrix4x4_f{
-			sx, 0,	0,	0,
-			0,	sy, 0,	0,
-			0,	0,	sz, 0,
-			0,	0,	0,	1
-		};
-	}
+		constexpr translate_matrix(const vector3_like auto& translation) noexcept
+			: translate_matrix(translation.x, translation.y, translation.z)
+		{ }
+
+		constexpr translate_matrix(float tx) noexcept
+			: translate_matrix(tx, tx, tx)
+		{ }
+
+		constexpr translate_matrix(float tx, float ty, float tz) noexcept
+			: matrix4x4_f{
+				1, 0, 0, tx,
+				0, 1, 0, ty,
+				0, 0, 1, tz,
+				0, 0, 0, 1
+			}
+		{ }
+	};
+
+	struct scale_matrix : matrix4x4_f
+	{
+		constexpr scale_matrix(const vector_4f& scale) noexcept
+			: scale_matrix(scale.x, scale.y, scale.z)
+		{ }
+
+		constexpr scale_matrix(float s) noexcept
+			: scale_matrix(s, s, s)
+		{ }
+
+		constexpr scale_matrix(float sx, float sy, float sz) noexcept
+			: matrix4x4_f{
+				sx, 0,	0,	0,
+				0,	sy, 0,	0,
+				0,	0,	sz, 0,
+				0,	0,	0,	1
+			}
+		{ }
+	};
 
 	template<std::uint32_t VRows, std::uint32_t VColumns>
 	constexpr auto operator*(float scale, const matrix<float, VRows, VColumns>& mat) 
