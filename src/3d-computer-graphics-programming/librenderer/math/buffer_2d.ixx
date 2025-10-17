@@ -31,8 +31,8 @@ export namespace math
 
         constexpr void set(std::uint64_t row, std::uint64_t column, T value) noexcept(util::is_release)
         {
-            check_bounds(row, column);
-            m_buffer[row * m_width + column] = value;
+            if (check_bounds(row, column, std::nothrow))
+                m_buffer[row * m_width + column] = value;
         }
 
 		constexpr auto operator[](this auto&& self, std::uint64_t row, std::uint64_t column) noexcept -> decltype(auto)
@@ -41,10 +41,20 @@ export namespace math
             return std::forward_like<decltype(self)>(self.m_buffer[row * self.m_width + column]);
 		}
 
+        constexpr auto check_bounds(
+            this auto&& self, 
+            std::uint64_t row, 
+            std::uint64_t column,
+            const std::nothrow_t&
+        ) noexcept -> bool
+        {
+            return row < self.m_height and column < self.m_width;
+        }
+
         constexpr void check_bounds(this auto&& self, std::uint64_t row, std::uint64_t column)
         {
             if constexpr (util::is_debug) // for debugging only
-				if (row >= self.m_height or column >= self.m_width)
+				if (not self.check_bounds(row, column, std::nothrow))
 				    throw std::runtime_error(std::format("Index out of bounds {}:{} against {}:{}", row, column, self.m_width, self.m_height));
 		}
 

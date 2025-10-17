@@ -18,6 +18,13 @@ export namespace renderer
         math::vector_3f scale{.x=1,.y=1,.z=1};
         math::vector_3f translation;
 
+        constexpr auto additively_scale_by(float s) noexcept
+        {
+            scale.x += s;
+            scale.y += s;
+            scale.z += s;
+		}
+
         [[nodiscard("Loading a mesh and immediately discarding it is pointless.")]]
         static auto from_file(const std::filesystem::path& p) -> mesh
         {

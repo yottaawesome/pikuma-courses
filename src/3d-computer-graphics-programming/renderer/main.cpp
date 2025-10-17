@@ -91,7 +91,8 @@ void update(const std::chrono::milliseconds elapsed_time)
     main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
     main_app::elapsed += elapsed_time;
 
-	main_app::cube_mesh.scale.x += 0.001;
+	// Change to > 0 to make the cube progressively bigger.
+	main_app::cube_mesh.additively_scale_by(0);
     math::matrix4x4_f m = math::scale(
         main_app::cube_mesh.scale.x,
         main_app::cube_mesh.scale.y,
@@ -115,7 +116,15 @@ void update(const std::chrono::milliseconds elapsed_time)
         {
             math::vector_3f transformed = face_vertices[j];
 
-			// Use a matrix to scale our original vertex.
+            // Use a matrix to scale our original vertex.
+            math::vector_4f vec4 = transformed;
+            auto scaleMatrix = math::scale(
+                main_app::cube_mesh.scale.x,
+                main_app::cube_mesh.scale.y,
+                main_app::cube_mesh.scale.z
+            );
+            vec4 = scaleMatrix * vec4;
+            transformed = vec4;
 
             transformed = transformed.rotate_x(main_app::cube_mesh.rotation.x);
             transformed = transformed.rotate_y(main_app::cube_mesh.rotation.y);
@@ -210,7 +219,7 @@ void render(
             display::draw_filled_triangle(triangle, triangle.color, buffer);
 
         if (main_app::render_settings.should_draw_triangles()) 
-            display::draw_triangle(triangle, 0xff000000, buffer);
+            display::draw_triangle(triangle, 0xffffffff, buffer);
 
         if (main_app::render_settings.should_draw_points())
         {

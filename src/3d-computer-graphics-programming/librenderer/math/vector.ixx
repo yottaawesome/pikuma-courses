@@ -268,11 +268,14 @@ export namespace math
 		}
 	};
 
+	// Forward declaration of vector_4f for conversion operator.
+	struct vector_4f;
 	struct vector_3f : euclidean_vector, three_space_euclidean_vector
 	{
 		float x = 0;
 		float y = 0;
 		float z = 0;
+		constexpr operator vector_4f(this const vector_3f& self) noexcept;
 	};
 
 	struct vector_4f : euclidean_vector, three_space_euclidean_vector
@@ -281,9 +284,14 @@ export namespace math
 		float y = 0;
 		float z = 0;
 		float w = 1; // homogenous coordinate
-		constexpr auto to_vector_3f(this const vector_4f& self) noexcept -> vector_3f
+		constexpr operator vector_3f(this const vector_4f& self) noexcept
 		{
 			return { .x = self.x, .y = self.y, .z = self.z };
 		}
 	};
+
+	constexpr vector_3f::operator vector_4f(this const vector_3f& self) noexcept
+	{
+		return { .x = self.x, .y = self.y, .z = self.z };
+	}
 }

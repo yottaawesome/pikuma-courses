@@ -1,6 +1,7 @@
 export module librenderer:matrix;
 import std;
 import :concepts;
+import :vector;
 
 export namespace math
 {
@@ -111,4 +112,15 @@ export namespace math
 		}(),
 		"Matrix scaling did not produce the expected results."
 	);
+
+	constexpr auto operator*(const matrix4x4_f& self, const vector_4f& other)
+		noexcept -> vector_4f
+	{
+		return vector_4f{
+			.x = self[0][0] * other.x + self[0][1] * other.y + self[0][2] * other.z + self[0][3] * other.w,
+			.y = self[1][0] * other.x + self[1][1] * other.y + self[1][2] * other.z + self[1][3] * other.w,
+			.z = self[2][0] * other.x + self[2][1] * other.y + self[2][2] * other.z + self[2][3] * other.w,
+			.w = self[3][0] * other.x + self[3][1] * other.y + self[3][2] * other.z + self[3][3] * other.w
+		};
+	}
 }
