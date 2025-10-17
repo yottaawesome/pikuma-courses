@@ -106,23 +106,23 @@ void update(const std::chrono::milliseconds elapsed_time)
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
         math::face mesh_face = main_app::cube_mesh.faces[i];
-        math::vector_3f face_vertices[3];
-        face_vertices[0] = main_app::cube_mesh.vertices[mesh_face.a - 1];
-        face_vertices[1] = main_app::cube_mesh.vertices[mesh_face.b - 1];
-        face_vertices[2] = main_app::cube_mesh.vertices[mesh_face.c - 1];
+        math::vector_3f face_vertices[3]{
+            main_app::cube_mesh.vertices[mesh_face.a - 1],
+            main_app::cube_mesh.vertices[mesh_face.b - 1],
+            main_app::cube_mesh.vertices[mesh_face.c - 1]
+		};
 
-        math::vector_3f transformed_vertices[3];
+        math::vector_4f transformed_vertices[3];
         for (int j = 0; j < 3; j++)
         {
-            math::vector_3f transformed = face_vertices[j];
-
             // Use a matrix to scale our original vertex.
-            math::vector_4f scaledTransformed = scaleMatrix * transformed;
-            transformed = scaledTransformed;
+            math::vector_4f transformed = scaleMatrix * face_vertices[j];
 
-            transformed.rotate_x_in_place(main_app::cube_mesh.rotation.x);
-            transformed.rotate_y_in_place(main_app::cube_mesh.rotation.y);
-            transformed.rotate_z_in_place(main_app::cube_mesh.rotation.z);
+            transformed.rotate_xyz_in_place(
+                main_app::cube_mesh.rotation.x,
+                main_app::cube_mesh.rotation.y,
+                main_app::cube_mesh.rotation.z
+            );
 
             //Translate the vertex away from the camera
             //transformed.z -= main_app::camera_position.z;

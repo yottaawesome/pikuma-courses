@@ -285,6 +285,18 @@ export namespace math
 			self.y = newY;
 		}
 
+		constexpr void rotate_xyz_in_place(
+			this auto& self, 
+			float x_angle, 
+			float y_angle, 
+			float z_angle
+		) noexcept
+		{
+			self.rotate_x_in_place(x_angle);
+			self.rotate_y_in_place(y_angle);
+			self.rotate_z_in_place(z_angle);
+		}
+
 		constexpr auto cross_product(this const auto& self, auto other)
 			noexcept -> auto
 		{
