@@ -86,14 +86,14 @@ namespace Tests
 		TEST_METHOD(TestRadiansToDegrees)
 		{
 			math::radians value{std::numbers::pi};
-			auto converted = math::convert(value);
+			auto converted = math::degrees(value).value;
 			Assert::IsTrue(converted == 180.f);
 		}
 
 		TEST_METHOD(TestDegreesToRadians)
 		{
 			math::degrees value{180};
-			auto converted = math::convert(value);
+			auto converted = math::radians(value).value;
 			Assert::IsTrue(converted == 3.14159274f);
 		}
 	};

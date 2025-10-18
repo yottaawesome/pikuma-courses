@@ -2,6 +2,7 @@ export module librenderer:matrix;
 import std;
 import :concepts;
 import :vector;
+import :degreesradians;
 
 export namespace math
 {
@@ -249,4 +250,30 @@ export namespace math
 	// * Normalization: adjust x, y, and z values to be in the range [-1,1]. This
 	// is the image space that the projected coordinates will be mapped to, and is
 	// also referred to as normalized device coordinates (NDC).
+
+	struct projection_matrix : matrix4x4_f
+	{
+		constexpr projection_matrix(
+			radians fov,
+			float aspect_ratio,
+			float z_near,
+			float z_far
+		) noexcept
+			: matrix4x4_f{
+				fov == 0 ? 0.f : (1.f / std::tan(fov / 2.f)) / aspect_ratio,	0,												0,							0,
+				0,																(fov == 0 ? 0.f : 1.f / std::tan(fov / 2.f)),	0,							0,
+				0,																0,												z_far / (z_far - z_near),	(-z_far * z_near) / (z_far - z_near),
+				0,																0,												1,							0
+			}
+		{ }
+
+		constexpr projection_matrix(
+			degrees fov_degrees,
+			float aspect_ratio,
+			float z_near,
+			float z_far
+		) noexcept
+			: projection_matrix(radians(fov_degrees), aspect_ratio, z_near, z_far)
+		{ }
+	};
 }
