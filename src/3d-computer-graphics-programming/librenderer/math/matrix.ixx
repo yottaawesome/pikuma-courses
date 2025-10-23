@@ -244,6 +244,31 @@ export namespace math
 		};
 	}
 
+	[[deprecated("Use the projection_matrix type.")]]
+	auto project(float fov_factor, math::vector_4f vec) -> math::vector_4f
+	{
+		/*
+		* Perspective divide (perspective projection lecture):
+		*   P'x = Px/Pz
+		*   P'y = Py/Pz
+		* where P'x and P'y are the projected points on the screen
+		* and Px, Py, and Pz are the original 3-space components.
+		* The idea is based on similar trianges, whose ratios
+		* between sides must remain constant.
+		*
+		* Coordinate system handedness:
+		*   Left-handed: Z-axis is positive away from the viewer.
+		*   Right-handed: Z-axis is positive toward the viewer
+		*
+		* We scale by the fov_factor and perform the perspective
+		* divide.
+		*/
+		return {
+			.x = fov_factor * vec.x / vec.z,
+			.y = fov_factor * vec.y / vec.z
+		};
+	}
+
 	// Projection matrices have three main goals.
 	// * Aspect ratio: adjust x and y values based on the screen width and height.
 	// * Field of view: adjust x and y values based on the desired FOV.
@@ -275,5 +300,17 @@ export namespace math
 		) noexcept
 			: projection_matrix(radians(fov_degrees), aspect_ratio, z_near, z_far)
 		{ }
+
+		constexpr auto project_with_perspective_divide(this const projection_matrix& self, const vector4_like auto& v) -> vector4_like auto
+		{
+			auto result = self * v;
+			if (result.w != 0.0f)
+			{
+				result.x /= result.w;
+				result.y /= result.w;
+				result.z /= result.w;
+			}
+			return result;
+		}
 	};
 }

@@ -36,7 +36,7 @@ export namespace math
 
 	struct triangle
 	{
-		vector_2f points[3];
+		vector_4f points[3];
 		std::uint32_t color = 0xffffffff;
 		float average_depth = 0; // for painter's algorithm
 	};

@@ -55,31 +55,6 @@ void process_input()
     }
 }
 
-math::vector_2f project(math::vector_4f vec)
-{
-    /*
-    * Perspective divide (perspective projection lecture):
-    *   P'x = Px/Pz
-    *   P'y = Py/Pz
-    * where P'x and P'y are the projected points on the screen
-    * and Px, Py, and Pz are the original 3-space components.
-    * The idea is based on similar trianges, whose ratios
-    * between sides must remain constant.
-    *
-    * Coordinate system handedness:
-    *   Left-handed: Z-axis is positive away from the viewer.
-    *   Right-handed: Z-axis is positive toward the viewer
-    * 
-    * We scale by the fov_factor and perform the perspective
-    * divide.
-    */
-    return { 
-        .x = main_app::fov_factor * vec.x / vec.z,
-        .y = main_app::fov_factor * vec.y / vec.z
-    };
-}
-
-
 void update(const std::chrono::milliseconds elapsed_time)
 {
     // Delay to meet target frame rate. Note: we can 
@@ -164,9 +139,13 @@ void update(const std::chrono::milliseconds elapsed_time)
         for(int j = 0; j < 3; j++)
         {
             // Project the current vertex
-            math::vector_2f projected_point = project(transformed_vertices[j]);
-            
-            // Scale and translate the projected points to the middle of the screen
+            math::vector_4f projected_point = 
+			    main_app::pm.project_with_perspective_divide(transformed_vertices[j]);
+
+            // Scale into the view.
+            projected_point.x *= main_app::window_dimensions.width() / 2;
+            projected_point.y *= main_app::window_dimensions.height() / 2;
+            // Translate the projected points to the middle of the screen.
             projected_point.x += main_app::window_dimensions.width() / 2;
             projected_point.y += main_app::window_dimensions.height() / 2;
 

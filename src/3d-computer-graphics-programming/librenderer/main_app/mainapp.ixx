@@ -41,7 +41,6 @@ namespace
 export namespace main_app
 {
     constexpr auto number_of_points = 9 * 9 * 9;
-    constexpr float fov_factor = 640;
     constexpr int fps = 60;
     constexpr std::chrono::milliseconds frame_target_time{ 1000 / fps };
 
@@ -187,4 +186,12 @@ export namespace main_app
             return self.rendering_mode == main_app::render_mode::wireframe_with_dot;
         }
     } render_settings;
+
+
+    const math::projection_matrix pm(
+        math::radians{ std::numbers::pi / 3 },
+        (float)main_app::window_dimensions.width() / (float)main_app::window_dimensions.height(),
+        0.1f,
+        100.f
+    );
 }
