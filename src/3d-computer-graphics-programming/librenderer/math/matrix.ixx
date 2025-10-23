@@ -16,6 +16,14 @@ export namespace math
 	// dimensions: a shear in N dimensions results in a
 	// translation in N-1 dimensions.
 
+	// Row-major and column-major affect the way matrices
+	// are multiplied with vectors. In a row-major system,
+	// vectors are treated as row vectors and multiplied
+	// on the left side of matrices (pre-multiplication). 
+	// In a column-major, vectors are treated as column 
+	// vectors and multiplied on the right side of 
+	// matrices (post-multiplication).
+
 	template<concepts::is_arithmetic TArithmetic, std::uint32_t VRows, std::uint32_t VColumns>
 	struct matrix
 	{
@@ -323,6 +331,7 @@ export namespace math
 		{ }
 	};
 
+	// Gives us normalized device coordinates (image space) after multiplication.
 	constexpr auto operator*(const projective_perspective_divide_matrix& self, const vector_4f& other) noexcept -> vector_4f
 	{
 		auto result = static_cast<const matrix4x4_f&>(self) * other;
