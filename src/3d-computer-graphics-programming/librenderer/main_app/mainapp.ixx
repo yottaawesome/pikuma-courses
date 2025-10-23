@@ -188,7 +188,7 @@ export namespace main_app
     } render_settings;
 
 
-    const math::projection_matrix pm(
+    const math::projective_perspective_divide_matrix proj_matrix(
         math::radians{ std::numbers::pi / 3 },
         (float)main_app::window_dimensions.width() / (float)main_app::window_dimensions.height(),
         0.1f,

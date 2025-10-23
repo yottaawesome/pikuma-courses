@@ -140,7 +140,7 @@ void update(const std::chrono::milliseconds elapsed_time)
         {
             // Project the current vertex
             math::vector_4f projected_point = 
-			    main_app::pm.project_with_perspective_divide(transformed_vertices[j]);
+			    main_app::proj_matrix * transformed_vertices[j];
 
             // Scale into the view.
             projected_point.x *= main_app::window_dimensions.width() / 2;

@@ -300,17 +300,38 @@ export namespace math
 		) noexcept
 			: projection_matrix(radians(fov_degrees), aspect_ratio, z_near, z_far)
 		{ }
-
-		constexpr auto project_with_perspective_divide(this const projection_matrix& self, const vector4_like auto& v) -> vector4_like auto
-		{
-			auto result = self * v;
-			if (result.w != 0.0f)
-			{
-				result.x /= result.w;
-				result.y /= result.w;
-				result.z /= result.w;
-			}
-			return result;
-		}
 	};
+
+	struct projective_perspective_divide_matrix : projection_matrix
+	{
+		constexpr projective_perspective_divide_matrix(
+			degrees fov,
+			float aspect_ratio,
+			float z_near,
+			float z_far
+		) noexcept
+			: projection_matrix{ fov, aspect_ratio, z_near, z_far }
+		{ }
+
+		constexpr projective_perspective_divide_matrix(
+			radians fov,
+			float aspect_ratio,
+			float z_near,
+			float z_far
+		) noexcept
+			: projection_matrix{ fov, aspect_ratio, z_near, z_far }
+		{ }
+	};
+
+	constexpr auto operator*(const projective_perspective_divide_matrix& self, const vector_4f& other) noexcept -> vector_4f
+	{
+		auto result = static_cast<const matrix4x4_f&>(self) * other;
+		if (result.w != 0.0f)
+		{
+			result.x /= result.w;
+			result.y /= result.w;
+			result.z /= result.w;
+		}
+		return result;
+	}
 }
