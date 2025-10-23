@@ -28,6 +28,7 @@
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
     <ClCompile Include="math\math.ixx" />
+    <ClCompile Include="renderer\shading.ixx" />
     <ClCompile Include="renderer\mesh.ixx" />
     <ClCompile Include="renderer\display.ixx" />
     <ClCompile Include="main_app\mainapp.ixx" />
