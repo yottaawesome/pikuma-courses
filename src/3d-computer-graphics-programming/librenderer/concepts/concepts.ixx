@@ -23,6 +23,9 @@ export namespace concepts
 		as_all
 	};
 
+	template<typename TActual, typename TExpected>
+	concept is = std::same_as<std::remove_cvref_t<TActual>, TExpected>;
+
 	template<tuple_for_each_behaviour TBehaviour>
 	auto tuple_for_each(auto&& tuple, auto&& func)
 	{

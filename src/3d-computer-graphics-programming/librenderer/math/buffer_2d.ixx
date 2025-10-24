@@ -13,7 +13,7 @@ export namespace math
 
         constexpr buffer_2d() = default;
 
-        constexpr buffer_2d(T width, T height)
+        constexpr buffer_2d(std::uint32_t width, std::uint32_t height)
             : m_width(width),
             m_height(height),
             m_buffer(std::vector<T>(width * height))
@@ -24,9 +24,9 @@ export namespace math
             return std::forward_like<decltype(self)>(m_buffer[index]);
         }
 
-        constexpr auto width()          const noexcept  -> T    { return m_width; }
-        constexpr auto height()         const noexcept  -> T    { return m_height; }
-        constexpr auto total_elements() const noexcept  -> T    { return m_buffer.size(); }
+        constexpr auto width()          const noexcept  -> std::uint32_t { return m_width; }
+        constexpr auto height()         const noexcept  -> std::uint32_t { return m_height; }
+        constexpr auto total_elements() const noexcept  -> size_t    { return m_buffer.size(); }
         constexpr auto raw_buffer()     noexcept        -> T*   { return m_buffer.data(); }
 
         constexpr void set(std::uint64_t row, std::uint64_t column, T value) noexcept(util::is_release)
