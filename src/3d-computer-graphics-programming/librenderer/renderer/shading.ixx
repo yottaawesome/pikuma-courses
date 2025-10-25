@@ -7,7 +7,7 @@ export namespace renderer
 	struct light
 	{
 		constexpr light() = default;
-		constexpr light(math::vector_4f direction, std::uint32_t color)
+		constexpr light(math::vector_4f direction, std::uint32_t color) noexcept
 			: direction(direction), color(color)
 		{ 
 			normalise();
@@ -16,22 +16,28 @@ export namespace renderer
 		math::vector_4f direction{};
 		std::uint32_t color = 0xFFFFFFFF;
 
-		constexpr void normalise(this light& self)
+		constexpr void normalise(this light& self) noexcept
 		{
 			self.direction.normalise();
 		}
 
-		constexpr auto dot(this const light& self, const math::vector_4f& other) -> float
+		constexpr auto dot(this const light& self, const math::vector_4f& other) 
+			noexcept -> float
 		{
+			/*return self.direction.x * other.x
+				+ self.direction.y * other.y
+				+ self.direction.z * other.z;*/
 			return self.direction.dot_product(other);
 		}
 
-		constexpr auto cross(this const light& self, const math::vector_4f& other) -> math::vector_4f
+		constexpr auto cross(this const light& self, const math::vector_4f& other) 
+			noexcept -> math::vector_4f
 		{
 			return math::cross_product(self.direction, other);
 		}
 
-		constexpr auto intensity_from_normal(this const light& self, const math::vector_4f& face_normal) -> float
+		constexpr auto intensity_from_normal(this const light& self, const math::vector_4f& face_normal) 
+			noexcept -> float
 		{
 			auto dot = self.dot(face_normal);
 			if (dot >= 0)
@@ -39,7 +45,8 @@ export namespace renderer
 			return math::abs(dot);
 		}
 
-		constexpr auto apply_light_intensity(this const light& self, float percentage_factor) noexcept -> std::uint32_t
+		constexpr auto apply_light_intensity(this const light& self, float percentage_factor) 
+			noexcept -> std::uint32_t
 		{
 			auto a = (self.color & 0xFF000000);
 			auto r = static_cast<std::uint32_t>((self.color & 0x00FF0000) * percentage_factor);
@@ -49,7 +56,8 @@ export namespace renderer
 			return a | (r & 0x00FF0000) | (g & 0x0000FF00) | (b & 0x000000FF);
 		}
 
-		constexpr auto compute_intensity_from_normal(this const light& self, const math::vector_4f& face_normal) -> float
+		constexpr auto compute_intensity_from_normal(this const light& self, const math::vector_4f& face_normal) 
+			noexcept -> std::uint32_t
 		{
 			auto intensity = self.intensity_from_normal(face_normal);
 			return self.apply_light_intensity(intensity);

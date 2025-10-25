@@ -7,7 +7,7 @@ export namespace renderer
 {
     struct mesh
     {
-        mesh() = default;
+        constexpr mesh() = default;
         mesh(const std::filesystem::path& p)
         {
 			*this = from_file(p);

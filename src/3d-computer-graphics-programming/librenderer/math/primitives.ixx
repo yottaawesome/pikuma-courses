@@ -39,5 +39,23 @@ export namespace math
 		vector_4f points[3];
 		std::uint32_t color = 0xffffffff;
 		float average_depth = 0; // for painter's algorithm
+		
+		constexpr void normalise(this triangle& self) noexcept
+		{
+			for (auto& point : self.points)
+				point.normalise();
+		}
+
+		constexpr auto compute_normal(this const triangle& self)
+			noexcept -> vector_4f
+		{
+			const auto& [vector_a, vector_b, vector_c] = self.points;
+			math::vector_4f vector_ab = vector_b - vector_a;
+			math::vector_4f vector_ac = vector_c - vector_a;
+			math::vector_4f ab_cross_ac =
+				math::cross_product(vector_ab, vector_ac);
+			ab_cross_ac.normalise();
+			return ab_cross_ac;
+		}
 	};
 }

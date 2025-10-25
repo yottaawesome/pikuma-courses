@@ -77,6 +77,9 @@ void update(const std::chrono::milliseconds elapsed_time)
     main_app::cube_mesh.rotation.z += 0.01f;
     math::rotation_matrix rotationMatrix{ main_app::cube_mesh.rotation };
 
+    const renderer::light global_light
+        { { .x = 0, .y = 0, .z = 1 }, 0x0000ffff };
+
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
         math::face mesh_face = main_app::cube_mesh.faces[i];
@@ -115,7 +118,7 @@ void update(const std::chrono::milliseconds elapsed_time)
         * culling.
         */
         bool cullBackface = 
-            main_app::render_settings.culling_mode == main_app::cull_mode::enabled 
+            main_app::render_settings.culling_mode == main_app::cull_mode::enabled
             and [&transformed_vertices] -> bool
                 {
                     const auto& [vector_a, vector_b, vector_c] = transformed_vertices;
@@ -134,8 +137,22 @@ void update(const std::chrono::milliseconds elapsed_time)
         if (cullBackface)
             continue;
 
+		math::triangle transformed_triangle{ 
+            .points {
+                transformed_vertices[0],
+                transformed_vertices[1],
+                transformed_vertices[2]
+            } 
+		};
+        transformed_triangle.normalise();
+		auto normal = transformed_triangle.compute_normal();
+
         // Loop all three vertices
-        math::triangle projected_triangle{ .color = mesh_face.color };
+        math::triangle projected_triangle{ 
+            //.color = mesh_face.color
+            .color = global_light.compute_intensity_from_normal(normal)
+        };
+
         for(int j = 0; j < 3; j++)
         {
             // Project the current vertex
@@ -148,7 +165,6 @@ void update(const std::chrono::milliseconds elapsed_time)
             // Translate the projected points to the middle of the screen.
             projected_point.x += main_app::window_dimensions.width() / 2;
             projected_point.y += main_app::window_dimensions.height() / 2;
-
             projected_triangle.points[j] = projected_point;
         }
         projected_triangle.average_depth =
@@ -183,8 +199,14 @@ void render(
 
     for (math::triangle triangle : main_app::triangles_to_render)
     {
-        if (main_app::render_settings.should_draw_filled_triangles()) 
-            display::draw_filled_triangle(triangle, triangle.color, buffer);
+        if (main_app::render_settings.should_draw_filled_triangles())
+        {
+            display::draw_filled_triangle(
+                triangle,
+                triangle.color, 
+                buffer
+            );
+        }
 
         if (main_app::render_settings.should_draw_triangles()) 
             display::draw_triangle(triangle, 0xffffffff, buffer);
