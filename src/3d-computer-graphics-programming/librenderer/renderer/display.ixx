@@ -118,26 +118,26 @@ export namespace display
     )
     {
         draw_line(
-            static_cast<int>(triangle.points[0].x),
-            static_cast<int>(triangle.points[0].y),
-            static_cast<int>(triangle.points[1].x),
-            static_cast<int>(triangle.points[1].y),
+            static_cast<int>(triangle.vertices[0].x),
+            static_cast<int>(triangle.vertices[0].y),
+            static_cast<int>(triangle.vertices[1].x),
+            static_cast<int>(triangle.vertices[1].y),
             color,
             buffer
         ); // line from 0 -> 1
         draw_line(
-            static_cast<int>(triangle.points[1].x),
-            static_cast<int>(triangle.points[1].y),
-            static_cast<int>(triangle.points[2].x),
-            static_cast<int>(triangle.points[2].y),
+            static_cast<int>(triangle.vertices[1].x),
+            static_cast<int>(triangle.vertices[1].y),
+            static_cast<int>(triangle.vertices[2].x),
+            static_cast<int>(triangle.vertices[2].y),
             color,
             buffer
         ); // line from 1 -> 2
         draw_line(
-            static_cast<int>(triangle.points[2].x),
-            static_cast<int>(triangle.points[2].y),
-            static_cast<int>(triangle.points[0].x),
-            static_cast<int>(triangle.points[0].y),
+            static_cast<int>(triangle.vertices[2].x),
+            static_cast<int>(triangle.vertices[2].y),
+            static_cast<int>(triangle.vertices[0].x),
+            static_cast<int>(triangle.vertices[0].y),
             color,
             buffer
         ); // and back to 2 -> 0
@@ -145,16 +145,16 @@ export namespace display
 
     void fill_flat_bottom_triangle(math::triangle tri, std::uint32_t color, math::color_buffer& buffer)
     {
-        float inv_slope_1 = static_cast<float>(tri.points[1].x - tri.points[0].x) / (tri.points[1].y - tri.points[0].y);
-        float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
+        float inv_slope_1 = static_cast<float>(tri.vertices[1].x - tri.vertices[0].x) / (tri.vertices[1].y - tri.vertices[0].y);
+        float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
 
-        float x_start = tri.points[0].x;
-        float x_end = tri.points[0].x;
+        float x_start = tri.vertices[0].x;
+        float x_end = tri.vertices[0].x;
 
         // While looping, you may end up with extreme slopes that can
         // cause huge lines to be drawn. Here, we correct for this.
-        float max_width = std::abs(tri.points[2].x - tri.points[1].x); // prevents constexpr
-        for (int y = static_cast<int>(tri.points[0].y); y <= tri.points[2].y; y++)
+        float max_width = std::abs(tri.vertices[2].x - tri.vertices[1].x); // prevents constexpr
+        for (int y = static_cast<int>(tri.vertices[0].y); y <= tri.vertices[2].y; y++)
         {
             draw_line(static_cast<int>(x_start), static_cast<int>(y), static_cast<int>(x_end), static_cast<int>(y), color, buffer);
             x_start += inv_slope_1;
@@ -162,21 +162,21 @@ export namespace display
 
             if (std::abs(x_end - x_start) > max_width)
             {
-                x_start = tri.points[1].x;
-                x_end = tri.points[2].x;
+                x_start = tri.vertices[1].x;
+                x_end = tri.vertices[2].x;
             }
         }
     }
 
     constexpr void fill_flat_top_triangle(math::triangle tri, std::uint32_t color, math::color_buffer& buffer)
     {
-        float inv_slope_1 = static_cast<float>(tri.points[2].x - tri.points[0].x) / (tri.points[2].y - tri.points[0].y);
-        float inv_slope_2 = static_cast<float>(tri.points[2].x - tri.points[1].x) / (tri.points[2].y - tri.points[1].y);
+        float inv_slope_1 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
+        float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[1].x) / (tri.vertices[2].y - tri.vertices[1].y);
 
-        float x_start = tri.points[2].x;
-        float x_end = tri.points[2].x;
+        float x_start = tri.vertices[2].x;
+        float x_end = tri.vertices[2].x;
 
-        for (int y = static_cast<int>(tri.points[2].y); y >= tri.points[0].y; y--)
+        for (int y = static_cast<int>(tri.vertices[2].y); y >= tri.vertices[0].y; y--)
         {
             draw_line(static_cast<int>(x_start), static_cast<int>(y), static_cast<int>(x_end), static_cast<int>(y), color, buffer);
             x_start -= inv_slope_1;
@@ -191,16 +191,16 @@ export namespace display
     )
     {
         // Sort by ascending y-coordinate
-        std::ranges::sort(triangle.points, [](auto a, auto b) { return a.y < b.y; });
+        std::ranges::sort(triangle.vertices, [](auto a, auto b) { return a.y < b.y; });
         
-        if (triangle.points[1].y == triangle.points[2].y)
+        if (triangle.vertices[1].y == triangle.vertices[2].y)
         {
             // Simply darw flat-bottom triangle
             fill_flat_bottom_triangle({ 
-                    .points{
-                        { triangle.points[0].x, triangle.points[0].y },
-                        { triangle.points[1].x, triangle.points[1].y },
-                        { triangle.points[2].x, triangle.points[2].y }
+                    .vertices{
+                        { triangle.vertices[0].x, triangle.vertices[0].y },
+                        { triangle.vertices[1].x, triangle.vertices[1].y },
+                        { triangle.vertices[2].x, triangle.vertices[2].y }
                     } 
                 },
                 color,
@@ -208,14 +208,14 @@ export namespace display
             );
             return;
         }
-        else if (triangle.points[0].y == triangle.points[1].y)
+        else if (triangle.vertices[0].y == triangle.vertices[1].y)
         {
             // Simply darw flat-top triangle
             fill_flat_top_triangle({
-                    .points{
-                       { triangle.points[0].x, triangle.points[0].y },
-                       { triangle.points[1].x, triangle.points[1].y },
-                       { triangle.points[2].x, triangle.points[2].y }
+                    .vertices{
+                       { triangle.vertices[0].x, triangle.vertices[0].y },
+                       { triangle.vertices[1].x, triangle.vertices[1].y },
+                       { triangle.vertices[2].x, triangle.vertices[2].y }
                     } 
                 },
                 color,
@@ -225,12 +225,12 @@ export namespace display
         else
         {
             // Find midpoint coordinates
-            int My = static_cast<int>(triangle.points[1].y);
-            int Mx = static_cast<int>((((triangle.points[2].x - triangle.points[0].x) * (triangle.points[1].y - triangle.points[0].y)) / (triangle.points[2].y - triangle.points[0].y)) + triangle.points[0].x);
+            int My = static_cast<int>(triangle.vertices[1].y);
+            int Mx = static_cast<int>((((triangle.vertices[2].x - triangle.vertices[0].x) * (triangle.vertices[1].y - triangle.vertices[0].y)) / (triangle.vertices[2].y - triangle.vertices[0].y)) + triangle.vertices[0].x);
             fill_flat_bottom_triangle({ 
-                    .points{
-                        { triangle.points[0].x, triangle.points[0].y},
-                        {triangle.points[1].x, triangle.points[1].y},
+                    .vertices{
+                        { triangle.vertices[0].x, triangle.vertices[0].y},
+                        {triangle.vertices[1].x, triangle.vertices[1].y},
                         {static_cast<float>(Mx), static_cast<float>(My)}
                     } 
                 },
@@ -238,10 +238,10 @@ export namespace display
                 buffer
             );
             fill_flat_top_triangle({ 
-                    .points{
-                        {triangle.points[1].x, triangle.points[1].y},
+                    .vertices{
+                        {triangle.vertices[1].x, triangle.vertices[1].y},
                         {static_cast<float>(Mx), static_cast<float>(My)},
-                        {triangle.points[2].x, triangle.points[2].y}
+                        {triangle.vertices[2].x, triangle.vertices[2].y}
                     } 
                 },
                 color,

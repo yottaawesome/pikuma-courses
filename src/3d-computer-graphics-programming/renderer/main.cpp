@@ -103,6 +103,15 @@ void update(const std::chrono::milliseconds elapsed_time)
                 translation * rotationMatrix * scaleMatrix * face_vertices[j];
         }
 
+        math::triangle transformed_triangle{
+            .vertices {
+                transformed_vertices[0],
+                transformed_vertices[1],
+                transformed_vertices[2]
+            }
+        };
+        auto normal = transformed_triangle.compute_normal();
+
         /* Backface culling -- bypass rendering triangles that 
         * are not facing the camera.
         * Note:
@@ -119,32 +128,14 @@ void update(const std::chrono::milliseconds elapsed_time)
         */
         bool cullBackface = 
             main_app::render_settings.culling_mode == main_app::cull_mode::enabled
-            and [&transformed_vertices] -> bool
+            and [&transformed_vertices, &normal] -> bool
                 {
                     const auto& [vector_a, vector_b, vector_c] = transformed_vertices;
-                    // B-A is A -> B
-                    math::vector_4f vector_ab = vector_b - vector_a;
-                    // C-A is A -> C
-                    math::vector_4f vector_ac = vector_c - vector_a;
-                    math::vector_4f ab_cross_ac =
-                        math::cross_product(vector_ab, vector_ac);
-                    ab_cross_ac.normalise();
-                    // CamPosition - A is A -> CamPosition
                     math::vector_4f camera_ray = main_app::camera_position - vector_a;
-                    camera_ray.normalise();
-                    return math::dot_product(camera_ray, ab_cross_ac) < 0;
+                    return math::dot_product(camera_ray, normal) < 0;
                 }();
         if (cullBackface)
             continue;
-
-		math::triangle transformed_triangle{ 
-            .points {
-                transformed_vertices[0],
-                transformed_vertices[1],
-                transformed_vertices[2]
-            } 
-		};
-		auto normal = transformed_triangle.compute_normal();
 
         // Loop all three vertices
         math::triangle projected_triangle{ 
@@ -164,7 +155,7 @@ void update(const std::chrono::milliseconds elapsed_time)
             // Translate the projected points to the middle of the screen.
             projected_point.x += main_app::window_dimensions.width() / 2;
             projected_point.y += main_app::window_dimensions.height() / 2;
-            projected_triangle.points[j] = projected_point;
+            projected_triangle.vertices[j] = projected_point;
         }
         projected_triangle.average_depth =
             (transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.f;
@@ -220,7 +211,7 @@ void render(
                     0xffff0000,
                     buffer
                 ), ...);
-            }(buffer, triangle.points[0], triangle.points[1], triangle.points[2]);
+            }(buffer, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]);
         }
     }
 
