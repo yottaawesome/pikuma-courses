@@ -39,10 +39,14 @@ export namespace renderer
 		constexpr auto intensity_from_normal(this const light& self, const math::vector_4f& face_normal) 
 			noexcept -> float
 		{
-			auto dot = self.dot(face_normal);
+			auto dot = self.direction.dot_product(face_normal);
+			// vector a: ---->
+			// vector b: ---->
 			if (dot >= 0)
 				return 0;
-			return math::abs(dot);
+			// vector a: ---->
+			// vector b: <----
+			return std::clamp(math::abs(dot), 0.f, 1.f);
 		}
 
 		constexpr auto apply_light_intensity(this const light& self, float percentage_factor) 

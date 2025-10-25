@@ -78,7 +78,7 @@ void update(const std::chrono::milliseconds elapsed_time)
     math::rotation_matrix rotationMatrix{ main_app::cube_mesh.rotation };
 
     const renderer::light global_light
-        { { .x = 0, .y = 0, .z = 1 }, 0x0000ffff };
+        { { .x = 0, .y = 0, .z = 1 }, 0xff55aaff };
 
     for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
     {
@@ -144,7 +144,6 @@ void update(const std::chrono::milliseconds elapsed_time)
                 transformed_vertices[2]
             } 
 		};
-        transformed_triangle.normalise();
 		auto normal = transformed_triangle.compute_normal();
 
         // Loop all three vertices
