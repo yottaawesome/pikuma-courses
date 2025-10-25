@@ -126,16 +126,13 @@ void update(const std::chrono::milliseconds elapsed_time)
         * Note that backface culling is not the same as frustum
         * culling.
         */
-        bool cullBackface = 
-            main_app::render_settings.culling_mode == main_app::cull_mode::enabled
-            and [&transformed_vertices, &normal] -> bool
-                {
-                    const auto& [vector_a, vector_b, vector_c] = transformed_vertices;
-                    math::vector_4f camera_ray = main_app::camera_position - vector_a;
-                    return math::dot_product(camera_ray, normal) < 0;
-                }();
-        if (cullBackface)
-            continue;
+        if (main_app::render_settings.culling_mode == main_app::cull_mode::enabled)
+        {
+            const auto& [vector_a, vector_b, _] = transformed_vertices;
+            math::vector_4f camera_ray = main_app::camera_position - vector_a;
+			if (math::dot_product(camera_ray, normal) < 0) // cull the face
+                continue;
+        }
 
         // Loop all three vertices
         math::triangle projected_triangle{ 
