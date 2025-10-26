@@ -55,7 +55,7 @@ export namespace math
 	constexpr auto magnitude(vector_like auto&& v) noexcept -> float
 	{
 		if constexpr (vector4_like<decltype(v)>)
-			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector3_like<decltype(v)>)
 			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector2_like<decltype(v)>)

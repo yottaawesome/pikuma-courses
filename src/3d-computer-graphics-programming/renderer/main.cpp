@@ -149,7 +149,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 		{
 			const auto& [vector_a, vector_b, _] = transformed_vertices;
 			math::vector_4f camera_ray = main_app::camera_position - vector_a;
-			if (math::dot_product(camera_ray, normal) < 0) // cull the face
+			if (math::dot_product(camera_ray, normal) <= 0) // cull the face
 				continue;
 		}
 
