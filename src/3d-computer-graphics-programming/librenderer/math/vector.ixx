@@ -60,8 +60,8 @@ export namespace math
 			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector2_like<decltype(v)>)
 			return std::sqrt(v.x * v.x + v.y * v.y);
-		if constexpr (vector1_like<decltype(v)>)
-			return std::sqrt(v.x * v.x);
+		/*if constexpr (vector1_like<decltype(v)>)
+			return std::sqrt(v.x * v.x);*/
 	}
 
 	constexpr auto normalise(vector_like auto& v) noexcept

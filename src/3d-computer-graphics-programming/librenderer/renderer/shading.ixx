@@ -1,6 +1,7 @@
 export module librenderer:shading;
 import std;
 import :math;
+import :util;
 
 export namespace renderer
 {
@@ -46,13 +47,20 @@ export namespace renderer
 				return 0;
 			// vector a: ---->
 			// vector b: <----
-			return std::clamp(math::abs(dot), 0.f, 1.f);
+
+			auto percentage_factor = std::clamp(math::abs(dot), 0.f, 1.f);
+			if not consteval
+			{
+				//util::print_debug_string("z {}", face_normal.z);
+			}
+
+			return percentage_factor;
 		}
 
 		constexpr auto apply_light_intensity(this const light& self, std::uint32_t color, float percentage_factor) 
 			noexcept -> std::uint32_t
 		{
-			auto a = (self.color & 0xFF000000);
+			auto a = (color & 0xFF000000);
 			auto r = static_cast<std::uint32_t>((color & 0x00FF0000) * percentage_factor);
 			auto g = static_cast<std::uint32_t>((color & 0x0000FF00) * percentage_factor);
 			auto b = static_cast<std::uint32_t>((color & 0x000000FF) * percentage_factor);

@@ -1,6 +1,7 @@
 ﻿export module librenderer:primitives;
 import std;
 import :vector;
+import :util;
 
 export namespace math
 {
@@ -51,9 +52,16 @@ export namespace math
 		{
 			const auto& [vert_a, vert_b, vert_c] = self.vertices;
 			math::vector_4f vector_ab = vert_b - vert_a; // A -> B
-			math::vector_4f vector_bc = vert_c - vert_b; // B -> C
-			math::vector_4f normal = math::cross_product(vector_ab, vector_bc);
-			normal.normalise();
+			//vector_ab.normalise();
+			math::vector_4f vector_ac = vert_c - vert_a; // A -> C
+			//vector_ac.normalise();
+			//math::vector_4f vector_bc = vert_c - vert_b; // B -> C
+			math::vector_4f normal = math::cross_product(vector_ab, vector_ac);
+			/*auto mag = normal.magnitude();
+			if not consteval
+			{
+				util::print_debug_string("Normal magnitude: {}", mag);
+			}*/
 			return normal;
 		}
 	};

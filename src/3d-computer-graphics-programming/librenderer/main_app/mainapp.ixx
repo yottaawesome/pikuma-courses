@@ -149,7 +149,7 @@ export namespace main_app
     std::chrono::milliseconds previous_frame_time{ 0 };
     std::chrono::milliseconds elapsed{ 0 };
 
-    renderer::mesh cube_mesh{ "..\\assets\\cube.obj" };
+    renderer::mesh cube_mesh{ "..\\assets\\f22.obj" };
 
     enum class render_mode
     {
