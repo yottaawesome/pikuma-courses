@@ -140,7 +140,7 @@ void update(const std::chrono::milliseconds elapsed_time)
             .color = global_light.compute_intensity_from_normal(normal)
         };
 
-        for(int j = 0; j < 3; j++)
+        for (int j = 0; j < 3; j++)
         {
             // Project the current vertex
             math::vector_4f projected_point = 
