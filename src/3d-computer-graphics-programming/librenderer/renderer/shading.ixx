@@ -49,13 +49,13 @@ export namespace renderer
 			return std::clamp(math::abs(dot), 0.f, 1.f);
 		}
 
-		constexpr auto apply_light_intensity(this const light& self, float percentage_factor) 
+		constexpr auto apply_light_intensity(this const light& self, std::uint32_t color, float percentage_factor) 
 			noexcept -> std::uint32_t
 		{
 			auto a = (self.color & 0xFF000000);
-			auto r = static_cast<std::uint32_t>((self.color & 0x00FF0000) * percentage_factor);
-			auto g = static_cast<std::uint32_t>((self.color & 0x0000FF00) * percentage_factor);
-			auto b = static_cast<std::uint32_t>((self.color & 0x000000FF) * percentage_factor);
+			auto r = static_cast<std::uint32_t>((color & 0x00FF0000) * percentage_factor);
+			auto g = static_cast<std::uint32_t>((color & 0x0000FF00) * percentage_factor);
+			auto b = static_cast<std::uint32_t>((color & 0x000000FF) * percentage_factor);
 
 			return a | (r & 0x00FF0000) | (g & 0x0000FF00) | (b & 0x000000FF);
 		}
@@ -64,7 +64,14 @@ export namespace renderer
 			noexcept -> std::uint32_t
 		{
 			auto intensity = self.intensity_from_normal(face_normal);
-			return self.apply_light_intensity(intensity);
+			return self.apply_light_intensity(self.color, intensity);
+		}
+
+		constexpr auto compute_intensity_from_normal(this const light& self, std::uint32_t color, const math::vector_4f& face_normal)
+			noexcept -> std::uint32_t
+		{
+			auto intensity = self.intensity_from_normal(face_normal);
+			return self.apply_light_intensity(color, intensity);
 		}
 	};
 }
