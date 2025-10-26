@@ -12,16 +12,16 @@ You'll need Visual Studio 2022 with the _Desktop development with C++_ workload 
 
 Use the following controls to adjust the rendering.
 
-* 1: render a mesh wireframe with dots at the vertices.
-* 2: render a mesh wireframe.
-* 3: render a filled-triangle mesh.
-* 4: render a filled-triangle mesh with edges.
-* c: enables backface culling.
-* d: disables backface culling.
-* up arrow: rotates the mesh.
-* down arrow: rotates the mesh.
-* left arrow: rotates the mesh.
-* right arrow: rotates the mesh.
+* `1`: render a mesh wireframe with dots at the vertices.
+* `2`: render a mesh wireframe.
+* `3`: render a filled-triangle mesh.
+* `4`: render a filled-triangle mesh with edges.
+* `c`: enables backface culling.
+* `d`: disables backface culling.
+* `up arrow`: rotates the mesh.
+* `down arrow`: rotates the mesh.
+* `left arrow`: rotates the mesh.
+* `right arrow`: rotates the mesh.
 
 ## Changes
 
