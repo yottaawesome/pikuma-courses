@@ -43,11 +43,8 @@ export namespace renderer
 			auto dot = self.direction.dot_product(face_normal);
 			// vector a: ---->
 			// vector b: ---->
-			if (dot >= 0)
-				return 0;
 			// vector a: ---->
 			// vector b: <----
-
 			auto percentage_factor = std::clamp(math::abs(dot), 0.f, 1.f);
 			if not consteval
 			{

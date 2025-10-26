@@ -23,8 +23,24 @@ void process_input()
 
 		case sdl::SDL_EventType::SDL_KEYDOWN:
 		{
-			if (eventInfo.key.keysym.sym == sdl::SDL_KeyCode::SDLK_ESCAPE)
-				main_app::is_running = false;
+			switch (eventInfo.key.keysym.sym)
+			{
+				case sdl::SDL_KeyCode::SDLK_ESCAPE:
+					main_app::is_running = false;
+					break;
+				case sdl::SDL_KeyCode::SDLK_RIGHT:
+					main_app::mesh_to_render.rotation.y += 0.01f;
+					break;
+				case sdl::SDL_KeyCode::SDLK_LEFT:
+					main_app::mesh_to_render.rotation.y -= 0.01f;
+					break;
+				case sdl::SDL_KeyCode::SDLK_UP:
+					main_app::mesh_to_render.rotation.x += 0.01f;
+					break;
+				case sdl::SDL_KeyCode::SDLK_DOWN:
+					main_app::mesh_to_render.rotation.x -= 0.01f;
+					break;
+			}
 			break;
 		}
 
@@ -32,25 +48,26 @@ void process_input()
 		{
 			switch (eventInfo.key.keysym.sym)
 			{
-			case sdl::SDL_KeyCode::SDLK_1:
-				main_app::render_settings.rendering_mode = main_app::render_mode::wireframe_with_dot;
-				break;
-			case sdl::SDL_KeyCode::SDLK_2:
-				main_app::render_settings.rendering_mode = main_app::render_mode::wireframe;
-				break;
-			case sdl::SDL_KeyCode::SDLK_3:
-				main_app::render_settings.rendering_mode = main_app::render_mode::filled;
-				break;
-			case sdl::SDL_KeyCode::SDLK_4:
-				main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
-				break;
-			case sdl::SDL_KeyCode::SDLK_c:
-				main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
-				break;
-			case sdl::SDL_KeyCode::SDLK_d:
-				main_app::render_settings.culling_mode = main_app::cull_mode::disabled;
-				break;
+				case sdl::SDL_KeyCode::SDLK_1:
+					main_app::render_settings.rendering_mode = main_app::render_mode::wireframe_with_dot;
+					break;
+				case sdl::SDL_KeyCode::SDLK_2:
+					main_app::render_settings.rendering_mode = main_app::render_mode::wireframe;
+					break;
+				case sdl::SDL_KeyCode::SDLK_3:
+					main_app::render_settings.rendering_mode = main_app::render_mode::filled;
+					break;
+				case sdl::SDL_KeyCode::SDLK_4:
+					main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
+					break;
+				case sdl::SDL_KeyCode::SDLK_c:
+					main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
+					break;
+				case sdl::SDL_KeyCode::SDLK_d:
+					main_app::render_settings.culling_mode = main_app::cull_mode::disabled;
+					break;
 			}
+			break;
 		}
 	}
 }
@@ -67,26 +84,26 @@ void update(const std::chrono::milliseconds elapsed_time)
 	main_app::elapsed += elapsed_time;
 
 	// Change to > 0 to make the cube progressively bigger.
-	main_app::cube_mesh.additively_scale_by(0);
-	math::scale_matrix scaleMatrix { main_app::cube_mesh.scale };
-	main_app::cube_mesh.translation.z = 4;
-	math::translate_matrix translation { main_app::cube_mesh.translation };
+	main_app::mesh_to_render.additively_scale_by(0);
+	math::scale_matrix scaleMatrix { main_app::mesh_to_render.scale };
+	main_app::mesh_to_render.translation.z = 4;
+	math::translate_matrix translation { main_app::mesh_to_render.translation };
 
-	main_app::cube_mesh.rotation.x += 0.01f;
-	//main_app::cube_mesh.rotation.y += 0.01f;
-	//main_app::cube_mesh.rotation.z += 0.01f;
-	math::rotation_matrix rotationMatrix{ main_app::cube_mesh.rotation };
+	//main_app::mesh_to_render.rotation.x += 0.01f;
+	//main_app::mesh_to_render.rotation.y += 0.01f;
+	//main_app::mesh_to_render.rotation.z += 0.01f;
+	math::rotation_matrix rotationMatrix{ main_app::mesh_to_render.rotation };
 
 	const renderer::light global_light
 		{ { .x = 0, .y = 0, .z = 1 }, 0xffffffff };
 
-	for (int i = 0; i < main_app::cube_mesh.faces.size(); i++)
+	for (int i = 0; i < main_app::mesh_to_render.faces.size(); i++)
 	{
-		math::face mesh_face = main_app::cube_mesh.faces[i];
+		math::face mesh_face = main_app::mesh_to_render.faces[i];
 		math::vector_4f face_vertices[3]{
-			main_app::cube_mesh.vertices[mesh_face.a - 1],
-			main_app::cube_mesh.vertices[mesh_face.b - 1],
-			main_app::cube_mesh.vertices[mesh_face.c - 1]
+			main_app::mesh_to_render.vertices[mesh_face.a - 1],
+			main_app::mesh_to_render.vertices[mesh_face.b - 1],
+			main_app::mesh_to_render.vertices[mesh_face.c - 1]
 		};
 
 		math::vector_4f transformed_vertices[3];
@@ -99,8 +116,10 @@ void update(const std::chrono::milliseconds elapsed_time)
 			// translate*rotate*scale is called the world 
 			// matrix and is responsible for placing the
 			// mesh in its correct position in the 3D world.
-			transformed_vertices[j] = 
-				translation * rotationMatrix * scaleMatrix * face_vertices[j];
+			transformed_vertices[j] = translation 
+				* rotationMatrix 
+				* scaleMatrix 
+				* face_vertices[j];
 		}
 
 		math::triangle transformed_triangle{
@@ -201,7 +220,7 @@ void render(
 		}
 
 		if (main_app::render_settings.should_draw_triangles())
-			;// display::draw_triangle(triangle, 0xffffffff, buffer);
+			display::draw_triangle(triangle, 0xffffffff, buffer);
 
 		if (main_app::render_settings.should_draw_points())
 		{

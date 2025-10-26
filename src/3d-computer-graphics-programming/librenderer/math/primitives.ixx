@@ -57,6 +57,7 @@ export namespace math
 			//vector_ac.normalise();
 			//math::vector_4f vector_bc = vert_c - vert_b; // B -> C
 			math::vector_4f normal = math::cross_product(vector_ab, vector_ac);
+			normal.normalise();
 			/*auto mag = normal.magnitude();
 			if not consteval
 			{
