@@ -27,6 +27,10 @@ Use the following controls to adjust the rendering.
 
 The [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming) coursework is implemented in C on Pikuma, whereas I've chosen to implement the coursework in C++23.
 
+## Credits
+
+F22 mesh provided by [Gustavo Pezzi](https://github.com/gustavopezzi) from his [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming) course.
+
 ## Additional resources
 
 * [Scratchapixel 3.0](https://scratchapixel.com/)
