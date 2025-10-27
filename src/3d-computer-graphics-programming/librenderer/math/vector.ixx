@@ -64,7 +64,7 @@ export namespace math
 			return std::sqrt(v.x * v.x);*/
 	}
 
-	constexpr auto normalise(vector_like auto& v) noexcept
+	constexpr void normalise(vector_like auto& v) noexcept
 	{
 		float multiplicand = 1.f / v.magnitude();
 		if constexpr (requires { v.x; })
@@ -73,8 +73,8 @@ export namespace math
 			v.y *= multiplicand;
 		if constexpr (requires { v.z; })
 			v.z *= multiplicand;
-		if constexpr (requires { v.w; })
-			v.w *= multiplicand;
+		/*if constexpr (requires { v.w; })
+			v.w *= multiplicand;*/
 	}
 
 	auto add(const vector_like auto& v, const vector_like auto& u) 

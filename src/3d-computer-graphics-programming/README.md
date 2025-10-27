@@ -1,6 +1,21 @@
-# Course Notes
+# 3D Computer Graphics Programming from Scratch
 
-## Notes
+## Controls
+
+Use the following controls to adjust the rendering.
+
+* `1`: render a mesh wireframe with dots at the vertices.
+* `2`: render a mesh wireframe.
+* `3`: render a filled-triangle mesh.
+* `4`: render a filled-triangle mesh with edges.
+* `c`: enables backface culling.
+* `d`: disables backface culling.
+* `up arrow`: rotates the mesh.
+* `down arrow`: rotates the mesh.
+* `left arrow`: rotates the mesh.
+* `right arrow`: rotates the mesh.
+
+## Course notes
 
 ![Trigonometry Review](1-trig-review-notes.png "Trigonometry Review Notes")
 
