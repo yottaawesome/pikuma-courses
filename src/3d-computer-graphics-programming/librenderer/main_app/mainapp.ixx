@@ -159,7 +159,9 @@ export namespace main_app
 		wireframe_with_dot,
 		wireframe,
 		filled,
-		filled_wireframe
+		filled_wireframe,
+		textured,
+		textured_wireframe
 	};
 	enum class cull_mode
 	{
@@ -187,6 +189,12 @@ export namespace main_app
 		auto should_draw_points(this const renderer_settings& self) -> bool
 		{
 			return self.rendering_mode == main_app::render_mode::wireframe_with_dot;
+		}
+
+		auto should_draw_textured_triangles(this const renderer_settings& self) -> bool
+		{
+			return self.rendering_mode == main_app::render_mode::textured
+				or self.rendering_mode == main_app::render_mode::textured_wireframe;
 		}
 	} render_settings;
 

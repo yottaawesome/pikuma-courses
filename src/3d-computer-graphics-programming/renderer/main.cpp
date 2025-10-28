@@ -60,6 +60,12 @@ void process_input()
 				case sdl::SDL_KeyCode::SDLK_4:
 					main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
 					break;
+				case sdl::SDL_KeyCode::SDLK_5:
+					main_app::render_settings.rendering_mode = main_app::render_mode::textured;
+					break;
+				case sdl::SDL_KeyCode::SDLK_6:
+					main_app::render_settings.rendering_mode = main_app::render_mode::textured_wireframe;
+					break;
 				case sdl::SDL_KeyCode::SDLK_c:
 					main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
 					break;
@@ -217,6 +223,15 @@ void render(
 				triangle.color, 
 				buffer
 			);
+		}
+
+		if (main_app::render_settings.should_draw_textured_triangles())
+		{
+			//display::draw_textured_triangle(
+			//	triangle,
+			//	main_app::mesh_to_render.texture,
+			//	buffer
+			//);
 		}
 
 		if (main_app::render_settings.should_draw_triangles())

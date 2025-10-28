@@ -2,6 +2,7 @@
 import std;
 import :vector;
 import :util;
+import :texture;
 
 export namespace math
 {
@@ -33,11 +34,15 @@ export namespace math
 		int b = 0;
 		int c = 0;
 		std::uint32_t color = 0xffadd8e6;
+		renderer::tex2_coordinates a_uv = { 0.0f, 0.0f };
+		renderer::tex2_coordinates b_uv = { 0.0f, 0.0f };
+		renderer::tex2_coordinates c_uv = { 0.0f, 0.0f };
 	};
 
 	struct triangle
 	{
 		vector_4f vertices[3];
+		renderer::tex2_coordinates texcoords[3];
 		std::uint32_t color = 0xffffffff;
 		float average_depth = 0; // for painter's algorithm
 		
