@@ -13,7 +13,7 @@ export namespace display
         black = 0xff000000
     };
 
-    constexpr void draw_line_grid(const std::int32_t step, const std::uint32_t color, math::color_buffer& buffer)
+    constexpr void draw_line_grid(std::int32_t step, std::uint32_t color, math::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)
         {
@@ -31,24 +31,24 @@ export namespace display
         }
     }
 
-    constexpr void draw_dot_grid(const std::int32_t step, const std::uint32_t color, math::color_buffer& buffer)
+    constexpr void draw_dot_grid(std::int32_t step, std::uint32_t color, math::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
             for (uint32_t column = 0; column < buffer.width(); column += 10)
                 buffer.set(row, column, color);
     }
 
-    constexpr void draw_pixel(const std::uint32_t x, const std::uint32_t y, const std::uint32_t color, math::color_buffer& buffer)
+    constexpr void draw_pixel(std::uint32_t x, std::uint32_t y, std::uint32_t color, math::color_buffer& buffer)
     {
         buffer.set(x, y, color);
     }
 
     constexpr void draw_rect(
-        const std::uint32_t x,
-        const std::uint32_t y,
-        const std::uint32_t width,
-        const std::uint32_t height,
-        const std::uint32_t color,
+        std::uint32_t x,
+        std::uint32_t y,
+        std::uint32_t width,
+        std::uint32_t height,
+        std::uint32_t color,
         math::color_buffer& buffer
     )
     {
@@ -112,7 +112,7 @@ export namespace display
     }
 
     constexpr void draw_triangle(
-        const math::triangle triangle,
+        const math::triangle& triangle,
         const std::uint32_t color,
         math::color_buffer& buffer
     )
@@ -143,7 +143,7 @@ export namespace display
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(math::triangle tri, std::uint32_t color, math::color_buffer& buffer)
+    void fill_flat_bottom_triangle(const math::triangle& tri, std::uint32_t color, math::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[1].x - tri.vertices[0].x) / (tri.vertices[1].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
@@ -168,7 +168,7 @@ export namespace display
         }
     }
 
-    constexpr void fill_flat_top_triangle(math::triangle tri, std::uint32_t color, math::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(const math::triangle& tri, std::uint32_t color, math::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[1].x) / (tri.vertices[2].y - tri.vertices[1].y);
@@ -185,37 +185,39 @@ export namespace display
     }
 
     constexpr void draw_filled_triangle(
-        math::triangle triangle,
+        const math::triangle& triangle,
         std::uint32_t color,
         math::color_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate
-        std::ranges::sort(triangle.vertices, [](auto a, auto b) { return a.y < b.y; });
+        math::vector_4f vertices[3]{ triangle.vertices[0], triangle.vertices[1], triangle.vertices[2] };
+        std::ranges::sort(vertices, [](const auto& a, const auto& b) { return a.y < b.y; });
         
-        if (triangle.vertices[1].y == triangle.vertices[2].y)
+        if (vertices[1].y == vertices[2].y)
         {
             // Simply darw flat-bottom triangle
-            fill_flat_bottom_triangle({ 
+            fill_flat_bottom_triangle(
+                { 
                     .vertices{
-                        { triangle.vertices[0].x, triangle.vertices[0].y },
-                        { triangle.vertices[1].x, triangle.vertices[1].y },
-                        { triangle.vertices[2].x, triangle.vertices[2].y }
+                        { vertices[0].x, vertices[0].y },
+                        { vertices[1].x, vertices[1].y },
+                        { vertices[2].x, vertices[2].y }
                     } 
                 },
                 color,
                 buffer
             );
-            return;
         }
-        else if (triangle.vertices[0].y == triangle.vertices[1].y)
+        else if (vertices[0].y == vertices[1].y)
         {
             // Simply darw flat-top triangle
-            fill_flat_top_triangle({
+            fill_flat_top_triangle(
+                {
                     .vertices{
-                       { triangle.vertices[0].x, triangle.vertices[0].y },
-                       { triangle.vertices[1].x, triangle.vertices[1].y },
-                       { triangle.vertices[2].x, triangle.vertices[2].y }
+                       { vertices[0].x, vertices[0].y },
+                       { vertices[1].x, vertices[1].y },
+                       { vertices[2].x, vertices[2].y }
                     } 
                 },
                 color,
@@ -225,28 +227,52 @@ export namespace display
         else
         {
             // Find midpoint coordinates
-            int My = static_cast<int>(triangle.vertices[1].y);
-            int Mx = static_cast<int>((((triangle.vertices[2].x - triangle.vertices[0].x) * (triangle.vertices[1].y - triangle.vertices[0].y)) / (triangle.vertices[2].y - triangle.vertices[0].y)) + triangle.vertices[0].x);
+            int My = static_cast<int>(vertices[1].y);
+            int Mx = static_cast<int>(
+                (
+                    (
+                        (vertices[2].x - vertices[0].x) 
+                        * 
+                        (vertices[1].y - vertices[0].y)
+                    ) 
+                    / (vertices[2].y - vertices[0].y)
+                ) 
+                + vertices[0].x
+            );
             fill_flat_bottom_triangle({ 
                     .vertices{
-                        { triangle.vertices[0].x, triangle.vertices[0].y},
-                        {triangle.vertices[1].x, triangle.vertices[1].y},
+                        { vertices[0].x, vertices[0].y},
+                        { vertices[1].x, vertices[1].y},
                         {static_cast<float>(Mx), static_cast<float>(My)}
                     } 
                 },
                 color,
                 buffer
             );
-            fill_flat_top_triangle({ 
+            fill_flat_top_triangle(
+                { 
                     .vertices{
-                        {triangle.vertices[1].x, triangle.vertices[1].y},
+                        {vertices[1].x, vertices[1].y},
                         {static_cast<float>(Mx), static_cast<float>(My)},
-                        {triangle.vertices[2].x, triangle.vertices[2].y}
+                        {vertices[2].x, vertices[2].y}
                     } 
                 },
                 color,
                 buffer
             );
         }
+    }
+
+    // Draw a textured triangle with flat-top/flat-bottom method.
+    constexpr void draw_textured_triangle(
+        const math::triangle& triangle, 
+        std::uint32_t color, 
+        math::color_buffer& buffer,
+        const std::uint8_t* const texture
+    )
+    {
+        // Sort by ascending y-coordinate
+        math::vector_4f vertices[3]{ triangle.vertices[0], triangle.vertices[1], triangle.vertices[2] };
+        std::ranges::sort(vertices, [](const auto& a, const auto& b) { return a.y < b.y; });
     }
 }

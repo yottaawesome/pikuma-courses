@@ -160,10 +160,11 @@ void update(const std::chrono::milliseconds elapsed_time)
 		}
 
 		// Loop all three vertices
-		math::triangle projected_triangle{ 
-			.color = 
+		math::triangle projected_triangle{
+			.texcoords = { mesh_face.a_uv, mesh_face.b_uv, mesh_face.c_uv },
+			.color =
 				//global_light.compute_intensity_from_normal(mesh_face.color, normal)
-				global_light.compute_intensity_from_normal(normal)
+				global_light.compute_intensity_from_normal(normal),
 		};
 
 		for (int j = 0; j < 3; j++)

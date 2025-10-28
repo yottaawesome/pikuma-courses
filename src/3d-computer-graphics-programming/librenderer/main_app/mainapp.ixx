@@ -23,18 +23,18 @@ namespace
 	};
 
 	std::array<math::face, total_cube_faces> cube_faces{
-		math::face{ 1, 2, 3 },
-		math::face{ 1, 3, 4 },
-		math::face{ 4, 3, 5 },
-		math::face{ 4, 5, 6 },
-		math::face{ 6, 5, 7 },
-		math::face{ 6, 7, 8 },
-		math::face{ 8, 7, 2 },
-		math::face{ 8, 2, 1 },
-		math::face{ 2, 7, 5 },
-		math::face{ 2, 5, 3 },
-		math::face{ 6, 8, 1 },
-		math::face{ 6, 1, 4 }
+		math::face{ .a = 1, .b = 2, .c = 3, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{ .a = 1, .b = 3, .c = 4, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{ .a = 4, .b = 3, .c = 5, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{ .a = 4, .b = 5, .c = 6, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{ .a = 6, .b = 5, .c = 7, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{ .a = 6, .b = 7, .c = 8, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{ .a = 8, .b = 7, .c = 2, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{ .a = 8, .b = 2, .c = 1, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{ .a = 2, .b = 7, .c = 5, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{ .a = 2, .b = 5, .c = 3, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{ .a = 6, .b = 8, .c = 1, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{ .a = 6, .b = 1, .c = 4, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } }
 	};
 }
 
@@ -183,7 +183,8 @@ export namespace main_app
 		{
 			return self.rendering_mode == main_app::render_mode::filled_wireframe
 				or self.rendering_mode == main_app::render_mode::wireframe
-				or self.rendering_mode == main_app::render_mode::wireframe_with_dot;
+				or self.rendering_mode == main_app::render_mode::wireframe_with_dot
+				or self.rendering_mode == main_app::render_mode::textured_wireframe;
 		}
 
 		auto should_draw_points(this const renderer_settings& self) -> bool

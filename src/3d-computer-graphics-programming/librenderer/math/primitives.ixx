@@ -63,11 +63,11 @@ export namespace math
 			//math::vector_4f vector_bc = vert_c - vert_b; // B -> C
 			math::vector_4f normal = math::cross_product(vector_ab, vector_ac);
 			normal.normalise();
-			/*auto mag = normal.magnitude();
 			if not consteval
 			{
-				util::print_debug_string("Normal magnitude: {}", mag);
-			}*/
+				/*auto mag = normal.magnitude();
+					util::print_debug_string("Normal magnitude: {}", mag);*/
+			}
 			return normal;
 		}
 	};
