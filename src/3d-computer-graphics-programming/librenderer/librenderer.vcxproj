@@ -38,6 +38,7 @@
     <ClCompile Include="lib\win32.ixx" />
     <ClCompile Include="math\buffer_2d.ixx" />
     <ClCompile Include="concepts\concepts.ixx" />
+    <ClCompile Include="renderer\texture.ixx" />
     <ClCompile Include="util\util.ixx" />
     <ClCompile Include="util\functions.ixx" />
     <ClCompile Include="util\fileline.ixx" />
