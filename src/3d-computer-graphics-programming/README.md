@@ -14,6 +14,10 @@ Use the following controls to adjust the rendering.
 * `down arrow`: rotates the mesh.
 * `left arrow`: rotates the mesh.
 * `right arrow`: rotates the mesh.
+* `w`: translate along y-axis.
+* `a`: translate along y-axis.
+* `s`: translate along x-axis.
+* `d`: translate along x-axis.
 
 ## Course notes
 
@@ -106,3 +110,4 @@ Given three triangles that constitute a face, sorted by increasing _y_, find the
 
 * [Markdown and LaTeX introduction](https://ashki23.github.io/markdown-latex.html)
 * [Mathjax newline issue (Github rendering related)](https://github.com/mathjax/MathJax/issues/2312)
+
