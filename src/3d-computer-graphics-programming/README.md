@@ -18,6 +18,8 @@ Use the following controls to adjust the rendering.
 * `a`: translate along y-axis.
 * `s`: translate along x-axis.
 * `d`: translate along x-axis.
+* `e`: translate along z-axis.
+* `f`: translate along z-axis.
 
 ## Course notes
 
