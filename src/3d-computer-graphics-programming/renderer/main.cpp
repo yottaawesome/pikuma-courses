@@ -53,6 +53,13 @@ void process_input()
 				case sdl::SDL_KeyCode::SDLK_d:
 					main_app::mesh_to_render.translation.x += increment;
 					break;
+				case sdl::SDL_KeyCode::SDLK_e:
+					main_app::mesh_to_render.translation.z += increment;
+					break;
+				case sdl::SDL_KeyCode::SDLK_f:
+					main_app::mesh_to_render.translation.z -= increment;
+					break;
+
 				break;
 			}
 
@@ -105,7 +112,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 	// Change to > 0 to make the cube progressively bigger.
 	main_app::mesh_to_render.additively_scale_by(0);
 	math::scale_matrix scaleMatrix { main_app::mesh_to_render.scale };
-	main_app::mesh_to_render.translation.z = 4;
+	//main_app::mesh_to_render.translation.z = 4;
 	math::translate_matrix translation { main_app::mesh_to_render.translation };
 
 	//main_app::mesh_to_render.rotation.x += 0.01f;
@@ -280,6 +287,7 @@ int WinMain(int argc, char* argv[])
 		std::chrono::milliseconds, 
 		std::chrono::high_resolution_clock, 
 		std::chrono::duration_cast;
+	main_app::mesh_to_render.translation.z = 4;
 
 	//display::initialize_window(app);
 
