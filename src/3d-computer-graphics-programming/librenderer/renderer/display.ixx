@@ -38,8 +38,9 @@ export namespace display
                 buffer.set(row, column, color);
     }
 
-	// This is in Cartesian space (x right, y down). This means that if you're
-	// working with row-major buffers, you need to swap x and y.
+	// This is in row-major form. This means that if you're
+	// working with Cartesian coordinates, you need to swap 
+    // x and y to get the correct pixel.
     constexpr void draw_pixel(std::uint32_t x, std::uint32_t y, std::uint32_t color, math::color_buffer& buffer)
     {
         buffer.set(x, y, color);
