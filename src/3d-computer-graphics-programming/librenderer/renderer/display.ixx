@@ -266,13 +266,80 @@ export namespace display
     // Draw a textured triangle with flat-top/flat-bottom method.
     constexpr void draw_textured_triangle(
         const math::triangle& triangle, 
-        std::uint32_t color, 
-        math::color_buffer& buffer,
-        const std::uint8_t* const texture
+        const std::uint8_t* const texture,
+        math::color_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate
-        math::vector_4f vertices[3]{ triangle.vertices[0], triangle.vertices[1], triangle.vertices[2] };
-        std::ranges::sort(vertices, [](const auto& a, const auto& b) { return a.y < b.y; });
+        math::textured_vertex vertices[3]{
+            { triangle.vertices[0], triangle.texcoords[0] },
+            { triangle.vertices[1], triangle.texcoords[1] },
+            { triangle.vertices[2], triangle.texcoords[2] }
+		};
+
+        std::ranges::sort(
+            vertices, 
+            [](const auto& a, const auto& b) 
+            { 
+                return a.position.y < b.position.y; 
+            });
+
+		// Render upper part of triangle
+        float inv_slope_1 = 0;
+        float inv_slope_2 = 0;
+        if (vertices[1].position.y - vertices[0].position.y != 0)
+			inv_slope_1 = static_cast<float>((vertices[1].position.x - vertices[0].position.x) / math::abs(vertices[1].position.y - vertices[0].position.y));
+		if (vertices[2].position.y - vertices[0].position.y != 0)
+			inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+
+        if (vertices[1].position.y - vertices[0].position.y != 0)
+        {
+            for (
+                int y = static_cast<int>(vertices[0].position.y);
+                y <= static_cast<int>(vertices[1].position.y);
+                y++
+            )
+            {
+                int x_start = static_cast<int>(vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
+                int x_end = static_cast<int>(vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
+
+                if (x_start > x_end)
+                    std::swap(x_start, x_end);
+
+                for (int x = x_start; x < x_end; x++)
+                {
+                    draw_pixel(y, x, 0xffff00ff, buffer);
+                }
+            }
+        }
+
+		// Render bottom part of triangle
+        inv_slope_1 = 0;
+        inv_slope_2 = 0;
+        if (vertices[2].position.y - vertices[1].position.y != 0)
+            inv_slope_1 = static_cast<float>((vertices[2].position.x - vertices[1].position.x) / math::abs(vertices[2].position.y - vertices[1].position.y));
+        if (vertices[2].position.y - vertices[0].position.y != 0)
+            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+
+        if (vertices[2].position.y - vertices[1].position.y != 0)
+        {
+            for (
+                int y = static_cast<int>(vertices[1].position.y);
+                y <= static_cast<int>(vertices[2].position.y);
+                y++
+            )
+            {
+                int x_start = static_cast<int>(vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
+                int x_end = static_cast<int>(vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
+
+                if (x_start > x_end)
+                    std::swap(x_start, x_end);
+
+                for (int x = x_start; x < x_end; x++)
+                {
+                    draw_pixel(y, x, 0xffff00ff, buffer);
+                }
+            }
+        }
     }
 }

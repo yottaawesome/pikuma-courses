@@ -248,11 +248,11 @@ void render(
 
 		if (main_app::render_settings.should_draw_textured_triangles())
 		{
-			//display::draw_textured_triangle(
-			//	triangle,
-			//	main_app::mesh_to_render.texture,
-			//	buffer
-			//);
+			display::draw_textured_triangle(
+				triangle,
+				renderer::red_brick_texture::data,
+				buffer
+			);
 		}
 
 		if (main_app::render_settings.should_draw_triangles())

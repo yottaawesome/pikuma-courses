@@ -152,7 +152,7 @@ export namespace main_app
 	renderer::mesh f22_mesh{ "..\\assets\\f22.obj" };
 	renderer::mesh cube_mesh{ "..\\assets\\cube.obj" };
 
-	renderer::mesh mesh_to_render = f22_mesh;
+	renderer::mesh mesh_to_render = cube_mesh;
 
 	enum class render_mode
 	{
@@ -184,7 +184,8 @@ export namespace main_app
 			return self.rendering_mode == main_app::render_mode::filled_wireframe
 				or self.rendering_mode == main_app::render_mode::wireframe
 				or self.rendering_mode == main_app::render_mode::wireframe_with_dot
-				or self.rendering_mode == main_app::render_mode::textured_wireframe;
+				;
+				//or self.rendering_mode == main_app::render_mode::textured_wireframe;
 		}
 
 		auto should_draw_points(this const renderer_settings& self) -> bool
