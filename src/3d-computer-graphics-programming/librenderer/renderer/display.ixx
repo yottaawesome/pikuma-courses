@@ -266,26 +266,84 @@ export namespace display
         }
     }
 
+	// Expects x and y to be in Cartesian space.
+    constexpr void draw_texel(
+		std::uint32_t x,
+		std::uint32_t y,
+		const std::array<math::textured_vertex, 3>& vertex,
+        const std::uint32_t* const texture,
+        size_t texture_width,
+        size_t texture_height,
+		math::color_buffer& buffer
+    )
+    {
+        auto weights = math::barycentric_weights(
+            math::vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
+            math::vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
+            math::vector_2f{ .x = vertex[2].position.x, .y = vertex[2].position.y },
+            math::vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
+        );
+
+        float alpha = weights.x;
+        float beta = weights.y;
+        float gamma = weights.z;
+
+		// Perform texture interpolation using barycentric coordinates
+        float interpolated_u = 
+            vertex[0].texcoords.u * alpha 
+            + vertex[1].texcoords.u * beta 
+            + vertex[2].texcoords.u * gamma;
+        float interpolated_v =
+            vertex[0].texcoords.v * alpha
+            + vertex[1].texcoords.v * beta
+            + vertex[2].texcoords.v * gamma;
+
+		// Map the interpolated UV coordinates to texture space
+        int tex_x = math::abs(static_cast<int>(interpolated_u * texture_width));
+        int tex_y = math::abs(static_cast<int>(interpolated_v * texture_height));
+
+        auto colorIndex = (texture_width * tex_y) + tex_x;
+        if (colorIndex >= texture_width * texture_height)
+            colorIndex = texture_width * texture_height - 1;
+
+        draw_pixel(y, x, texture[colorIndex], buffer);
+	}
+
     // Draw a textured triangle with flat-top/flat-bottom method.
     constexpr void draw_textured_triangle(
-        const math::triangle& triangle, 
-        const std::uint8_t* const texture,
+        const math::triangle& triangle,
+        const std::uint32_t* const texture,
+		size_t texture_width,
+		size_t texture_height,
         math::color_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate
-        math::textured_vertex vertices[3]{
-            { triangle.vertices[0], triangle.texcoords[0] },
-            { triangle.vertices[1], triangle.texcoords[1] },
-            { triangle.vertices[2], triangle.texcoords[2] }
-		};
+        std::array<math::textured_vertex, 3> vertices{
+            math::textured_vertex{triangle.vertices[0], triangle.texcoords[0]},
+            math::textured_vertex{triangle.vertices[1], triangle.texcoords[1]},
+            math::textured_vertex{triangle.vertices[2], triangle.texcoords[2]}
+        };
 
         std::ranges::sort(
-            vertices, 
-            [](const auto& a, const auto& b) 
-            { 
-                return a.position.y < b.position.y; 
+            vertices,
+            [](const auto& a, const auto& b)
+            {
+                return a.position.y < b.position.y;
             });
+
+        math::vector_2f point_a{
+            .x = vertices[0].position.x,
+            .y = vertices[0].position.y
+        };
+        math::vector_2f point_b{
+            .x = vertices[1].position.x,
+            .y = vertices[1].position.y
+        };
+        math::vector_2f point_c{
+            .x = vertices[2].position.x,
+            .y = vertices[2].position.y
+        };
 
 		// Render upper part of triangle
         float inv_slope_1 = 0;
@@ -311,7 +369,7 @@ export namespace display
 
                 for (int x = x_start; x < x_end; x++)
                 {
-                    draw_pixel(y, x, 0xffff00ff, buffer);
+					draw_texel(x, y, vertices, texture, texture_width, texture_height, buffer);
                 }
             }
         }
@@ -340,7 +398,7 @@ export namespace display
 
                 for (int x = x_start; x < x_end; x++)
                 {
-                    draw_pixel(y, x, 0xffff00ff, buffer);
+                    draw_texel(x, y, vertices, texture, texture_width, texture_height, buffer);
                 }
             }
         }

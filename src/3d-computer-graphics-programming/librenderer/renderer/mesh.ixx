@@ -7,11 +7,58 @@ import std;
 import :math;
 import :util;
 
+namespace
+{
+	constexpr auto total_cube_vertices = 8;
+	constexpr auto total_cube_faces = 6 * 2;
+
+	std::array<math::vector_4f, total_cube_vertices> cube_vertices{
+		math::vector_4f{.x = -1, .y = -1, .z = -1 }, // 1
+		math::vector_4f{.x = -1, .y = 1, .z = -1 }, // 2
+		math::vector_4f{.x = 1, .y = 1, .z = -1 }, // 3
+		math::vector_4f{.x = 1, .y = -1, .z = -1 }, // 4
+		math::vector_4f{.x = 1, .y = 1, .z = 1 }, // 5
+		math::vector_4f{.x = 1, .y = -1, .z = 1 }, // 6
+		math::vector_4f{.x = -1, .y = 1, .z = 1 }, // 7
+		math::vector_4f{.x = -1, .y = -1, .z = 1 } // 8
+	};
+
+	std::array<math::face, total_cube_faces> cube_faces{
+		math::face{.a = 1, .b = 2, .c = 3, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{.a = 1, .b = 3, .c = 4, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{.a = 4, .b = 3, .c = 5, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{.a = 4, .b = 5, .c = 6, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{.a = 6, .b = 5, .c = 7, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{.a = 6, .b = 7, .c = 8, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{.a = 8, .b = 7, .c = 2, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{.a = 8, .b = 2, .c = 1, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{.a = 2, .b = 7, .c = 5, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{.a = 2, .b = 5, .c = 3, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } },
+		math::face{.a = 6, .b = 8, .c = 1, .a_uv = { 0, 0 }, .b_uv = { 0, 1 }, .c_uv = { 1, 1 } },
+		math::face{.a = 6, .b = 1, .c = 4, .a_uv = { 0, 0 }, .b_uv = { 1, 1 }, .c_uv = { 1, 0 } }
+	};
+
+	template<typename T, size_t N>
+	auto vector_from_array(const std::array<T, N>& array) -> std::vector<T>
+	{
+		return std::vector<T>{
+			std::make_move_iterator(std::begin(array)),
+			std::make_move_iterator(std::end(array))
+		};
+	}
+}
+
 export namespace renderer
 {
 	struct mesh
 	{
 		constexpr mesh() = default;
+		mesh(
+			const std::vector<math::vector_4f>& vertices,
+			const std::vector<math::face>& faces
+		) : vertices(vertices), faces(faces) 
+		{ }
+
 		mesh(const std::filesystem::path& p)
 		{
 			*this = from_file(p);
@@ -135,5 +182,10 @@ export namespace renderer
 			return returnValue;
 		}
 	};
+
+	auto load_cube_mesh() -> mesh
+	{
+		return mesh(vector_from_array(cube_vertices), vector_from_array(cube_faces));
+	}
 }
 

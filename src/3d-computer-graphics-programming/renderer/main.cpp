@@ -250,7 +250,9 @@ void render(
 		{
 			display::draw_textured_triangle(
 				triangle,
-				renderer::red_brick_texture::data,
+				renderer::red_brick_texture::texture(),
+				renderer::red_brick_texture::width,
+				renderer::red_brick_texture::height,
 				buffer
 			);
 		}
