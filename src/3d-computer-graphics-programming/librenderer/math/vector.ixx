@@ -330,4 +330,54 @@ export namespace math
 	{
 		return { .x = self.x, .y = self.y, .z = self.z };
 	}
+
+	/*
+	Barycentric coordinates are a set of weights that express the position of a point
+	relative to the vertices of a triangle. They can be thought of as weights assigned
+	to each vertex. They are represented typically as (α,β,γ), where:
+		α = area_triangle(PBC) / area_triangle(ABC)
+		β = area_triangle(APC) / area_triangle(ABC)
+		γ = area_triangle(ABP) / area_triangle(ABC)
+
+	Note that α + β + γ = 1.
+
+	Due to the cross-product giving us a parallelogram area to the two vectors, we
+	can also express the above as the following:
+		α = (area_parallelogram(PBEC)/2) / (area_parallelogram(ABCD)/2)
+		β = (area_parallelogram(APEC)/2) / (area_parallelogram(ABCD)/2)
+	which simplifies to:
+		α = area_parallelogram(PBEC) / area_parallelogram(ABCD).
+		β = area_parallelogram(APEC) / area_parallelogram(ABCD).
+
+	PBEC is  the subparallelogram formed by points P, B, E and C, and ABCD is the
+	parallelogram formed by points A, B, C and D.
+
+	Thus,
+		α = ||PC x PB|| / ||AC x AB||
+		β = ||AC x AP|| / ||AC x AB||
+
+	With α and β known, we can find γ using the identity above:
+		γ = 1 - α - β
+	*/
+	constexpr auto barycentric_weights(
+		vector2_like auto a, 
+		vector2_like auto b, 
+		vector2_like auto c,
+		vector2_like auto p
+	) noexcept -> vector_3f
+	{
+		auto ac = c - a;
+		auto ab = b - a;
+		auto pc = c - p;
+		auto pb = b - p;
+		auto ap = p - a;
+
+		// Pseudo-cross products to get areas.
+		auto area_parallelologram_abc = ac.x * ab.y - ac.y * ab.x;
+
+		float alpha = (pc.x * pb.y - pc.y * pb.x) / area_parallelologram_abc;
+		float beta = (ac.x * ap.y - ac.y * ap.x) / area_parallelologram_abc;
+		float gamma = 1.f - alpha - beta;
+		return { .x = alpha, .y = beta, .z = gamma };
+	}
 }
