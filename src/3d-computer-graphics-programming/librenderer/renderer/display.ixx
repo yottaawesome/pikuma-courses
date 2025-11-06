@@ -1,4 +1,4 @@
-export module librenderer:display;
+﻿export module librenderer:display;
 import std;
 import :math;
 
@@ -345,4 +345,33 @@ export namespace display
             }
         }
     }
+
+    /*
+	Barycentric coordinates are a set of weights that express the position of a point 
+	relative to the vertices of a triangle. They can be thought of as weights assigned 
+	to each vertex. They are represented typically as (α,β,γ), where:
+	    α = area_triangle(PBC) / area_triangle(ABC)
+	    β = area_triangle(APC) / area_triangle(ABC)
+	    γ = area_triangle(ABP) / area_triangle(ABC)
+
+	Note that α + β + γ = 1.
+
+	Due to the cross-product giving us a parallelogram area to the two vectors, we
+    can also express the above as the following:
+        α = (area_parallelogram(PBEC)/2) / (area_parallelogram(ABCD)/2)
+        β = (area_parallelogram(APEC)/2) / (area_parallelogram(ABCD)/2)
+	which simplifies to:
+        α = area_parallelogram(PBEC) / area_parallelogram(ABCD).
+        β = area_parallelogram(APEC) / area_parallelogram(ABCD).
+
+    PBEC is  the subparallelogram formed by points P, B, E and C, and ABCD is the 
+    parallelogram formed by points A, B, C and D.
+
+    Thus,
+	    α = ||PC x PB|| / ||AC x AB||
+        β = ||AC x AP|| / ||AC x AB||
+    
+	With α and β known, we can find γ using the identity above:
+	    γ = 1 - α - β
+    */
 }
