@@ -154,6 +154,12 @@ export namespace display
         float x_start = tri.vertices[0].x;
         float x_end = tri.vertices[0].x;
 
+        if (x_end < x_start)
+        {
+            std::swap(x_start, x_end);
+            std::swap(inv_slope_1, inv_slope_2);
+        }
+
         // While looping, you may end up with extreme slopes that can
         // cause huge lines to be drawn. Here, we correct for this.
         float max_width = std::abs(tri.vertices[2].x - tri.vertices[1].x); // prevents constexpr
@@ -178,6 +184,12 @@ export namespace display
 
         float x_start = tri.vertices[2].x;
         float x_end = tri.vertices[2].x;
+
+        if (x_end < x_start)
+        {
+            std::swap(x_start, x_end);
+            std::swap(inv_slope_1, inv_slope_2);
+		}
 
         for (int y = static_cast<int>(tri.vertices[2].y); y >= tri.vertices[0].y; y--)
         {
