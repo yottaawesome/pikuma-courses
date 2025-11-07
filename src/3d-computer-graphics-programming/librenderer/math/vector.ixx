@@ -358,6 +358,13 @@ export namespace math
 
 	With α and β known, we can find γ using the identity above:
 		γ = 1 - α - β
+
+	Note that this does not currently incorporate perspective correction. To fix
+	the distortion caused by perspective, we need to find the depth at point P
+	inside the triangle. Perspective is not linear, so we cannot simply linearly
+	interpolate the depths of the triangle vertices using barycentric coordinates;
+	z is no linear across the triangle. But the reciprocal of z (1/z) is linear and
+	so we can use 1/z to find the interpolated z/depth at point P.
 	*/
 	constexpr auto barycentric_weights(
 		const vector2_like auto& a,

@@ -319,7 +319,7 @@ export namespace display
     )
     {
         // Sort by ascending y-coordinate
-        std::array<math::textured_vertex, 3> vertices{
+        std::array vertices{
             math::textured_vertex{triangle.vertices[0], triangle.texcoords[0]},
             math::textured_vertex{triangle.vertices[1], triangle.texcoords[1]},
             math::textured_vertex{triangle.vertices[2], triangle.texcoords[2]}
