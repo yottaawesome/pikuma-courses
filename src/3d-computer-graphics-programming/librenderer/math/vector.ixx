@@ -378,6 +378,9 @@ export namespace math
 		float alpha = (pc.x * pb.y - pc.y * pb.x) / area_parallelologram_abc;
 		float beta = (ac.x * ap.y - ac.y * ap.x) / area_parallelologram_abc;
 		float gamma = 1.f - alpha - beta;
-		return { .x = alpha, .y = beta, .z = gamma };
+		return { 
+			.x = std::clamp(alpha, 0.f, 1.f), 
+			.y = std::clamp(beta, 0.f, 1.f), 
+			.z = std::clamp(gamma, 0.f, 1.f) };
 	}
 }
