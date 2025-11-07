@@ -360,10 +360,10 @@ export namespace math
 		γ = 1 - α - β
 	*/
 	constexpr auto barycentric_weights(
-		vector2_like auto a, 
-		vector2_like auto b, 
-		vector2_like auto c,
-		vector2_like auto p
+		const vector2_like auto& a,
+		const vector2_like auto& b,
+		const vector2_like auto& c,
+		const vector2_like auto& p
 	) noexcept -> vector_3f
 	{
 		auto ac = c - a;
