@@ -300,17 +300,28 @@ export namespace display
         float beta = weights.y;
         float gamma = weights.z;
 
-		// Perform texture interpolation using barycentric coordinates
+		// Perform the interpolation of all U/w and V/w values using barycentric 
+        // weights and a factor of 1/w.
         float interpolated_u = 
-            vertex[0].texcoords.u * alpha 
-            + vertex[1].texcoords.u * beta 
-            + vertex[2].texcoords.u * gamma;
+            (vertex[0].texcoords.u / vertex[0].position.w) * alpha
+            + (vertex[1].texcoords.u / vertex[1].position.w)* beta
+            + (vertex[2].texcoords.u / vertex[2].position.w)* gamma;
         float interpolated_v =
-            vertex[0].texcoords.v * alpha
-            + vertex[1].texcoords.v * beta
-            + vertex[2].texcoords.v * gamma;
+            (vertex[0].texcoords.v / vertex[0].position.w) * alpha
+            + (vertex[1].texcoords.v / vertex[1].position.w) * beta
+            + (vertex[2].texcoords.v / vertex[2].position.w) * gamma;
 
-		// Map the interpolated UV coordinates to texture space
+		// Also interpolate the 1/w value for the current pixel.
+        float interpolated_w_reciprocal =
+            (1.f / vertex[0].position.w) * alpha
+            + (1.f / vertex[1].position.w) * beta
+			+ (1.f / vertex[2].position.w) * gamma;
+
+		// Now we can divide back both interpolated U and V by the interpolated 1/w.
+        interpolated_u /= interpolated_w_reciprocal;
+        interpolated_v /= interpolated_w_reciprocal;
+
+		// Map the UV coordinate to the full texture width and height.
         int tex_x = math::abs(static_cast<int>(interpolated_u * texture_width));
         int tex_y = math::abs(static_cast<int>(interpolated_v * texture_height));
 
@@ -343,19 +354,6 @@ export namespace display
             {
                 return a.position.y < b.position.y;
             });
-
-        math::vector_2f point_a{
-            .x = vertices[0].position.x,
-            .y = vertices[0].position.y
-        };
-        math::vector_2f point_b{
-            .x = vertices[1].position.x,
-            .y = vertices[1].position.y
-        };
-        math::vector_2f point_c{
-            .x = vertices[2].position.x,
-            .y = vertices[2].position.y
-        };
 
 		// Render upper part of triangle
         float inv_slope_1 = 0;
