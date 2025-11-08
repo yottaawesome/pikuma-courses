@@ -22,6 +22,7 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\upng.c" />
     <ClCompile Include="math\degreesradians.ixx" />
     <ClCompile Include="lib\lib.ixx" />
     <ClCompile Include="math\math_functions.ixx" />
@@ -44,6 +45,9 @@
     <ClCompile Include="util\fileline.ixx" />
     <ClCompile Include="math\primitives.ixx" />
     <ClCompile Include="math\vector.ixx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lib\upng.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
