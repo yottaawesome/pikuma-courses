@@ -8,6 +8,8 @@ Use the following controls to adjust the rendering.
 * `2`: render a mesh wireframe.
 * `3`: render a filled-triangle mesh.
 * `4`: render a filled-triangle mesh with edges.
+* `5`: render a textured mesh.
+* `6`: render a textuted mesh with wireframe.
 * `c`: enables backface culling.
 * `d`: disables backface culling.
 * `up arrow`: rotates the mesh.
@@ -112,4 +114,5 @@ Given three triangles that constitute a face, sorted by increasing _y_, find the
 
 * [Markdown and LaTeX introduction](https://ashki23.github.io/markdown-latex.html)
 * [Mathjax newline issue (Github rendering related)](https://github.com/mathjax/MathJax/issues/2312)
+
 
