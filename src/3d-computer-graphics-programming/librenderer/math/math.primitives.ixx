@@ -12,14 +12,10 @@ export namespace math
 		std::uint32_t y = 0;
 	};
 
-	struct basic_rectangle
+	struct rectangle
 	{
 		std::uint32_t width = 0;
 		std::uint32_t height = 0;
-	};
-
-	struct rectangle : basic_rectangle
-	{
 		std::uint32_t x = 0;
 		std::uint32_t y = 0;
 		auto is_in_point_space(this const rectangle& self, point_2d point) noexcept -> bool
