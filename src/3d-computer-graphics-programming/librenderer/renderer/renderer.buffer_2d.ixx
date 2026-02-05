@@ -2,7 +2,6 @@ export module librenderer:renderer.buffer_2d;
 import std;
 import :util;
 import :concepts;
-import :math;
 
 export namespace renderer
 {

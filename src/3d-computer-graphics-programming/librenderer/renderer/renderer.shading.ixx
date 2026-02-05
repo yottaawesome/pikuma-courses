@@ -1,7 +1,6 @@
 export module librenderer:renderer.shading;
 import std;
 import :math;
-import :util;
 
 export namespace renderer
 {

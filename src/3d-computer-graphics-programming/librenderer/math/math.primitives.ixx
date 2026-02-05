@@ -1,8 +1,5 @@
 export module librenderer:math.primitives;
 import std;
-import :math.vector;
-import :util;
-import :renderer.texture;
 
 export namespace math
 {
