@@ -34,7 +34,7 @@
     <ClCompile Include="renderer\renderer.shading.ixx" />
     <ClCompile Include="renderer\renderer.mesh.ixx" />
     <ClCompile Include="renderer\renderer.display.ixx" />
-    <ClCompile Include="main_app\mainapp.ixx" />
+    <ClCompile Include="mainapp\mainapp.ixx" />
     <ClCompile Include="renderer\renderer.ixx" />
     <ClCompile Include="lib\lib.sdl.ixx" />
     <ClCompile Include="lib\lib.win32.ixx" />
