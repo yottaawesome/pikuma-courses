@@ -3,6 +3,17 @@ import :math;
 
 export namespace renderer
 {
+	struct face
+	{
+		int a = 0;
+		int b = 0;
+		int c = 0;
+		std::uint32_t color = 0xffadd8e6;
+		math::tex2_coordinates a_uv = { 0.0f, 0.0f };
+		math::tex2_coordinates b_uv = { 0.0f, 0.0f };
+		math::tex2_coordinates c_uv = { 0.0f, 0.0f };
+	};
+
 	struct triangle
 	{
 		math::vector_4f vertices[3];

@@ -125,7 +125,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 
 	for (int i = 0; i < main_app::mesh_to_render.faces.size(); i++)
 	{
-		math::face mesh_face = main_app::mesh_to_render.faces[i];
+		renderer::face mesh_face = main_app::mesh_to_render.faces[i];
 		math::vector_4f face_vertices[3]{
 			main_app::mesh_to_render.vertices[mesh_face.a - 1],
 			main_app::mesh_to_render.vertices[mesh_face.b - 1],

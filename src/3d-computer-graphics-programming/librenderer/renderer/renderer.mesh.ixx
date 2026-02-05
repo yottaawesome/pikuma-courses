@@ -6,6 +6,7 @@ export module librenderer:renderer.mesh;
 import std;
 import :math;
 import :util;
+import :renderer.primitives;
 
 namespace
 {
@@ -24,25 +25,25 @@ namespace
 		math::vector_4f{.x = -1, .y = -1, .z = 1 } // 8
 	};
 
-	std::array<math::face, total_cube_faces> cube_faces{
+	std::array<renderer::face, total_cube_faces> cube_faces{
 		// front
-		math::face{.a = 1, .b = 2, .c = 3, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
-		math::face{.a = 1, .b = 3, .c = 4, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
+		renderer::face{.a = 1, .b = 2, .c = 3, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
+		renderer::face{.a = 1, .b = 3, .c = 4, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
 		// right
-		math::face{.a = 4, .b = 3, .c = 5, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
-		math::face{.a = 4, .b = 5, .c = 6, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
+		renderer::face{.a = 4, .b = 3, .c = 5, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
+		renderer::face{.a = 4, .b = 5, .c = 6, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
 		// back
-		math::face{.a = 6, .b = 5, .c = 7, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
-		math::face{.a = 6, .b = 7, .c = 8, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
+		renderer::face{.a = 6, .b = 5, .c = 7, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
+		renderer::face{.a = 6, .b = 7, .c = 8, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
 		// left
-		math::face{.a = 8, .b = 7, .c = 2, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
-		math::face{.a = 8, .b = 2, .c = 1, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
+		renderer::face{.a = 8, .b = 7, .c = 2, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
+		renderer::face{.a = 8, .b = 2, .c = 1, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
 		// top
-		math::face{.a = 2, .b = 7, .c = 5, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
-		math::face{.a = 2, .b = 5, .c = 3, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
+		renderer::face{.a = 2, .b = 7, .c = 5, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
+		renderer::face{.a = 2, .b = 5, .c = 3, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
 		// bottom
-		math::face{.a = 6, .b = 8, .c = 1, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
-		math::face{.a = 6, .b = 1, .c = 4, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }}
+		renderer::face{.a = 6, .b = 8, .c = 1, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
+		renderer::face{.a = 6, .b = 1, .c = 4, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }}
 	};
 
 	template<typename T, size_t N>
@@ -62,7 +63,7 @@ export namespace renderer
 		constexpr mesh() = default;
 		mesh(
 			const std::vector<math::vector_4f>& vertices,
-			const std::vector<math::face>& faces
+			const std::vector<renderer::face>& faces
 		) : vertices(vertices), faces(faces) 
 		{ }
 
@@ -71,7 +72,7 @@ export namespace renderer
 			*this = from_file(p);
 		}
 		std::vector<math::vector_4f> vertices;
-		std::vector<math::face> faces;
+		std::vector<renderer::face> faces;
 		math::vector_4f rotation;
 		math::vector_4f scale{.x=1,.y=1,.z=1};
 		math::vector_4f translation;
@@ -109,7 +110,7 @@ export namespace renderer
 						&vertex_indices[1], &texture_indices[1], &normal_indices[1],
 						&vertex_indices[2], &texture_indices[2], &normal_indices[2]
 					);
-					math::face face = {
+					renderer::face face = {
 						.a = vertex_indices[0],
 						.b = vertex_indices[1],
 						.c = vertex_indices[2],
