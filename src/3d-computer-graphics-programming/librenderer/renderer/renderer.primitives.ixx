@@ -3,6 +3,12 @@ import :math;
 
 export namespace renderer
 {
+	struct textured_vertex
+	{
+		math::vector_4f position;
+		math::tex2_coordinates texcoords;
+	};
+
 	struct face
 	{
 		int a = 0;

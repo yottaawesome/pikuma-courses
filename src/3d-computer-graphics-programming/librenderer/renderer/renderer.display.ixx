@@ -284,7 +284,7 @@ export namespace renderer
     constexpr void draw_texel(
 		std::uint32_t x,
 		std::uint32_t y,
-		const std::array<math::textured_vertex, 3>& vertex,
+		const std::array<textured_vertex, 3>& vertex,
         const std::uint32_t* const texture,
         size_t texture_width,
         size_t texture_height,
@@ -345,9 +345,9 @@ export namespace renderer
     {
         // Sort by ascending y-coordinate
         std::array vertices{
-            math::textured_vertex{triangle.vertices[0], triangle.texcoords[0]},
-            math::textured_vertex{triangle.vertices[1], triangle.texcoords[1]},
-            math::textured_vertex{triangle.vertices[2], triangle.texcoords[2]}
+            textured_vertex{triangle.vertices[0], triangle.texcoords[0]},
+            textured_vertex{triangle.vertices[1], triangle.texcoords[1]},
+            textured_vertex{triangle.vertices[2], triangle.texcoords[2]}
         };
 
         std::ranges::sort(

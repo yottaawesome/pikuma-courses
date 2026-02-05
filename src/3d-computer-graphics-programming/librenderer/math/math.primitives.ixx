@@ -33,10 +33,4 @@ export namespace math
 			return (self.x + self.width < point.x) and (self.y + self.height < point.y);
 		}
 	};
-
-	struct textured_vertex
-	{
-		vector_4f position;
-		tex2_coordinates texcoords;
-	};
 }
