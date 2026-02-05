@@ -30,10 +30,10 @@ void process_input()
 					main_app::is_running = false;
 					break;
 				case sdl::SDL_KeyCode::SDLK_RIGHT:
-					main_app::mesh_to_render.rotation.y += increment;
+					main_app::mesh_to_render.rotation.y -= increment;
 					break;
 				case sdl::SDL_KeyCode::SDLK_LEFT:
-					main_app::mesh_to_render.rotation.y -= increment;
+					main_app::mesh_to_render.rotation.y += increment;
 					break;
 				case sdl::SDL_KeyCode::SDLK_UP:
 					main_app::mesh_to_render.rotation.x += increment;
