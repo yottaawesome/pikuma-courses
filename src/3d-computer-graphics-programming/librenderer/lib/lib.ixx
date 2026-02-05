@@ -1,3 +1,4 @@
 export module librenderer:lib;
-export import :sdl;
-export import :win32;
+export import :lib.sdl;
+export import :lib.win32;
+export import :lib.upng;

@@ -22,29 +22,30 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\lib.upng.ixx" />
     <ClCompile Include="lib\upng.c" />
-    <ClCompile Include="math\degreesradians.ixx" />
+    <ClCompile Include="math\math.degreesradians.ixx" />
     <ClCompile Include="lib\lib.ixx" />
-    <ClCompile Include="math\math_functions.ixx" />
-    <ClCompile Include="math\matrix.ixx" />
+    <ClCompile Include="math\math.functions.ixx" />
+    <ClCompile Include="math\math.matrix.ixx" />
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
     <ClCompile Include="math\math.ixx" />
-    <ClCompile Include="renderer\shading.ixx" />
-    <ClCompile Include="renderer\mesh.ixx" />
-    <ClCompile Include="renderer\display.ixx" />
+    <ClCompile Include="renderer\renderer.shading.ixx" />
+    <ClCompile Include="renderer\renderer.mesh.ixx" />
+    <ClCompile Include="renderer\renderer.display.ixx" />
     <ClCompile Include="main_app\mainapp.ixx" />
     <ClCompile Include="renderer\renderer.ixx" />
-    <ClCompile Include="lib\sdl.ixx" />
-    <ClCompile Include="lib\win32.ixx" />
-    <ClCompile Include="math\buffer_2d.ixx" />
+    <ClCompile Include="lib\lib.sdl.ixx" />
+    <ClCompile Include="lib\lib.win32.ixx" />
+    <ClCompile Include="math\math.buffer_2d.ixx" />
     <ClCompile Include="concepts\concepts.ixx" />
-    <ClCompile Include="renderer\texture.ixx" />
+    <ClCompile Include="renderer\renderer.texture.ixx" />
     <ClCompile Include="util\util.ixx" />
-    <ClCompile Include="util\functions.ixx" />
-    <ClCompile Include="util\fileline.ixx" />
-    <ClCompile Include="math\primitives.ixx" />
-    <ClCompile Include="math\vector.ixx" />
+    <ClCompile Include="util\util.functions.ixx" />
+    <ClCompile Include="util\util.fileline.ixx" />
+    <ClCompile Include="math\math.primitives.ixx" />
+    <ClCompile Include="math\math.vector.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\upng.h" />

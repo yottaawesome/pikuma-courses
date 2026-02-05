@@ -1,4 +1,4 @@
-export module librenderer:fileline;
+export module librenderer:util.fileline;
 import std;
 
 export namespace util

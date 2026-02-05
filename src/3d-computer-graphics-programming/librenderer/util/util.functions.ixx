@@ -1,7 +1,6 @@
-export module librenderer:functions;
+export module librenderer:util.functions;
 import std;
-import :win32;
-import :sdl;
+import :lib;
 
 export namespace util
 {

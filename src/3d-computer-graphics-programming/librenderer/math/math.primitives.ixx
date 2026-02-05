@@ -1,8 +1,8 @@
-﻿export module librenderer:primitives;
+﻿export module librenderer:math.primitives;
 import std;
-import :vector;
+import :math.vector;
 import :util;
-import :texture;
+import :renderer.texture;
 
 export namespace math
 {

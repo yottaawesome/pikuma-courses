@@ -1,4 +1,4 @@
-﻿export module librenderer:vector;
+﻿export module librenderer:math.vector;
 import std;
 
 export namespace math

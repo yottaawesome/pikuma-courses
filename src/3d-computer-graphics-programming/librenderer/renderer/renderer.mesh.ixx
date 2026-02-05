@@ -2,7 +2,7 @@ module;
 
 #include <stdio.h>
 
-export module librenderer:mesh;
+export module librenderer:renderer.mesh;
 import std;
 import :math;
 import :util;

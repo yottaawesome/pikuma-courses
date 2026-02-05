@@ -1,11 +1,8 @@
 export module librenderer;
-export import :renderer;
+export import :concepts;
+export import :lib;
+export import :mainapp;
 export import :math;
 export import :raii;
-export import :sdl;
-export import :win32;
-export import :concepts;
-export import :mainapp;
-export import :vector;
-export import :degreesradians;
+export import :renderer;
 export import :util;

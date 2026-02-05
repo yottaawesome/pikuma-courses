@@ -1,4 +1,4 @@
-export module librenderer:degreesradians;
+export module librenderer:math.degreesradians;
 import std;
 
 export namespace math

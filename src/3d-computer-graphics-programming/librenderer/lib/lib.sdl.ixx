@@ -2,7 +2,7 @@ module;
 
 #include <SDL2/SDL.h>
 
-export module librenderer:sdl;
+export module librenderer:lib.sdl;
 
 export namespace sdl
 {

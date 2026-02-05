@@ -1,8 +1,8 @@
-export module librenderer:matrix;
+export module librenderer:math.matrix;
 import std;
 import :concepts;
-import :vector;
-import :degreesradians;
+import :math.vector;
+import :math.degreesradians;
 
 export namespace math
 {

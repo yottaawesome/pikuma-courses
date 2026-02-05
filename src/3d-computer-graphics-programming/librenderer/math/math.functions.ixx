@@ -1,4 +1,4 @@
-export module librenderer:math_functions;
+export module librenderer:math.functions;
 import std;
 import :concepts;
 

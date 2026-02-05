@@ -1,6 +1,6 @@
 export module librenderer:raii;
 import std;
-import :sdl;
+import :lib.sdl;
 
 export namespace raii
 {

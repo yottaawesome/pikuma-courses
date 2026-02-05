@@ -1,4 +1,4 @@
-export module librenderer:texture;
+export module librenderer:renderer.texture;
 import std;
 
 namespace

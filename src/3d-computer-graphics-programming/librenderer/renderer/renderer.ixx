@@ -1,5 +1,5 @@
 export module librenderer:renderer;
-export import :display;
-export import :mesh;
-export import :shading;
-export import :texture;
+export import :renderer.display;
+export import :renderer.mesh;
+export import :renderer.shading;
+export import :renderer.texture;

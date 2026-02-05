@@ -1,7 +1,7 @@
 export module librenderer:math;
-export import :buffer_2d;
-export import :primitives;
-export import :matrix;
-export import :degreesradians;
-export import :vector;
-export import :math_functions;
+export import :math.buffer_2d;
+export import :math.primitives;
+export import :math.matrix;
+export import :math.degreesradians;
+export import :math.vector;
+export import :math.functions;

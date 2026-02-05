@@ -1,4 +1,4 @@
-export module librenderer:buffer_2d;
+export module librenderer:math.buffer_2d;
 import std;
 import :util;
 import :concepts;
