@@ -103,7 +103,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 	// Delay to meet target frame rate. Note: we can 
 	// do this ourselves by keeping track of the 
 	// elapsed milliseconds.
-	std::chrono::milliseconds time_to_wait = main_app::frame_target_time - elapsed_time;
+	auto time_to_wait = std::chrono::milliseconds{ main_app::frame_target_time - elapsed_time };
 	if (time_to_wait.count() > 0 and time_to_wait <= main_app::frame_target_time)
 		sdl::SDL_Delay(static_cast<std::uint32_t>(time_to_wait.count()));
 	main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
@@ -111,28 +111,27 @@ void update(const std::chrono::milliseconds elapsed_time)
 
 	// Change to > 0 to make the cube progressively bigger.
 	main_app::mesh_to_render.additively_scale_by(0);
-	math::scale_matrix scaleMatrix { main_app::mesh_to_render.scale };
+	auto scaleMatrix = math::scale_matrix{ main_app::mesh_to_render.scale };
 	//main_app::mesh_to_render.translation.z = 4;
-	math::translate_matrix translation { main_app::mesh_to_render.translation };
+	auto translation = math::translate_matrix{ main_app::mesh_to_render.translation };
 
 	//main_app::mesh_to_render.rotation.x += 0.01f;
 	//main_app::mesh_to_render.rotation.y += 0.01f;
 	//main_app::mesh_to_render.rotation.z += 0.01f;
-	math::rotation_matrix rotationMatrix{ main_app::mesh_to_render.rotation };
+	auto rotationMatrix = math::rotation_matrix{ main_app::mesh_to_render.rotation };
 
-	const renderer::light global_light
-		{ { .x = 0, .y = 0, .z = 1 }, 0xffffffff };
+	constexpr auto global_light = renderer::light{ { .x = 0, .y = 0, .z = 1 }, 0xffffffff };
 
 	for (int i = 0; i < main_app::mesh_to_render.faces.size(); i++)
 	{
-		renderer::face mesh_face = main_app::mesh_to_render.faces[i];
-		math::vector_4f face_vertices[3]{
+		auto mesh_face = renderer::face{ main_app::mesh_to_render.faces[i] };
+		auto face_vertices = std::array{
 			main_app::mesh_to_render.vertices[mesh_face.a - 1],
 			main_app::mesh_to_render.vertices[mesh_face.b - 1],
 			main_app::mesh_to_render.vertices[mesh_face.c - 1]
 		};
 
-		math::vector_4f transformed_vertices[3];
+		auto transformed_vertices = std::array<math::vector_4f, 3>{};
 		for (int j = 0; j < 3; j++)
 		{
 			// These need to be applied in the correct order: 
@@ -148,14 +147,14 @@ void update(const std::chrono::milliseconds elapsed_time)
 				* face_vertices[j];
 		}
 
-		renderer::triangle transformed_triangle{
+		auto transformed_triangle = renderer::triangle{
 			.vertices {
 				transformed_vertices[0],
 				transformed_vertices[1],
 				transformed_vertices[2]
 			}
 		};
-		auto normal = transformed_triangle.compute_normal();
+		auto normal = math::vector_4f{ transformed_triangle.compute_normal() };
 
 		/* Backface culling -- bypass rendering triangles that 
 		* are not facing the camera.
@@ -174,13 +173,13 @@ void update(const std::chrono::milliseconds elapsed_time)
 		if (main_app::render_settings.culling_mode == main_app::cull_mode::enabled)
 		{
 			const auto& [vector_a, vector_b, _] = transformed_vertices;
-			math::vector_4f camera_ray = main_app::camera_position - vector_a;
+			auto camera_ray = math::vector_4f{ main_app::camera_position - vector_a };
 			if (math::dot_product(camera_ray, normal) <= 0) // cull the face
 				continue;
 		}
 
 		// Loop all three vertices
-		renderer::triangle projected_triangle{
+		auto projected_triangle = renderer::triangle{
 			.texcoords = { mesh_face.a_uv, mesh_face.b_uv, mesh_face.c_uv },
 			.color =
 				//global_light.compute_intensity_from_normal(mesh_face.color, normal)
@@ -190,8 +189,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 		for (int j = 0; j < 3; j++)
 		{
 			// Project the current vertex
-			math::vector_4f projected_point = 
-				main_app::proj_matrix * transformed_vertices[j];
+			auto projected_point = math::vector_4f{ main_app::proj_matrix * transformed_vertices[j] };
 
 			// Scale into the view.
 			projected_point.x *= main_app::window_dimensions.width() / 2;
@@ -235,7 +233,7 @@ void render(
 	//draw_pixel(0, 50, 0xffff0000, buffer);
 	renderer::draw_dot_grid(10, 0xff464646, buffer);
 
-	for (renderer::triangle triangle : main_app::triangles_to_render)
+	for (const renderer::triangle& triangle : main_app::triangles_to_render)
 	{
 		if (main_app::render_settings.should_draw_filled_triangles())
 		{
@@ -293,10 +291,10 @@ int WinMain(int argc, char* argv[])
 
 	//display::initialize_window(app);
 
-	milliseconds elapsed{ 0 };
+	auto elapsed = milliseconds{ 0 };
 	while (main_app::is_running)
 	{
-		high_resolution_clock::time_point begin = high_resolution_clock::now();
+		auto begin = high_resolution_clock::now();
 		process_input();
 		update(elapsed);
 		render(

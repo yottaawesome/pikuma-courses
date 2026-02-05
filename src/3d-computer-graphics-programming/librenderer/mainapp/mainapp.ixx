@@ -95,7 +95,7 @@ export namespace main_app
 		}();
 
 	std::array<math::vector_3f, number_of_points> cube_points{};
-	math::vector_3f camera_position;
+	math::vector_4f camera_position;
 
 	bool is_running =
 		[](std::array<math::vector_3f, number_of_points>& cube_points, const raii::sdl_window_unique_ptr& window)
