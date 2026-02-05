@@ -6,13 +6,7 @@ import :renderer.texture;
 
 export namespace math
 {
-	struct tex2_coordinates
-	{
-		float u = 0.f;
-		float v = 0.f;
-	};
-
-	struct point_2d final
+	struct point_2d
 	{
 		std::uint32_t x = 0;
 		std::uint32_t y = 0;

@@ -3,10 +3,16 @@ import :math;
 
 export namespace renderer
 {
+	struct tex2_coordinates
+	{
+		float u = 0.f;
+		float v = 0.f;
+	};
+
 	struct textured_vertex
 	{
 		math::vector_4f position;
-		math::tex2_coordinates texcoords;
+		tex2_coordinates texcoords;
 	};
 
 	struct face
@@ -15,15 +21,15 @@ export namespace renderer
 		int b = 0;
 		int c = 0;
 		std::uint32_t color = 0xffadd8e6;
-		math::tex2_coordinates a_uv = { 0.0f, 0.0f };
-		math::tex2_coordinates b_uv = { 0.0f, 0.0f };
-		math::tex2_coordinates c_uv = { 0.0f, 0.0f };
+		tex2_coordinates a_uv = { 0.0f, 0.0f };
+		tex2_coordinates b_uv = { 0.0f, 0.0f };
+		tex2_coordinates c_uv = { 0.0f, 0.0f };
 	};
 
 	struct triangle
 	{
 		math::vector_4f vertices[3];
-		math::tex2_coordinates texcoords[3];
+		tex2_coordinates texcoords[3];
 		std::uint32_t color = 0xffffffff;
 		float average_depth = 0; // for painter's algorithm
 
