@@ -12,7 +12,7 @@ export namespace main_app
 	constexpr int fps = 60;
 	constexpr std::chrono::milliseconds frame_target_time{ 1000 / fps };
 
-	std::vector<math::triangle> triangles_to_render; // renderer::mesh_faces.size()
+	std::vector<renderer::triangle> triangles_to_render; // renderer::mesh_faces.size()
 
 	std::unique_ptr<raii::sdl_context> context = std::make_unique<raii::sdl_context>(sdl::sdl_init_everything);
 

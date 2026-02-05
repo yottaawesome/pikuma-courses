@@ -31,6 +31,7 @@
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
     <ClCompile Include="math\math.ixx" />
+    <ClCompile Include="renderer\renderer.primitives.ixx" />
     <ClCompile Include="renderer\renderer.shading.ixx" />
     <ClCompile Include="renderer\renderer.mesh.ixx" />
     <ClCompile Include="renderer\renderer.display.ixx" />

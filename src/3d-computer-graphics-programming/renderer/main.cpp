@@ -148,7 +148,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 				* face_vertices[j];
 		}
 
-		math::triangle transformed_triangle{
+		renderer::triangle transformed_triangle{
 			.vertices {
 				transformed_vertices[0],
 				transformed_vertices[1],
@@ -180,7 +180,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 		}
 
 		// Loop all three vertices
-		math::triangle projected_triangle{
+		renderer::triangle projected_triangle{
 			.texcoords = { mesh_face.a_uv, mesh_face.b_uv, mesh_face.c_uv },
 			.color =
 				//global_light.compute_intensity_from_normal(mesh_face.color, normal)
@@ -215,7 +215,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 	std::sort(
 		main_app::triangles_to_render.begin(), 
 		main_app::triangles_to_render.end(),
-		[](const math::triangle& t1, const math::triangle& t2) static
+		[](const renderer::triangle& t1, const renderer::triangle& t2) static
 		{
 			return t1.average_depth > t2.average_depth;
 		});
@@ -233,13 +233,13 @@ void render(
 	//draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
 	//draw_rect(50, 50, 60, 50, 0xffc0c0c0, buffer);
 	//draw_pixel(0, 50, 0xffff0000, buffer);
-	display::draw_dot_grid(10, 0xff464646, buffer);
+	renderer::draw_dot_grid(10, 0xff464646, buffer);
 
-	for (math::triangle triangle : main_app::triangles_to_render)
+	for (renderer::triangle triangle : main_app::triangles_to_render)
 	{
 		if (main_app::render_settings.should_draw_filled_triangles())
 		{
-			display::draw_filled_triangle(
+			renderer::draw_filled_triangle(
 				triangle,
 				triangle.color, 
 				buffer
@@ -248,7 +248,7 @@ void render(
 
 		if (main_app::render_settings.should_draw_textured_triangles())
 		{
-			display::draw_textured_triangle(
+			renderer::draw_textured_triangle(
 				triangle,
 				renderer::red_brick_texture::texture(),
 				renderer::red_brick_texture::width,
@@ -258,13 +258,13 @@ void render(
 		}
 
 		if (main_app::render_settings.should_draw_triangles())
-			display::draw_triangle(triangle, 0xffffffff, buffer);
+			renderer::draw_triangle(triangle, 0xffffffff, buffer);
 
 		if (main_app::render_settings.should_draw_points())
 		{
 			[](auto&& buffer, auto&&...point) static
 			{
-				(display::draw_pixel(
+				(renderer::draw_pixel(
 					static_cast<std::uint32_t>(point.y),
 					static_cast<std::uint32_t>(point.x),
 					0xffff0000,
@@ -274,7 +274,7 @@ void render(
 		}
 	}
 
-	display::render_color_buffer(renderer, buffer, color_buffer_texture);
+	renderer::render_color_buffer(renderer, buffer, color_buffer_texture);
 
 	buffer.fill(0xff000000);
 	main_app::triangles_to_render.clear();

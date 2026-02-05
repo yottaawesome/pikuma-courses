@@ -1,9 +1,10 @@
 ﻿export module librenderer:renderer.display;
 import std;
 import :math;
+import :renderer.primitives;
 import :renderer.buffer_2d;
 
-export namespace display
+export namespace renderer
 {
     enum class colors : std::uint32_t
     {
@@ -116,7 +117,7 @@ export namespace display
     }
 
     constexpr void draw_triangle(
-        const math::triangle& triangle,
+        const renderer::triangle& triangle,
         const std::uint32_t color,
         renderer::color_buffer& buffer
     )
@@ -147,7 +148,7 @@ export namespace display
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(const math::triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
+    void fill_flat_bottom_triangle(const triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[1].x - tri.vertices[0].x) / (tri.vertices[1].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
@@ -178,7 +179,7 @@ export namespace display
         }
     }
 
-    constexpr void fill_flat_top_triangle(const math::triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(const triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[1].x) / (tri.vertices[2].y - tri.vertices[1].y);
@@ -201,7 +202,7 @@ export namespace display
     }
 
     constexpr void draw_filled_triangle(
-        const math::triangle& triangle,
+        const triangle& triangle,
         std::uint32_t color,
         renderer::color_buffer& buffer
     )
@@ -335,7 +336,7 @@ export namespace display
 
     // Draw a textured triangle with flat-top/flat-bottom method.
     constexpr void draw_textured_triangle(
-        const math::triangle& triangle,
+        const triangle& triangle,
         const std::uint32_t* const texture,
 		size_t texture_width,
 		size_t texture_height,
