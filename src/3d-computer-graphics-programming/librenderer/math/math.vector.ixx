@@ -1,5 +1,6 @@
-﻿export module librenderer:math.vector;
+export module librenderer:math.vector;
 import std;
+import :math.functions;
 
 export namespace math
 {
@@ -55,11 +56,11 @@ export namespace math
 	constexpr auto magnitude(vector_like auto&& v) noexcept -> float
 	{
 		if constexpr (vector4_like<decltype(v)>)
-			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+			return math::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector3_like<decltype(v)>)
-			return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+			return math::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector2_like<decltype(v)>)
-			return std::sqrt(v.x * v.x + v.y * v.y);
+			return math::sqrt(v.x * v.x + v.y * v.y);
 		/*if constexpr (vector1_like<decltype(v)>)
 			return std::sqrt(v.x * v.x);*/
 	}
