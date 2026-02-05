@@ -1,4 +1,4 @@
-﻿export module librenderer:math.primitives;
+export module librenderer:math.primitives;
 import std;
 import :math.vector;
 import :util;
