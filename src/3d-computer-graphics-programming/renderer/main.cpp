@@ -10,10 +10,85 @@ import librenderer;
 
 void process_input()
 {
-	sdl::SDL_Event eventInfo;
-	sdl::SDL_PollEvent(&eventInfo);
 	constexpr float increment = 0.02f;
 
+	constexpr auto HandleKeyDown = 
+		[](sdl::SDL_Keycode key) static noexcept
+		{
+			switch (key)
+			{
+			case sdl::SDL_KeyCode::SDLK_ESCAPE:
+				main_app::is_running = false;
+				break;
+			case sdl::SDL_KeyCode::SDLK_RIGHT:
+				main_app::mesh_to_render.rotation.y -= increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_LEFT:
+				main_app::mesh_to_render.rotation.y += increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_UP:
+				main_app::mesh_to_render.rotation.x += increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_DOWN:
+				main_app::mesh_to_render.rotation.x -= increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_w:
+				main_app::mesh_to_render.translation.y -= increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_s:
+				main_app::mesh_to_render.translation.y += increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_a:
+				main_app::mesh_to_render.translation.x -= increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_d:
+				main_app::mesh_to_render.translation.x += increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_e:
+				main_app::mesh_to_render.translation.z += increment;
+				break;
+			case sdl::SDL_KeyCode::SDLK_f:
+				main_app::mesh_to_render.translation.z -= increment;
+				break;
+			default:
+				break; // do nothing for other keys
+			}
+		};
+
+	constexpr auto HandleKeyUp = 
+		[](sdl::SDL_Keycode key) static noexcept
+		{
+			switch (key)
+			{
+			case sdl::SDL_KeyCode::SDLK_1:
+				main_app::render_settings.rendering_mode = main_app::render_mode::wireframe_with_dot;
+				break;
+			case sdl::SDL_KeyCode::SDLK_2:
+				main_app::render_settings.rendering_mode = main_app::render_mode::wireframe;
+				break;
+			case sdl::SDL_KeyCode::SDLK_3:
+				main_app::render_settings.rendering_mode = main_app::render_mode::filled;
+				break;
+			case sdl::SDL_KeyCode::SDLK_4:
+				main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
+				break;
+			case sdl::SDL_KeyCode::SDLK_5:
+				main_app::render_settings.rendering_mode = main_app::render_mode::textured;
+				break;
+			case sdl::SDL_KeyCode::SDLK_6:
+				main_app::render_settings.rendering_mode = main_app::render_mode::textured_wireframe;
+				break;
+			case sdl::SDL_KeyCode::SDLK_c:
+				main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
+				break;
+			case sdl::SDL_KeyCode::SDLK_d:
+				main_app::render_settings.culling_mode = main_app::cull_mode::disabled;
+				break;
+			}
+		};
+
+	sdl::SDL_Event eventInfo;
+	sdl::SDL_PollEvent(&eventInfo);
 	switch (eventInfo.type)
 	{
 		case sdl::SDL_EventType::SDL_QUIT:
@@ -24,76 +99,14 @@ void process_input()
 
 		case sdl::SDL_EventType::SDL_KEYDOWN:
 		{
-			switch (eventInfo.key.keysym.sym)
-			{
-				case sdl::SDL_KeyCode::SDLK_ESCAPE:
-					main_app::is_running = false;
-					break;
-				case sdl::SDL_KeyCode::SDLK_RIGHT:
-					main_app::mesh_to_render.rotation.y -= increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_LEFT:
-					main_app::mesh_to_render.rotation.y += increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_UP:
-					main_app::mesh_to_render.rotation.x += increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_DOWN:
-					main_app::mesh_to_render.rotation.x -= increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_w:
-					main_app::mesh_to_render.translation.y -= increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_s:
-					main_app::mesh_to_render.translation.y += increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_a:
-					main_app::mesh_to_render.translation.x -= increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_d:
-					main_app::mesh_to_render.translation.x += increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_e:
-					main_app::mesh_to_render.translation.z += increment;
-					break;
-				case sdl::SDL_KeyCode::SDLK_f:
-					main_app::mesh_to_render.translation.z -= increment;
-					break;
+			HandleKeyDown(eventInfo.key.keysym.sym);
+			break;
+		}
 
-				break;
-			}
-
-			case sdl::SDL_EventType::SDL_KEYUP:
-			{
-				switch (eventInfo.key.keysym.sym)
-				{
-					case sdl::SDL_KeyCode::SDLK_1:
-						main_app::render_settings.rendering_mode = main_app::render_mode::wireframe_with_dot;
-						break;
-					case sdl::SDL_KeyCode::SDLK_2:
-						main_app::render_settings.rendering_mode = main_app::render_mode::wireframe;
-						break;
-					case sdl::SDL_KeyCode::SDLK_3:
-						main_app::render_settings.rendering_mode = main_app::render_mode::filled;
-						break;
-					case sdl::SDL_KeyCode::SDLK_4:
-						main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
-						break;
-					case sdl::SDL_KeyCode::SDLK_5:
-						main_app::render_settings.rendering_mode = main_app::render_mode::textured;
-						break;
-					case sdl::SDL_KeyCode::SDLK_6:
-						main_app::render_settings.rendering_mode = main_app::render_mode::textured_wireframe;
-						break;
-					case sdl::SDL_KeyCode::SDLK_c:
-						main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
-						break;
-					case sdl::SDL_KeyCode::SDLK_d:
-						main_app::render_settings.culling_mode = main_app::cull_mode::disabled;
-						break;
-				}
-				break;
-			}
+		case sdl::SDL_EventType::SDL_KEYUP:
+		{
+			HandleKeyUp(eventInfo.key.keysym.sym);
+			break;
 		}
 	}
 }

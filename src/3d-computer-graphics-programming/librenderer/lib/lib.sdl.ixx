@@ -40,6 +40,7 @@ export namespace sdl
 		::SDL_Event,
 		::SDL_EventType,
 		::SDL_KeyCode,
+		::SDL_Keycode,
 		::SDL_WindowFlags,
 		::SDL_PixelFormatEnum,
 		::SDL_TextureAccess,
