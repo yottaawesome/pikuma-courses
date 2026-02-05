@@ -1,5 +1,4 @@
 export module librenderer:math;
-export import :math.buffer_2d;
 export import :math.primitives;
 export import :math.matrix;
 export import :math.degreesradians;

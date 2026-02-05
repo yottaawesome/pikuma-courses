@@ -1,9 +1,10 @@
-export module librenderer:math.buffer_2d;
+export module librenderer:renderer.buffer_2d;
 import std;
 import :util;
 import :concepts;
+import :math;
 
-export namespace math
+export namespace renderer
 {
     // represents a 2D buffer of an underlying numeric type.
     template<concepts::is_arithmetic T>
@@ -83,29 +84,29 @@ export namespace math
 
 static_assert(
     []{
-        math::buffer_2d<std::uint32_t> buffer;
+        renderer::buffer_2d<std::uint32_t> buffer;
         return buffer.width() == 0 and buffer.height() == 0;
     }(), "Default constructed buffer is expected to be zero width and height.");
 static_assert(
     [] {
-        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
+        renderer::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         return buffer.width() == 200 and buffer.height() == 300;
     }(), "A buffer constructed with arguments 200 and 300 should have width and height of 200 and 300 respectively.");
 static_assert(
     [] {
-        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
+        renderer::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         buffer.set(0, 1, 45);
         return buffer.raw_buffer()[1] == 45;
     }(), "A set() operation did not modify the expected pixel to the correct value.");
 static_assert(
     [] {
-        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
+        renderer::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         buffer.set(1, 1, 45);
         return buffer.raw_buffer()[200 + 1] == 45;
     }(), "A set() operation did not modify the expected pixel to the correct value.");
 static_assert(
     [] {
-        math::buffer_2d<std::uint32_t> buffer{ 200, 300 };
+        renderer::buffer_2d<std::uint32_t> buffer{ 200, 300 };
         buffer[1,1] = 45;
         return buffer.raw_buffer()[200 + 1] == 45;
     }(), "A set() operation did not modify the expected pixel to the correct value.");

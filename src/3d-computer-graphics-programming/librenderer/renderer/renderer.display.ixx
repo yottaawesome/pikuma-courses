@@ -1,6 +1,7 @@
 ﻿export module librenderer:renderer.display;
 import std;
 import :math;
+import :renderer.buffer_2d;
 
 export namespace display
 {
@@ -13,7 +14,7 @@ export namespace display
         black = 0xff000000
     };
 
-    constexpr void draw_line_grid(std::int32_t step, std::uint32_t color, math::color_buffer& buffer)
+    constexpr void draw_line_grid(std::int32_t step, std::uint32_t color, renderer::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row++)
         {
@@ -31,7 +32,7 @@ export namespace display
         }
     }
 
-    constexpr void draw_dot_grid(std::int32_t step, std::uint32_t color, math::color_buffer& buffer)
+    constexpr void draw_dot_grid(std::int32_t step, std::uint32_t color, renderer::color_buffer& buffer)
     {
         for (uint32_t row = 0; row < buffer.height(); row += 10)
             for (uint32_t column = 0; column < buffer.width(); column += 10)
@@ -41,7 +42,7 @@ export namespace display
 	// This is in row-major form. This means that if you're
 	// working with Cartesian coordinates, you need to swap 
     // x and y to get the correct pixel.
-    constexpr void draw_pixel(std::uint32_t x, std::uint32_t y, std::uint32_t color, math::color_buffer& buffer)
+    constexpr void draw_pixel(std::uint32_t x, std::uint32_t y, std::uint32_t color, renderer::color_buffer& buffer)
     {
         buffer.set(x, y, color);
     }
@@ -52,7 +53,7 @@ export namespace display
         std::uint32_t width,
         std::uint32_t height,
         std::uint32_t color,
-        math::color_buffer& buffer
+        renderer::color_buffer& buffer
     )
     {
         for (uint32_t row = y; row < y + width and row < buffer.height(); row++)
@@ -62,7 +63,7 @@ export namespace display
 
     void render_color_buffer(
         sdl::SDL_Renderer* renderer,
-        math::color_buffer& buffer,
+        renderer::color_buffer& buffer,
         sdl::SDL_Texture* color_buffer_texture
     )
     {
@@ -87,7 +88,7 @@ export namespace display
         const int x1,
         const int y1,
         const std::uint32_t color,
-        math::color_buffer& buffer
+        renderer::color_buffer& buffer
     )
     {
         int delta_x = x1 - x0;
@@ -117,7 +118,7 @@ export namespace display
     constexpr void draw_triangle(
         const math::triangle& triangle,
         const std::uint32_t color,
-        math::color_buffer& buffer
+        renderer::color_buffer& buffer
     )
     {
         draw_line(
@@ -146,7 +147,7 @@ export namespace display
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(const math::triangle& tri, std::uint32_t color, math::color_buffer& buffer)
+    void fill_flat_bottom_triangle(const math::triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[1].x - tri.vertices[0].x) / (tri.vertices[1].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
@@ -177,7 +178,7 @@ export namespace display
         }
     }
 
-    constexpr void fill_flat_top_triangle(const math::triangle& tri, std::uint32_t color, math::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(const math::triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[1].x) / (tri.vertices[2].y - tri.vertices[1].y);
@@ -202,7 +203,7 @@ export namespace display
     constexpr void draw_filled_triangle(
         const math::triangle& triangle,
         std::uint32_t color,
-        math::color_buffer& buffer
+        renderer::color_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate
@@ -286,7 +287,7 @@ export namespace display
         const std::uint32_t* const texture,
         size_t texture_width,
         size_t texture_height,
-		math::color_buffer& buffer
+		renderer::color_buffer& buffer
     )
     {
         auto weights = math::barycentric_weights(
@@ -338,7 +339,7 @@ export namespace display
         const std::uint32_t* const texture,
 		size_t texture_width,
 		size_t texture_height,
-        math::color_buffer& buffer
+        renderer::color_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate

@@ -224,7 +224,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 void render(
 	sdl::SDL_Renderer* renderer,
 	sdl::SDL_Texture* color_buffer_texture,
-	math::color_buffer& buffer
+	renderer::color_buffer& buffer
 )
 {
 	//sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);

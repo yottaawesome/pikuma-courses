@@ -46,7 +46,7 @@ export namespace main_app
 		}
 	} constexpr window_dimensions;
 
-	math::color_buffer main_buffer =
+	renderer::color_buffer main_buffer =
 		{ window_dimensions.width(), window_dimensions.height()};
 
 	raii::sdl_window_unique_ptr window =

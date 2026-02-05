@@ -38,7 +38,7 @@
     <ClCompile Include="renderer\renderer.ixx" />
     <ClCompile Include="lib\lib.sdl.ixx" />
     <ClCompile Include="lib\lib.win32.ixx" />
-    <ClCompile Include="math\math.buffer_2d.ixx" />
+    <ClCompile Include="renderer\renderer.buffer_2d.ixx" />
     <ClCompile Include="concepts\concepts.ixx" />
     <ClCompile Include="renderer\renderer.texture.ixx" />
     <ClCompile Include="util\util.ixx" />
