@@ -1,5 +1,10 @@
 module;
 
+// If using .c extension, it will use C linkage and cause 
+// linker errors when we try to link to it from C++ code.
+// We can either wrap this in extern "C" (which generates 
+// compiler warnings about this being in the global 
+// module fragment) or compile it as C++, which is cleaner.
 #include "upng.hpp"
 
 export module librenderer:upng;
