@@ -238,7 +238,6 @@ void render(
 	renderer::color_buffer& buffer
 )
 {
-	static auto upng_texture = upng::upng_texture{ "..\\assets\\red_brick.png" };
 
 	//sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	//sdl::SDL_RenderClear(renderer);
@@ -261,13 +260,8 @@ void render(
 
 		if (main_app::render_settings.should_draw_textured_triangles())
 		{
-			renderer::draw_textured_triangle(
-				triangle,
-				renderer::red_brick_texture::texture(),
-				renderer::red_brick_texture::width,
-				renderer::red_brick_texture::height,
-				buffer
-			);
+			const auto [texture, width, height] = renderer::texture::get_selected();
+			renderer::draw_textured_triangle(triangle, texture, width, height, buffer);
 		}
 
 		if (main_app::render_settings.should_draw_triangles())

@@ -85,20 +85,18 @@ export namespace upng
 	{
 		upng_texture(const std::filesystem::path& path)
 		{
-			auto x = upng_new_from_file(path.string().c_str());
-			png = upng_unique_ptr(x);
-			if (png == nullptr)
+			png = upng_unique_ptr{ upng_new_from_file(path.string().c_str()) };
+			if (not png)
 				throw std::runtime_error("Failed to load PNG from file");
-			
-			upng_decode(png.get());
-			if (auto error_code = upng_get_error(png.get()); error_code != UPNG_EOK)
-				throw error(error_code, "Failed to decode PNG");
+			if (auto result = upng_decode(png.get()); result != UPNG_EOK)
+				throw error(result, "Failed to decode PNG");
 		}
 		
-		const unsigned char* buffer() const noexcept { return upng_get_buffer(png.get()); }
-		unsigned width() const noexcept { return upng_get_width(png.get()); }
-		unsigned height() const noexcept { return upng_get_height(png.get()); }
-		upng_format format() const noexcept { return upng_get_format(png.get()); }
+		auto buffer() const noexcept -> const unsigned char* { return upng_get_buffer(png.get()); }
+		auto uint32_buffer() const noexcept -> const std::uint32_t* { return reinterpret_cast<const std::uint32_t*>(upng_get_buffer(png.get())); }
+		auto width() const noexcept -> std::uint32_t { return upng_get_width(png.get()); }
+		auto height() const noexcept -> std::uint32_t { return upng_get_height(png.get()); }
+		auto format() const noexcept -> upng_format { return upng_get_format(png.get()); }
 
 	private:
 		upng_unique_ptr png;

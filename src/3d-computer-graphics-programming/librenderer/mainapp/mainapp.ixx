@@ -9,12 +9,11 @@ import :raii;
 export namespace main_app
 {
 	constexpr auto number_of_points = 9 * 9 * 9;
-	constexpr int fps = 60;
-	constexpr std::chrono::milliseconds frame_target_time{ 1000 / fps };
+	constexpr auto fps = 60;
+	constexpr auto frame_target_time = std::chrono::milliseconds { 1000 / fps };
 
-	std::vector<renderer::triangle> triangles_to_render; // renderer::mesh_faces.size()
-
-	std::unique_ptr<sdl::sdl_context> context = std::make_unique<sdl::sdl_context>(sdl::sdl_init_everything);
+	auto triangles_to_render = std::vector<renderer::triangle>{}; // renderer::mesh_faces.size()
+	auto context = std::make_unique<sdl::sdl_context>(sdl::sdl_init_everything);
 
 	struct window_dimension_t 
 	{
@@ -46,11 +45,10 @@ export namespace main_app
 		}
 	} constexpr window_dimensions;
 
-	renderer::color_buffer main_buffer =
-		{ window_dimensions.width(), window_dimensions.height()};
+	auto main_buffer = renderer::color_buffer{ window_dimensions.width(), window_dimensions.height()};
 
-	sdl::sdl_window_unique_ptr window =
-		[]
+	auto window =
+		[] -> sdl::sdl_window_unique_ptr
 		{
 			// Create a window
 			// https://wiki.libsdl.org/SDL2/SDL_CreateWindow
@@ -69,8 +67,8 @@ export namespace main_app
 			return window;
 		}();
 
-	sdl::sdl_renderer_unique_ptr sdl_renderer =
-		[](const sdl::sdl_window_unique_ptr& window)
+	auto sdl_renderer =
+		[](const sdl::sdl_window_unique_ptr& window) -> sdl::sdl_renderer_unique_ptr
 		{
 			// Create a SDL renderer
 			// https://wiki.libsdl.org/SDL2/SDL_CreateRenderer
@@ -80,22 +78,18 @@ export namespace main_app
 			return renderer;
 		}(window);
 
-	sdl::sdl_texture_unique_ptr color_buffer_texture =
-		[]
-		{
-			return sdl::sdl_texture_unique_ptr{
-				sdl::SDL_CreateTexture(
-					sdl_renderer.get(),
-					sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_ARGB8888,
-					sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
-					window_dimensions.width(),
-					window_dimensions.height()
-				)
-			};
-		}();
+	auto color_buffer_texture = sdl::sdl_texture_unique_ptr{
+		sdl::SDL_CreateTexture(
+			sdl_renderer.get(),
+			sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA32,
+			sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
+			window_dimensions.width(),
+			window_dimensions.height()
+		)
+	};
 
-	std::array<math::vector_3f, number_of_points> cube_points{};
-	math::vector_4f camera_position;
+	auto cube_points = std::array<math::vector_3f, number_of_points>{};
+	auto camera_position = math::vector_4f{};
 
 	bool is_running =
 		[](std::array<math::vector_3f, number_of_points>& cube_points, const sdl::sdl_window_unique_ptr& window)
@@ -112,17 +106,15 @@ export namespace main_app
 			return true;
 		}(cube_points, window);
 
-	std::array<math::vector_2f, number_of_points> projected_cube_points{};
+	auto projected_cube_points = std::array<math::vector_2f, number_of_points>{};
 
-	std::chrono::milliseconds previous_frame_time{ 0 };
-	std::chrono::milliseconds elapsed{ 0 };
+	auto previous_frame_time = std::chrono::milliseconds{ 0 };
+	auto elapsed = std::chrono::milliseconds{ 0 };
 
-	renderer::mesh f22_mesh{ "..\\assets\\f22.obj" };
-	renderer::mesh cube_mesh
-		{ renderer::load_cube_mesh() };
+	auto f22_mesh = renderer::mesh{ "..\\assets\\f22.obj" };
+	auto cube_mesh = renderer::mesh{ renderer::load_cube_mesh() };
 		//{ "..\\assets\\cube.obj" };
-
-	renderer::mesh mesh_to_render = cube_mesh;
+	auto mesh_to_render = cube_mesh;
 
 	enum class render_mode
 	{
