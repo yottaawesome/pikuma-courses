@@ -31,7 +31,8 @@ export namespace sdl
 		::SDL_SetWindowFullscreen,
 		::SDL_GetTicks,
 		::SDL_GetTicks64,
-		::SDL_Delay
+		::SDL_Delay,
+		::SDL_GetWindowSize
 		;
 
 	using

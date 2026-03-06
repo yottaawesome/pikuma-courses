@@ -61,28 +61,28 @@ void process_input()
 			switch (key)
 			{
 			case sdl::SDL_KeyCode::SDLK_1:
-				main_app::render_settings.rendering_mode = main_app::render_mode::wireframe_with_dot;
+				main_app::render_settings.rendering_mode = renderer::render_mode::wireframe_with_dot;
 				break;
 			case sdl::SDL_KeyCode::SDLK_2:
-				main_app::render_settings.rendering_mode = main_app::render_mode::wireframe;
+				main_app::render_settings.rendering_mode = renderer::render_mode::wireframe;
 				break;
 			case sdl::SDL_KeyCode::SDLK_3:
-				main_app::render_settings.rendering_mode = main_app::render_mode::filled;
+				main_app::render_settings.rendering_mode = renderer::render_mode::filled;
 				break;
 			case sdl::SDL_KeyCode::SDLK_4:
-				main_app::render_settings.rendering_mode = main_app::render_mode::filled_wireframe;
+				main_app::render_settings.rendering_mode = renderer::render_mode::filled_wireframe;
 				break;
 			case sdl::SDL_KeyCode::SDLK_5:
-				main_app::render_settings.rendering_mode = main_app::render_mode::textured;
+				main_app::render_settings.rendering_mode = renderer::render_mode::textured;
 				break;
 			case sdl::SDL_KeyCode::SDLK_6:
-				main_app::render_settings.rendering_mode = main_app::render_mode::textured_wireframe;
+				main_app::render_settings.rendering_mode = renderer::render_mode::textured_wireframe;
 				break;
 			case sdl::SDL_KeyCode::SDLK_c:
-				main_app::render_settings.culling_mode = main_app::cull_mode::enabled;
+				main_app::render_settings.culling_mode = renderer::cull_mode::enabled;
 				break;
 			case sdl::SDL_KeyCode::SDLK_d:
-				main_app::render_settings.culling_mode = main_app::cull_mode::disabled;
+				main_app::render_settings.culling_mode = renderer::cull_mode::disabled;
 				break;
 			}
 		};
@@ -183,7 +183,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 		* Note that backface culling is not the same as frustum
 		* culling.
 		*/
-		if (main_app::render_settings.culling_mode == main_app::cull_mode::enabled)
+		if (main_app::render_settings.culling_mode == renderer::cull_mode::enabled)
 		{
 			const auto& [vector_a, vector_b, _] = transformed_vertices;
 			auto camera_ray = math::vector_4f{ main_app::camera_position - vector_a };

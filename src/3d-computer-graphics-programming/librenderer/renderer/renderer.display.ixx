@@ -1,6 +1,7 @@
 export module librenderer:renderer.display;
 import std;
 import :math;
+import :sdl;
 import :renderer.primitives;
 import :renderer.buffer_2d;
 

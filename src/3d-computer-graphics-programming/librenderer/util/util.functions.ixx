@@ -1,7 +1,6 @@
 export module librenderer:util.functions;
 import std;
 import :win32;
-import :sdl;
 
 export namespace util
 {
@@ -20,16 +19,5 @@ export namespace util
         auto error = std::format("{}\n", std::format(fmt, std::forward<TArgs>(args)...));
         win32::OutputDebugStringA(error.c_str());
         return error;
-    }
-
-    auto print_last_error(const std::source_location location = std::source_location::current()) -> std::string
-    {
-        return print_debug_string(
-            "SDL failed [{}] at {}:{}:{}\n",
-            sdl::SDL_GetError(),
-            location.file_name(),
-            location.function_name(),
-            location.line()
-        );
     }
 }

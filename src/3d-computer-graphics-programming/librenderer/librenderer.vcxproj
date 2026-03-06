@@ -22,9 +22,12 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="renderer\renderer.settings.ixx" />
+    <ClCompile Include="sdl\sdl.error.ixx" />
     <ClCompile Include="sdl\sdl.exports.ixx" />
     <ClCompile Include="sdl\sdl.ixx" />
     <ClCompile Include="sdl\sdl.raii.ixx" />
+    <ClCompile Include="sdl\sdl.window.ixx" />
     <ClCompile Include="upng\upng.texture.ixx" />
     <ClCompile Include="upng\upng.error.ixx" />
     <ClCompile Include="upng\upng.exports.ixx" />

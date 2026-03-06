@@ -5,3 +5,4 @@ export import :renderer.shading;
 export import :renderer.texture;
 export import :renderer.buffer_2d;
 export import :renderer.primitives;
+export import :renderer.settings;
