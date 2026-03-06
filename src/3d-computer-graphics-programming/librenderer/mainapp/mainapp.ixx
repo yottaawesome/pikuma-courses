@@ -14,7 +14,7 @@ export namespace main_app
 
 	std::vector<renderer::triangle> triangles_to_render; // renderer::mesh_faces.size()
 
-	std::unique_ptr<raii::sdl_context> context = std::make_unique<raii::sdl_context>(sdl::sdl_init_everything);
+	std::unique_ptr<sdl::sdl_context> context = std::make_unique<sdl::sdl_context>(sdl::sdl_init_everything);
 
 	struct window_dimension_t 
 	{
@@ -49,12 +49,12 @@ export namespace main_app
 	renderer::color_buffer main_buffer =
 		{ window_dimensions.width(), window_dimensions.height()};
 
-	raii::sdl_window_unique_ptr window =
+	sdl::sdl_window_unique_ptr window =
 		[]
 		{
 			// Create a window
 			// https://wiki.libsdl.org/SDL2/SDL_CreateWindow
-			auto window = raii::sdl_window_unique_ptr(
+			auto window = sdl::sdl_window_unique_ptr(
 				sdl::SDL_CreateWindow(
 					nullptr,
 					sdl::sdl_windowpos_centered,
@@ -69,21 +69,21 @@ export namespace main_app
 			return window;
 		}();
 
-	raii::sdl_renderer_unique_ptr sdl_renderer =
-		[](const raii::sdl_window_unique_ptr& window)
+	sdl::sdl_renderer_unique_ptr sdl_renderer =
+		[](const sdl::sdl_window_unique_ptr& window)
 		{
 			// Create a SDL renderer
 			// https://wiki.libsdl.org/SDL2/SDL_CreateRenderer
-			auto renderer = raii::sdl_renderer_unique_ptr(sdl::SDL_CreateRenderer(window.get(), -1, 0));
+			auto renderer = sdl::sdl_renderer_unique_ptr(sdl::SDL_CreateRenderer(window.get(), -1, 0));
 			if (not renderer)
 				throw std::runtime_error(util::print_last_error());
 			return renderer;
 		}(window);
 
-	raii::sdl_texture_unique_ptr color_buffer_texture =
+	sdl::sdl_texture_unique_ptr color_buffer_texture =
 		[]
 		{
-			return raii::sdl_texture_unique_ptr{
+			return sdl::sdl_texture_unique_ptr{
 				sdl::SDL_CreateTexture(
 					sdl_renderer.get(),
 					sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_ARGB8888,
@@ -98,7 +98,7 @@ export namespace main_app
 	math::vector_4f camera_position;
 
 	bool is_running =
-		[](std::array<math::vector_3f, number_of_points>& cube_points, const raii::sdl_window_unique_ptr& window)
+		[](std::array<math::vector_3f, number_of_points>& cube_points, const sdl::sdl_window_unique_ptr& window)
 		{
 			unsigned count = 0;
 			for (float x = -1; x <= 1; x += 0.25)

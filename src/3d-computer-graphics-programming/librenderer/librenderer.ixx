@@ -1,6 +1,8 @@
 export module librenderer;
 export import :concepts;
-export import :lib;
+export import :win32;
+export import :sdl;
+export import :upng;
 export import :mainapp;
 export import :math;
 export import :raii;

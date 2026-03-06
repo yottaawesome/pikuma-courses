@@ -22,10 +22,10 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lib\lib.upng.ixx" />
-    <ClCompile Include="lib\upng.c" />
+    <ClCompile Include="sdl\sdl.ixx" />
+    <ClCompile Include="upng\upng.ixx" />
+    <ClCompile Include="upng\upng.c" />
     <ClCompile Include="math\math.degreesradians.ixx" />
-    <ClCompile Include="lib\lib.ixx" />
     <ClCompile Include="math\math.functions.ixx" />
     <ClCompile Include="math\math.matrix.ixx" />
     <ClCompile Include="raii\raii.ixx" />
@@ -37,8 +37,7 @@
     <ClCompile Include="renderer\renderer.display.ixx" />
     <ClCompile Include="mainapp\mainapp.ixx" />
     <ClCompile Include="renderer\renderer.ixx" />
-    <ClCompile Include="lib\lib.sdl.ixx" />
-    <ClCompile Include="lib\lib.win32.ixx" />
+    <ClCompile Include="win32\win32.ixx" />
     <ClCompile Include="renderer\renderer.buffer_2d.ixx" />
     <ClCompile Include="concepts\concepts.ixx" />
     <ClCompile Include="renderer\renderer.texture.ixx" />
@@ -49,7 +48,7 @@
     <ClCompile Include="math\math.vector.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\upng.h" />
+    <ClInclude Include="upng\upng.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

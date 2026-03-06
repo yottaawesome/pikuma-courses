@@ -238,6 +238,8 @@ void render(
 	renderer::color_buffer& buffer
 )
 {
+	static auto upng_texture = upng::upng_texture{ "..\\assets\\red_brick.png" };
+
 	//sdl::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	//sdl::SDL_RenderClear(renderer);
 	//draw_line_grid(10, 0xffc0c0c0, app.main_buffer);
