@@ -22,7 +22,13 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sdl\sdl.exports.ixx" />
     <ClCompile Include="sdl\sdl.ixx" />
+    <ClCompile Include="sdl\sdl.raii.ixx" />
+    <ClCompile Include="upng\upng.texture.ixx" />
+    <ClCompile Include="upng\upng.error.ixx" />
+    <ClCompile Include="upng\upng.exports.ixx" />
+    <ClCompile Include="upng\upng.formatters.ixx" />
     <ClCompile Include="upng\upng.ixx" />
     <ClCompile Include="upng\upng.cpp" />
     <ClCompile Include="math\math.degreesradians.ixx" />
