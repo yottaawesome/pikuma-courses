@@ -1,8 +1,6 @@
 module;
 
-extern "C" {
-#include "upng.h"
-}
+#include "upng.hpp"
 
 export module librenderer:upng;
 import std;

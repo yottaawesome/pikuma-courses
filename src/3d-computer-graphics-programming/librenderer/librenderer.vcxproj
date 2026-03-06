@@ -24,7 +24,7 @@
   <ItemGroup>
     <ClCompile Include="sdl\sdl.ixx" />
     <ClCompile Include="upng\upng.ixx" />
-    <ClCompile Include="upng\upng.c" />
+    <ClCompile Include="upng\upng.cpp" />
     <ClCompile Include="math\math.degreesradians.ixx" />
     <ClCompile Include="math\math.functions.ixx" />
     <ClCompile Include="math\math.matrix.ixx" />
@@ -48,7 +48,7 @@
     <ClCompile Include="math\math.vector.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="upng\upng.h" />
+    <ClInclude Include="upng\upng.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
