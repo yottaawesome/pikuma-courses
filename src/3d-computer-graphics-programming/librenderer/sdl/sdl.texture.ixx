@@ -41,6 +41,16 @@ export namespace sdl
 		{
 			return self.sdlTexture.get();
 		}
+
+		constexpr auto update_from_buffer(
+			this auto&& self,
+			auto& buffer,
+			const SDL_Rect* rect = nullptr
+		) -> void
+		{
+			if (sdl::SDL_UpdateTexture(self.get(), rect, buffer.data(), buffer.pitch()) != 0)
+				throw std::runtime_error(sdl::print_last_error());
+		}
 	private:
 		sdl::sdl_texture_unique_ptr sdlTexture;
 	};

@@ -26,8 +26,9 @@ export namespace renderer
 
         constexpr auto width()          const noexcept  -> std::uint32_t { return m_width; }
         constexpr auto height()         const noexcept  -> std::uint32_t { return m_height; }
-        constexpr auto total_elements() const noexcept  -> size_t    { return m_buffer.size(); }
-        constexpr auto raw_buffer()     noexcept        -> T*   { return m_buffer.data(); }
+        constexpr auto total_elements() const noexcept  -> size_t { return m_buffer.size(); }
+        constexpr auto raw_buffer()     noexcept        -> T* { return m_buffer.data(); }
+        constexpr auto data()           noexcept        -> T* { return m_buffer.data(); }
 
         constexpr void set(std::uint64_t row, std::uint64_t column, T value) noexcept(util::is_release)
         {
