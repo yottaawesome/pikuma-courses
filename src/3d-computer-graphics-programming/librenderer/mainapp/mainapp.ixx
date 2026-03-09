@@ -51,9 +51,11 @@ export namespace main_app
 	auto previous_frame_time = std::chrono::milliseconds{ 0 };
 	auto elapsed = std::chrono::milliseconds{ 0 };
 
-	auto f22_mesh = renderer::mesh{ "..\\assets\\f22.obj" };
-	auto cube_mesh = renderer::mesh{ renderer::load_cube_mesh() };
-		//{ "..\\assets\\cube.obj" };
+	//auto f22_mesh = renderer::mesh{ "..\\assets\\f22.obj" };
+	auto cube_mesh = renderer::mesh{ 
+		//renderer::load_cube_mesh() 
+		"..\\assets\\cube.obj"
+	};
 	auto mesh_to_render = cube_mesh;
 
 	auto render_settings = renderer::settings{};
