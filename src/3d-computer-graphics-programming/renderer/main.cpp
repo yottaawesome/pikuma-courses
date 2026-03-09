@@ -139,9 +139,9 @@ void update(const std::chrono::milliseconds elapsed_time)
 	{
 		auto mesh_face = renderer::face{ main_app::mesh_to_render.faces[i] };
 		auto face_vertices = std::array{
-			main_app::mesh_to_render.vertices[mesh_face.a - 1],
-			main_app::mesh_to_render.vertices[mesh_face.b - 1],
-			main_app::mesh_to_render.vertices[mesh_face.c - 1]
+			main_app::mesh_to_render.vertices[mesh_face.a],
+			main_app::mesh_to_render.vertices[mesh_face.b],
+			main_app::mesh_to_render.vertices[mesh_face.c]
 		};
 
 		auto transformed_vertices = std::array<math::vector_4f, 3>{};

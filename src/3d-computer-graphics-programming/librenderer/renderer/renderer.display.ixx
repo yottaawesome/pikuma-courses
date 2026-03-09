@@ -345,7 +345,7 @@ export namespace renderer
     )
     {
         // Sort by ascending y-coordinate
-        std::array vertices{
+        auto vertices = std::array{
             textured_vertex{triangle.vertices[0], triangle.texcoords[0]},
             textured_vertex{triangle.vertices[1], triangle.texcoords[1]},
             textured_vertex{triangle.vertices[2], triangle.texcoords[2]}
@@ -353,10 +353,18 @@ export namespace renderer
 
         std::ranges::sort(
             vertices,
-            [](const auto& a, const auto& b)
+            [](const auto& a, const auto& b) static noexcept
             {
                 return a.position.y < b.position.y;
             });
+        // Some systems have the v coordinate growing 
+        // downwards, while others have it growing upwards.
+        // In this case, it grows downwards, so we flip it to 
+        // match the texture space.
+        for (textured_vertex& vertex : vertices)
+        {
+			vertex.texcoords.v = 1.f - vertex.texcoords.v; 
+        }
 
 		// Render upper part of triangle
         float inv_slope_1 = 0;

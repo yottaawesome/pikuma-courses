@@ -13,7 +13,7 @@ namespace
 	constexpr auto total_cube_vertices = 8;
 	constexpr auto total_cube_faces = 6 * 2;
 
-	std::array<math::vector_4f, total_cube_vertices> cube_vertices
+	constexpr auto cube_vertices = std::array
 	{
 		math::vector_4f{.x = -1, .y = -1, .z = -1 }, // 1
 		math::vector_4f{.x = -1, .y = 1, .z = -1 }, // 2
@@ -25,7 +25,7 @@ namespace
 		math::vector_4f{.x = -1, .y = -1, .z = 1 } // 8
 	};
 
-	std::array<renderer::face, total_cube_faces> cube_faces{
+	constexpr auto cube_faces = std::array{
 		// front
 		renderer::face{.a = 1, .b = 2, .c = 3, .a_uv = { 0, 1 }, .b_uv = { 0, 0 }, .c_uv = { 1, 0 }},
 		renderer::face{.a = 1, .b = 3, .c = 4, .a_uv = { 0, 1 }, .b_uv = { 1, 0 }, .c_uv = { 1, 1 }},
@@ -58,12 +58,6 @@ namespace
 
 export namespace renderer
 {
-	struct vt
-	{
-		float u;
-		float v;
-	};
-
 	struct mesh
 	{
 		constexpr mesh() = default;
@@ -147,37 +141,47 @@ export namespace renderer
 			if (file.fail())
 				throw std::runtime_error("Stream in bad state");
 
-			auto filter =
-				std::views::istream<util::file_line>(file)
+			auto filter = std::views::istream<util::file_line>(file)
 				| std::views::filter(
 					[](util::file_line& s) static -> bool
 					{ 
 						return s.line.starts_with("v ") 
 							or s.line.starts_with("vt ")
-							or s.line.starts_with("f ")
-							; 
+							or s.line.starts_with("f "); 
 					});
 
-			constexpr std::array colors{ 0xffff0000, 0xff00ff00, 0xff0000ff };
+			constexpr auto colors = std::array{ 0xffff0000, 0xff00ff00, 0xff0000ff };
 
-			mesh returnValue;
-			auto uvs = std::vector<vt>{};
+			auto returnValue = mesh{};
+			auto texcoords = std::vector<tex2_coordinates>{};
 			for (int i = 0; const auto& fl : filter)
 			{
 				if (fl.line.starts_with("v "))
 				{
-					std::vector splits =
+					auto splits = std::vector{
 						std::views::split(fl.line, ' ')
 						| std::views::drop(1) // drop 'v' prefix
 						| std::ranges::to<std::vector<std::string>>()
 						| std::views::transform(
 							[](const std::string& sv) static -> float { return std::stof(sv); })
-						| std::ranges::to<std::vector<float>>();
+						| std::ranges::to<std::vector<float>>()
+					};
 					returnValue.vertices.push_back({
 						.x = splits.at(0),
 						.y = splits.at(1),
 						.z = splits.at(2)
 					});
+				}
+				else if (fl.line.starts_with("vt "))
+				{
+					auto splits =
+						std::views::split(fl.line, ' ')
+						| std::views::drop(1) // drop 'vt' prefix
+						| std::ranges::to<std::vector<std::string>>() // split into vector of strings
+						| std::views::transform( // convert each string to float
+							[](const std::string& sv) static -> float { return std::stof(sv); })
+						| std::ranges::to<std::vector<float>>(); // convert to vector of floats
+					texcoords.emplace_back(splits.at(0), splits.at(1));
 				}
 				else if (fl.line.starts_with("f"))
 				{
@@ -202,8 +206,7 @@ export namespace renderer
 												throw std::runtime_error("Failed to parse face triplet");
 											return value;
 										})
-									| std::ranges::to<std::vector>()
-									;
+									| std::ranges::to<std::vector>();
 								return {
 									.vertex_index = parts.at(0),
 									.uv_index = parts.at(1),
@@ -216,27 +219,16 @@ export namespace renderer
 					// For every two faces, increment the colour index
 					auto color_index = i % colors.size();
 					returnValue.faces.emplace_back(
-						faceCoords.at(0).vertex_index, 
-						faceCoords.at(1).vertex_index, 
-						faceCoords.at(2).vertex_index, 
-						colors[color_index]
+						faceCoords.at(0).vertex_index - 1, 
+						faceCoords.at(1).vertex_index - 1, 
+						faceCoords.at(2).vertex_index - 1, 
+						colors[color_index],
+						texcoords.at(faceCoords.at(0).uv_index - 1), // OBJ indices are 1-based
+						texcoords.at(faceCoords.at(1).uv_index - 1),
+						texcoords.at(faceCoords.at(2).uv_index - 1)
 					);
 					if (returnValue.faces.size() % 2 == 0)
 						i++;
-				}
-				else if (fl.line.starts_with("vt "))
-				{
-					auto splits =
-						std::views::split(fl.line, ' ')
-						| std::views::drop(1) // drop 'vt' prefix
-						| std::ranges::to<std::vector<std::string>>()
-						| std::views::transform(
-							[](const std::string& sv) -> float { return std::stof(sv); })
-						| std::ranges::to<std::vector<float>>();
-					uvs.push_back({
-						.u = splits.at(0),
-						.v = splits.at(1)
-					});
 				}
 			}
 			return returnValue;
