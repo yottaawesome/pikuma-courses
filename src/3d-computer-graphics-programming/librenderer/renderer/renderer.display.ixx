@@ -299,34 +299,36 @@ export namespace renderer
             math::vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
         );
 
-        float alpha = weights.x;
-        float beta = weights.y;
-        float gamma = weights.z;
+        auto alpha = float{weights.x};
+        auto beta = float{weights.y};
+        auto gamma = float{weights.z};
 
 		// Perform the interpolation of all U/w and V/w values using barycentric 
         // weights and a factor of 1/w.
-        float interpolated_u = 
+		auto interpolated_u = float{
             (vertex[0].texcoords.u / vertex[0].position.w) * alpha
             + (vertex[1].texcoords.u / vertex[1].position.w)* beta
-            + (vertex[2].texcoords.u / vertex[2].position.w)* gamma;
-        float interpolated_v =
+            + (vertex[2].texcoords.u / vertex[2].position.w)* gamma
+        };
+        auto interpolated_v = float{
             (vertex[0].texcoords.v / vertex[0].position.w) * alpha
             + (vertex[1].texcoords.v / vertex[1].position.w) * beta
-            + (vertex[2].texcoords.v / vertex[2].position.w) * gamma;
-
+            + (vertex[2].texcoords.v / vertex[2].position.w) * gamma
+        } ;
 		// Also interpolate the 1/w value for the current pixel.
-        float interpolated_w_reciprocal =
+        auto interpolated_w_reciprocal = float{
             (1.f / vertex[0].position.w) * alpha
             + (1.f / vertex[1].position.w) * beta
-			+ (1.f / vertex[2].position.w) * gamma;
+            + (1.f / vertex[2].position.w) * gamma
+        };
 
 		// Now we can divide back both interpolated U and V by the interpolated 1/w.
         interpolated_u /= interpolated_w_reciprocal;
         interpolated_v /= interpolated_w_reciprocal;
 
 		// Map the UV coordinate to the full texture width and height.
-        int tex_x = math::abs(static_cast<int>(interpolated_u * texture_width));
-        int tex_y = math::abs(static_cast<int>(interpolated_v * texture_height));
+        auto tex_x = math::abs(static_cast<int>(interpolated_u * texture_width)) % static_cast<int>(texture_width);
+        auto tex_y = math::abs(static_cast<int>(interpolated_v * texture_height)) % static_cast<int>(texture_height);
 
         auto colorIndex = (texture_width * tex_y) + tex_x;
         if (colorIndex >= texture_width * texture_height)
