@@ -191,6 +191,23 @@ void update(const std::chrono::milliseconds elapsed_time)
 				continue;
 		}
 
+		// Near-plane culling: discard triangles with any vertex
+		// behind or too close to the near plane to prevent extreme
+		// values from perspective division by near-zero W.
+		{
+			bool behind_near_plane = false;
+			for (const auto& v : transformed_vertices)
+			{
+				if (v.z < main_app::z_near)
+				{
+					behind_near_plane = true;
+					break;
+				}
+			}
+			if (behind_near_plane)
+				continue;
+		}
+
 		// Loop all three vertices
 		auto projected_triangle = renderer::triangle{
 			.texcoords = { mesh_face.a_uv, mesh_face.b_uv, mesh_face.c_uv },
@@ -218,6 +235,28 @@ void update(const std::chrono::milliseconds elapsed_time)
 		}
 		projected_triangle.average_depth =
 			(transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.f;
+
+		// Screen-space rejection: skip triangles with any projected
+		// vertex too far off-screen. Without proper frustum clipping,
+		// extreme vertices cause the scanline rasterizer to fill wide
+		// bands across the screen (visible as "extreme lines").
+		{
+			const float limit = static_cast<float>(
+				std::max(main_app::window_dimensions.width(), main_app::window_dimensions.height())
+			);
+			bool extreme = false;
+			for (const auto& v : projected_triangle.vertices)
+			{
+				if (v.x < -limit || v.x > limit * 2.f ||
+					v.y < -limit || v.y > limit * 2.f)
+				{
+					extreme = true;
+					break;
+				}
+			}
+			if (extreme)
+				continue;
+		}
 
 		// Save the projected triangle in the array of triangles to render
 		main_app::triangles_to_render.push_back(projected_triangle);

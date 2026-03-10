@@ -83,7 +83,31 @@ export namespace renderer
         );
     }
 
-    // DDA algorithm
+    // Cohen-Sutherland region codes for line clipping.
+    namespace clip_codes
+    {
+        constexpr int inside = 0;
+        constexpr int left   = 1;
+        constexpr int right  = 2;
+        constexpr int bottom = 4;
+        constexpr int top    = 8;
+    }
+
+    constexpr int compute_outcode(
+        float x, float y,
+        float x_min, float y_min,
+        float x_max, float y_max
+    ) noexcept
+    {
+        int code = clip_codes::inside;
+        if (x < x_min)      code |= clip_codes::left;
+        else if (x > x_max) code |= clip_codes::right;
+        if (y < y_min)       code |= clip_codes::top;
+        else if (y > y_max)  code |= clip_codes::bottom;
+        return code;
+    }
+
+    // DDA algorithm with Cohen-Sutherland line clipping.
     constexpr void draw_line(
         const int x0,
         const int y0,
@@ -93,16 +117,95 @@ export namespace renderer
         renderer::color_buffer& buffer
     )
     {
-        int delta_x = x1 - x0;
-        int delta_y = y1 - y0;
+        // Clip the line to the buffer rectangle.
+        const float x_min = 0.f;
+        const float y_min = 0.f;
+        const float x_max = static_cast<float>(buffer.width()) - 1.f;
+        const float y_max = static_cast<float>(buffer.height()) - 1.f;
 
+        float cx0 = static_cast<float>(x0);
+        float cy0 = static_cast<float>(y0);
+        float cx1 = static_cast<float>(x1);
+        float cy1 = static_cast<float>(y1);
+
+        int outcode0 = compute_outcode(cx0, cy0, x_min, y_min, x_max, y_max);
+        int outcode1 = compute_outcode(cx1, cy1, x_min, y_min, x_max, y_max);
+        bool accept = false;
+
+        while (true)
+        {
+            if (!(outcode0 | outcode1))
+            {
+                accept = true;
+                break;
+            }
+            else if (outcode0 & outcode1)
+            {
+                break; // both endpoints outside the same edge
+            }
+            else
+            {
+                int outcode_out = outcode1 > outcode0 ? outcode1 : outcode0;
+                float x{}, y{};
+                if (outcode_out & clip_codes::bottom)
+                {
+                    x = cx0 + (cx1 - cx0) * (y_max - cy0) / (cy1 - cy0);
+                    y = y_max;
+                }
+                else if (outcode_out & clip_codes::top)
+                {
+                    x = cx0 + (cx1 - cx0) * (y_min - cy0) / (cy1 - cy0);
+                    y = y_min;
+                }
+                else if (outcode_out & clip_codes::right)
+                {
+                    y = cy0 + (cy1 - cy0) * (x_max - cx0) / (cx1 - cx0);
+                    x = x_max;
+                }
+                else // left
+                {
+                    y = cy0 + (cy1 - cy0) * (x_min - cx0) / (cx1 - cx0);
+                    x = x_min;
+                }
+
+                if (outcode_out == outcode0)
+                {
+                    cx0 = x;
+                    cy0 = y;
+                    outcode0 = compute_outcode(cx0, cy0, x_min, y_min, x_max, y_max);
+                }
+                else
+                {
+                    cx1 = x;
+                    cy1 = y;
+                    outcode1 = compute_outcode(cx1, cy1, x_min, y_min, x_max, y_max);
+                }
+            }
+        }
+
+        if (!accept)
+            return;
+
+        // DDA with clipped coordinates.
+        int delta_x = static_cast<int>(cx1) - static_cast<int>(cx0);
+        int delta_y = static_cast<int>(cy1) - static_cast<int>(cy0);
         int side_length = std::abs(delta_x) >= std::abs(delta_y) ? std::abs(delta_x) : std::abs(delta_y);
+        if (side_length == 0)
+        {
+            draw_pixel(
+                static_cast<uint32_t>(std::round(cy0)),
+                static_cast<uint32_t>(std::round(cx0)),
+                color,
+                buffer
+            );
+            return;
+        }
 
         float x_inc = delta_x / static_cast<float>(side_length);
         float y_inc = delta_y / static_cast<float>(side_length);
 
-        float current_x = static_cast<float>(x0);
-        float current_y = static_cast<float>(y0);
+        float current_x = cx0;
+        float current_y = cy0;
 
         for (int i = 0; i <= side_length; i++)
         {
@@ -299,6 +402,12 @@ export namespace renderer
             math::vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
         );
 
+        // Skip pixels outside the triangle (any negative weight
+        // means the point is on the wrong side of an edge).
+        constexpr float epsilon = -0.001f;
+        if (weights.x < epsilon || weights.y < epsilon || weights.z < epsilon)
+            return;
+
         auto alpha = float{weights.x};
         auto beta = float{weights.y};
         auto gamma = float{weights.z};
@@ -368,6 +477,15 @@ export namespace renderer
 			vertex.texcoords.v = 1.f - vertex.texcoords.v; 
         }
 
+        // Bounding box of the triangle to prevent scanlines from
+        // overshooting due to extreme slopes or integer truncation.
+        const float min_x_f = std::min({vertices[0].position.x, vertices[1].position.x, vertices[2].position.x});
+        const float max_x_f = std::max({vertices[0].position.x, vertices[1].position.x, vertices[2].position.x});
+        const int tri_x_min = static_cast<int>(min_x_f) - (min_x_f < 0 ? 1 : 0);
+        const int tri_x_max = static_cast<int>(max_x_f) + 1;
+        const int screen_x_min = std::max(tri_x_min, 0);
+        const int screen_x_max = std::min(tri_x_max, static_cast<int>(buffer.width()));
+
 		// Render upper part of triangle
         float inv_slope_1 = 0;
         float inv_slope_2 = 0;
@@ -378,17 +496,18 @@ export namespace renderer
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
-            for (
-                int y = static_cast<int>(vertices[0].position.y);
-                y <= static_cast<int>(vertices[1].position.y);
-                y++
-            )
+            int y_start = std::max(static_cast<int>(vertices[0].position.y), 0);
+            int y_end = std::min(static_cast<int>(vertices[1].position.y), static_cast<int>(buffer.height()) - 1);
+            for (int y = y_start; y <= y_end; y++)
             {
                 int x_start = static_cast<int>(vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
                 int x_end = static_cast<int>(vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
 
                 if (x_start > x_end)
                     std::swap(x_start, x_end);
+
+                x_start = std::max(x_start, screen_x_min);
+                x_end = std::min(x_end, screen_x_max);
 
                 for (int x = x_start; x < x_end; x++)
                 {
@@ -407,17 +526,18 @@ export namespace renderer
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {
-            for (
-                int y = static_cast<int>(vertices[1].position.y);
-                y <= static_cast<int>(vertices[2].position.y);
-                y++
-            )
+            int y_start = std::max(static_cast<int>(vertices[1].position.y), 0);
+            int y_end = std::min(static_cast<int>(vertices[2].position.y), static_cast<int>(buffer.height()) - 1);
+            for (int y = y_start; y <= y_end; y++)
             {
                 int x_start = static_cast<int>(vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
                 int x_end = static_cast<int>(vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
 
                 if (x_start > x_end)
                     std::swap(x_start, x_end);
+
+                x_start = std::max(x_start, screen_x_min);
+                x_end = std::min(x_end, screen_x_max);
 
                 for (int x = x_start; x < x_end; x++)
                 {

@@ -60,10 +60,13 @@ export namespace main_app
 
 	auto render_settings = renderer::settings{};
 
+	constexpr float z_near = 0.1f;
+	constexpr float z_far = 100.f;
+
 	const math::projective_perspective_divide_matrix proj_matrix(
 		math::radians{ std::numbers::pi / 3 },
 		(float)main_app::window_dimensions.width() / (float)main_app::window_dimensions.height(),
-		0.1f,
-		100.f
+		z_near,
+		z_far
 	);
 }
