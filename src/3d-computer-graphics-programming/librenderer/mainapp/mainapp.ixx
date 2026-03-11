@@ -8,7 +8,6 @@ import :raii;
 
 export namespace main_app
 {
-	constexpr auto number_of_points = 9 * 9 * 9;
 	constexpr auto fps = 60;
 	constexpr auto frame_target_time = std::chrono::milliseconds { 1000 / fps };
 
@@ -32,22 +31,9 @@ export namespace main_app
 		static_cast<int>(window.get_width()),
 		static_cast<int>(window.get_height())
 	};
-
-	auto cube_points = 
-		[] -> std::array<math::vector_3f, number_of_points>
-		{
-			auto points = std::array<math::vector_3f, number_of_points>{};
-			unsigned count = 0;
-			for (float x = -1; x <= 1; x += 0.25)
-				for (float y = -1; y <= 1; y += 0.25)
-					for (float z = -1; z <= 1; z += 0.25)
-						points[count++] = math::vector_3f{ .x=x, .y=y, .z=z };
-			return points;
-		}();
 		
 	auto camera_position = math::vector_4f{};
 	auto is_running = true;
-	auto projected_cube_points = std::array<math::vector_2f, number_of_points>{};
 	auto previous_frame_time = std::chrono::milliseconds{ 0 };
 	auto elapsed = std::chrono::milliseconds{ 0 };
 
