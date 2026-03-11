@@ -14,7 +14,9 @@ The [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/le
 
 ## Credits
 
-F22 mesh provided by [Gustavo Pezzi](https://github.com/gustavopezzi) from his [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming) course.
+* The f22.obj, efa.obj, and f117.obj aircraft files were created by Artem Katrych.
+* The file crab.obj file was created by [Bohdan Lvov](https://sketchfab.com/ostapblendercg).
+* The drone.obj file was created by [Willy Decarpentrie](https://sketchfab.com/skudgee).
 
 ## Additional resources
 
