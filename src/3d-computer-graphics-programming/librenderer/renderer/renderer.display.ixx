@@ -26,9 +26,9 @@ export namespace renderer
                     buffer.set(row, column, color);
                 else if (column == 0)
                     buffer.set(row, column, color);
-                else if (std::div(row + 1ui32, step).rem == 0)
+                else if (std::div(static_cast<int>(row + 1), step).rem == 0)
                     buffer.set(row, column, color);
-                else if (std::div(column + 1ui32, step).rem == 0)
+                else if (std::div(static_cast<int>(column + 1), step).rem == 0)
                     buffer.set(row, column, color);
             }
         }
@@ -106,12 +106,15 @@ export namespace renderer
 
         for (int i = 0; i <= side_length; i++)
         {
-            draw_pixel(
-                static_cast<uint32_t>(std::round(current_y)),
-                static_cast<uint32_t>(std::round(current_x)),
-                color, 
-                buffer
-            );
+            auto px = static_cast<int>(std::round(current_x));
+            auto py = static_cast<int>(std::round(current_y));
+            if (px >= 0 and py >= 0)
+                draw_pixel(
+                    static_cast<uint32_t>(py),
+                    static_cast<uint32_t>(px),
+                    color,
+                    buffer
+                );
             current_x += x_inc;
             current_y += y_inc;
         }
@@ -150,15 +153,16 @@ export namespace renderer
     }
 
     constexpr void draw_triangle_pixel(
-        std::uint32_t x,
-        std::uint32_t y,
+        int x,
+        int y,
         const std::array<textured_vertex, 3>& vertex,
         renderer::frame_buffer& buffer,
 		std::uint32_t color
     )
     {
-        // Getting huge y and x values, I think there's a rounding bug somewhere, but will look at it later.
-        if (y >= buffer.depth.height() or x >= buffer.depth.width())
+        if (x < 0 or y < 0
+            or static_cast<std::uint32_t>(y) >= buffer.depth.height()
+            or static_cast<std::uint32_t>(x) >= buffer.depth.width())
             return;
 
         auto weights = math::barycentric_weights(
@@ -198,10 +202,10 @@ export namespace renderer
         // Use 1/w directly for depth testing: larger 1/w means
         // closer to the camera. Avoids the precision loss that
         // a "1 - 1/w" transformation would introduce.
-        if (interpolated_w_reciprocal > buffer.depth[y, x])
+        if (interpolated_w_reciprocal > buffer.depth[static_cast<uint32_t>(y), static_cast<uint32_t>(x)])
         {
-            draw_pixel(y, x, color, buffer);
-            buffer.depth.set(y, x, interpolated_w_reciprocal);
+            draw_pixel(static_cast<uint32_t>(y), static_cast<uint32_t>(x), color, buffer);
+            buffer.depth.set(static_cast<uint32_t>(y), static_cast<uint32_t>(x), interpolated_w_reciprocal);
         }
     }
 
@@ -294,8 +298,8 @@ export namespace renderer
 
 	// Expects x and y to be in Cartesian space.
     constexpr void draw_texel(
-		std::uint32_t x,
-		std::uint32_t y,
+		int x,
+		int y,
 		const std::array<textured_vertex, 3>& vertex,
         const std::uint32_t* const texture,
         size_t texture_width,
@@ -303,8 +307,9 @@ export namespace renderer
 		renderer::frame_buffer& buffer
     )
     {
-        // Getting huge y and x values, I think there's a rounding bug somewhere, but will look at it later.
-        if (y >= buffer.depth.height() or x >= buffer.depth.width())
+        if (x < 0 or y < 0
+            or static_cast<std::uint32_t>(y) >= buffer.depth.height()
+            or static_cast<std::uint32_t>(x) >= buffer.depth.width())
             return;
 
         auto weights = math::barycentric_weights(
@@ -352,10 +357,10 @@ export namespace renderer
         // Use 1/w directly for depth testing: larger 1/w means
         // closer to the camera. Avoids the precision loss that
         // a "1 - 1/w" transformation would introduce.
-        if (interpolated_w_reciprocal > buffer.depth[y, x])
+        if (interpolated_w_reciprocal > buffer.depth[static_cast<uint32_t>(y), static_cast<uint32_t>(x)])
         {
-            draw_pixel(y, x, texture[colorIndex], buffer);
-            buffer.depth.set(y, x, interpolated_w_reciprocal);
+            draw_pixel(static_cast<uint32_t>(y), static_cast<uint32_t>(x), texture[colorIndex], buffer);
+            buffer.depth.set(static_cast<uint32_t>(y), static_cast<uint32_t>(x), interpolated_w_reciprocal);
         }
 	}
 
