@@ -31,7 +31,6 @@ export namespace renderer
 		math::vector_4f vertices[3];
 		tex2_coordinates texcoords[3];
 		std::uint32_t color = 0xffffffff;
-		float average_depth = 0; // for painter's algorithm
 
 		constexpr void normalise(this triangle& self) noexcept
 		{

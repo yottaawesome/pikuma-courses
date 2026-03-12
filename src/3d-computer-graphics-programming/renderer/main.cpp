@@ -223,20 +223,10 @@ void update(const std::chrono::milliseconds elapsed_time)
 			projected_point.y += app_state::window_dimensions.height() / 2;
 			projected_triangle.vertices[j] = projected_point;
 		}
-		projected_triangle.average_depth =
-			(transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.f;
 
 		// Save the projected triangle in the array of triangles to render
 		app_state::triangles_to_render.push_back(projected_triangle);
 	}
-	// Painter's algorithm -- sort triangles by average depth from back to front.
-	std::sort(
-		app_state::triangles_to_render.begin(), 
-		app_state::triangles_to_render.end(),
-		[](const renderer::triangle& t1, const renderer::triangle& t2) static
-		{
-			return t1.average_depth > t2.average_depth;
-		});
 }
 
 void render(

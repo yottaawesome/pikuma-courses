@@ -202,6 +202,62 @@ export namespace renderer
         }
     }
 
+    constexpr void draw_triangle_pixel(
+        std::uint32_t x,
+        std::uint32_t y,
+        const std::array<textured_vertex, 3>& vertex,
+        renderer::frame_buffer& buffer,
+		std::uint32_t color
+    )
+    {
+        // Getting huge y and x values, I think there's a rounding bug somewhere, but will look at it later.
+        if (y >= buffer.depth.height() or x >= buffer.depth.width())
+            return;
+
+        auto weights = math::barycentric_weights(
+            math::vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
+            math::vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
+            math::vector_2f{ .x = vertex[2].position.x, .y = vertex[2].position.y },
+            math::vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
+        );
+
+        auto alpha = float{ weights.x };
+        auto beta = float{ weights.y };
+        auto gamma = float{ weights.z };
+
+        // Perform the interpolation of all U/w and V/w values using barycentric 
+        // weights and a factor of 1/w.
+        auto interpolated_u = float{
+            (vertex[0].texcoords.u / vertex[0].position.w) * alpha
+            + (vertex[1].texcoords.u / vertex[1].position.w) * beta
+            + (vertex[2].texcoords.u / vertex[2].position.w) * gamma
+        };
+        auto interpolated_v = float{
+            (vertex[0].texcoords.v / vertex[0].position.w) * alpha
+            + (vertex[1].texcoords.v / vertex[1].position.w) * beta
+            + (vertex[2].texcoords.v / vertex[2].position.w) * gamma
+        };
+        // Also interpolate the 1/w value for the current pixel.
+        auto interpolated_w_reciprocal = float{
+            (1.f / vertex[0].position.w) * alpha
+            + (1.f / vertex[1].position.w) * beta
+            + (1.f / vertex[2].position.w) * gamma
+        };
+
+        // Now we can divide back both interpolated U and V by the interpolated 1/w.
+        interpolated_u /= interpolated_w_reciprocal;
+        interpolated_v /= interpolated_w_reciprocal;
+
+        // Adjust 1/w so that the pixel with smaller 1/w value is closer to the camera.
+        interpolated_w_reciprocal = 1.f - interpolated_w_reciprocal;
+
+        if (interpolated_w_reciprocal < buffer.depth[y, x])
+        {
+            draw_pixel(y, x, color, buffer);
+            buffer.depth.set(y, x, interpolated_w_reciprocal);
+        }
+    }
+
     constexpr void draw_filled_triangle(
         const triangle& triangle,
         std::uint32_t color,
@@ -209,75 +265,83 @@ export namespace renderer
     )
     {
         // Sort by ascending y-coordinate
-        math::vector_4f vertices[3]{ triangle.vertices[0], triangle.vertices[1], triangle.vertices[2] };
-        std::ranges::sort(vertices, [](const auto& a, const auto& b) { return a.y < b.y; });
-        
-        if (vertices[1].y == vertices[2].y)
+        auto vertices = std::array{
+            textured_vertex{triangle.vertices[0], triangle.texcoords[0]},
+            textured_vertex{triangle.vertices[1], triangle.texcoords[1]},
+            textured_vertex{triangle.vertices[2], triangle.texcoords[2]}
+        };
+
+        std::ranges::sort(
+            vertices,
+            [](const auto& a, const auto& b) static noexcept
+            {
+                return a.position.y < b.position.y;
+            });
+        // Some systems have the v coordinate growing 
+        // downwards, while others have it growing upwards.
+        // In this case, it grows downwards, so we flip it to 
+        // match the texture space.
+        for (textured_vertex& vertex : vertices)
         {
-            // Simply darw flat-bottom triangle
-            fill_flat_bottom_triangle(
-                { 
-                    .vertices{
-                        { vertices[0].x, vertices[0].y },
-                        { vertices[1].x, vertices[1].y },
-                        { vertices[2].x, vertices[2].y }
-                    } 
-                },
-                color,
-                buffer
-            );
+            vertex.texcoords.v = 1.f - vertex.texcoords.v;
         }
-        else if (vertices[0].y == vertices[1].y)
+
+        // Render upper part of triangle
+        float inv_slope_1 = 0;
+        float inv_slope_2 = 0;
+        if (vertices[1].position.y - vertices[0].position.y != 0)
+            inv_slope_1 = static_cast<float>((vertices[1].position.x - vertices[0].position.x) / math::abs(vertices[1].position.y - vertices[0].position.y));
+        if (vertices[2].position.y - vertices[0].position.y != 0)
+            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+
+        if (vertices[1].position.y - vertices[0].position.y != 0)
         {
-            // Simply darw flat-top triangle
-            fill_flat_top_triangle(
+            for (
+                int y = static_cast<int>(vertices[0].position.y);
+                y <= static_cast<int>(vertices[1].position.y);
+                y++
+            )
+            {
+                int x_start = static_cast<int>(vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
+                int x_end = static_cast<int>(vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
+
+                if (x_start > x_end)
+                    std::swap(x_start, x_end);
+
+                for (int x = x_start; x < x_end; x++)
                 {
-                    .vertices{
-                       { vertices[0].x, vertices[0].y },
-                       { vertices[1].x, vertices[1].y },
-                       { vertices[2].x, vertices[2].y }
-                    } 
-                },
-                color,
-                buffer
-            );
+                    draw_triangle_pixel(x, y, vertices, buffer, color);
+                }
+            }
         }
-        else
+
+        // Render bottom part of triangle
+        inv_slope_1 = 0;
+        inv_slope_2 = 0;
+        if (vertices[2].position.y - vertices[1].position.y != 0)
+            inv_slope_1 = static_cast<float>((vertices[2].position.x - vertices[1].position.x) / math::abs(vertices[2].position.y - vertices[1].position.y));
+        if (vertices[2].position.y - vertices[0].position.y != 0)
+            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+
+        if (vertices[2].position.y - vertices[1].position.y != 0)
         {
-            // Find midpoint coordinates
-            int My = static_cast<int>(vertices[1].y);
-            int Mx = static_cast<int>(
-                (
-                    (
-                        (vertices[2].x - vertices[0].x) 
-                        * 
-                        (vertices[1].y - vertices[0].y)
-                    ) 
-                    / (vertices[2].y - vertices[0].y)
-                ) 
-                + vertices[0].x
-            );
-            fill_flat_bottom_triangle({ 
-                    .vertices{
-                        { vertices[0].x, vertices[0].y},
-                        { vertices[1].x, vertices[1].y},
-                        {static_cast<float>(Mx), static_cast<float>(My)}
-                    } 
-                },
-                color,
-                buffer
-            );
-            fill_flat_top_triangle(
-                { 
-                    .vertices{
-                        {vertices[1].x, vertices[1].y},
-                        {static_cast<float>(Mx), static_cast<float>(My)},
-                        {vertices[2].x, vertices[2].y}
-                    } 
-                },
-                color,
-                buffer
-            );
+            for (
+                int y = static_cast<int>(vertices[1].position.y);
+                y <= static_cast<int>(vertices[2].position.y);
+                y++
+            )
+            {
+                int x_start = static_cast<int>(vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
+                int x_end = static_cast<int>(vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
+
+                if (x_start > x_end)
+                    std::swap(x_start, x_end);
+
+                for (int x = x_start; x < x_end; x++)
+                {
+                    draw_triangle_pixel(x, y, vertices, buffer, color);
+                }
+            }
         }
     }
 
