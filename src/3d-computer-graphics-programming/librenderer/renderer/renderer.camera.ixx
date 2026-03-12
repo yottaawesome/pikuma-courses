@@ -57,7 +57,7 @@ export namespace renderer
 		math::vector_4f target{ .x = 0.f, .y = 0.f, .z = 1.f, .w = 0.f };
 		const math::vector_4f up{ .x = 0.f, .y = 1.f, .z = 0.f, .w = 0.f };
 
-		auto look_at_matrix(this const look_at_camera& self) noexcept -> math::matrix4x4_f
+		auto get_look_at_matrix(this const look_at_camera& self) noexcept -> math::matrix4x4_f
 		{
 			auto z_axis = self.target - self.eye;
 			z_axis.normalise();
