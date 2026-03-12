@@ -149,59 +149,6 @@ export namespace renderer
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(const triangle& tri, std::uint32_t color, renderer::frame_buffer& buffer)
-    {
-        float inv_slope_1 = static_cast<float>(tri.vertices[1].x - tri.vertices[0].x) / (tri.vertices[1].y - tri.vertices[0].y);
-        float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
-
-        float x_start = tri.vertices[0].x;
-        float x_end = tri.vertices[0].x;
-
-        if (x_end < x_start)
-        {
-            std::swap(x_start, x_end);
-            std::swap(inv_slope_1, inv_slope_2);
-        }
-
-        // While looping, you may end up with extreme slopes that can
-        // cause huge lines to be drawn. Here, we correct for this.
-        float max_width = std::abs(tri.vertices[2].x - tri.vertices[1].x); // prevents constexpr
-        for (int y = static_cast<int>(tri.vertices[0].y); y <= tri.vertices[2].y; y++)
-        {
-            draw_line(static_cast<int>(x_start), static_cast<int>(y), static_cast<int>(x_end), static_cast<int>(y), color, buffer);
-            x_start += inv_slope_1;
-            x_end += inv_slope_2;
-
-            if (std::abs(x_end - x_start) > max_width)
-            {
-                x_start = tri.vertices[1].x;
-                x_end = tri.vertices[2].x;
-            }
-        }
-    }
-
-    constexpr void fill_flat_top_triangle(const triangle& tri, std::uint32_t color, renderer::frame_buffer& buffer)
-    {
-        float inv_slope_1 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
-        float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[1].x) / (tri.vertices[2].y - tri.vertices[1].y);
-
-        float x_start = tri.vertices[2].x;
-        float x_end = tri.vertices[2].x;
-
-        if (x_end < x_start)
-        {
-            std::swap(x_start, x_end);
-            std::swap(inv_slope_1, inv_slope_2);
-		}
-
-        for (int y = static_cast<int>(tri.vertices[2].y); y >= tri.vertices[0].y; y--)
-        {
-            draw_line(static_cast<int>(x_start), static_cast<int>(y), static_cast<int>(x_end), static_cast<int>(y), color, buffer);
-            x_start -= inv_slope_1;
-            x_end -= inv_slope_2;
-        }
-    }
-
     constexpr void draw_triangle_pixel(
         std::uint32_t x,
         std::uint32_t y,
