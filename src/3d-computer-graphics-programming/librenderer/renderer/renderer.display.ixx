@@ -232,7 +232,10 @@ export namespace renderer
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
-            for (float y = vertices[0].position.y; y <= (vertices[1].position.y); y++)
+            // Use ceil for start y to ensure scanlines are inside the triangle.
+            // Truncation (floor) can produce a y below the top vertex, causing
+            // the slope-based x computation to produce extreme values.
+            for (int y = static_cast<int>(std::ceil(vertices[0].position.y)); y <= static_cast<int>(vertices[1].position.y); y++)
             {
                 float x_start = (vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
                 float x_end = (vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
@@ -240,7 +243,12 @@ export namespace renderer
                 if (x_start > x_end)
                     std::swap(x_start, x_end);
 
-                for (float x = x_start; x < x_end; x++)
+                // Clamp to buffer bounds before casting to int to avoid
+                // overflow from large inverse slopes on near-horizontal edges.
+                x_start = std::clamp(x_start, 0.f, static_cast<float>(buffer.color.width() - 1));
+                x_end = std::clamp(x_end, 0.f, static_cast<float>(buffer.color.width() - 1));
+
+                for (int x = static_cast<int>(x_start); x <= static_cast<int>(x_end); x++)
                 {
                     draw_triangle_pixel(x, y, vertices, buffer, color);
                 }
@@ -257,7 +265,7 @@ export namespace renderer
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {
-            for (float y = (vertices[1].position.y); y <= (vertices[2].position.y); y++)
+            for (int y = static_cast<int>(std::ceil(vertices[1].position.y)); y <= static_cast<int>(vertices[2].position.y); y++)
             {
                 float x_start = (vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
                 float x_end = (vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
@@ -265,7 +273,10 @@ export namespace renderer
                 if (x_start > x_end)
                     std::swap(x_start, x_end);
 
-                for (float x = x_start; x < x_end; x++)
+                x_start = std::clamp(x_start, 0.f, static_cast<float>(buffer.color.width() - 1));
+                x_end = std::clamp(x_end, 0.f, static_cast<float>(buffer.color.width() - 1));
+
+                for (int x = static_cast<int>(x_start); x <= static_cast<int>(x_end); x++)
                 {
                     draw_triangle_pixel(x, y, vertices, buffer, color);
                 }
@@ -382,7 +393,7 @@ export namespace renderer
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
-            for (float y = vertices[0].position.y; y <= vertices[1].position.y; y++)
+            for (int y = static_cast<int>(std::ceil(vertices[0].position.y)); y <= static_cast<int>(vertices[1].position.y); y++)
             {
                 float x_start = vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1;
                 float x_end = vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2;
@@ -390,7 +401,10 @@ export namespace renderer
                 if (x_start > x_end)
                     std::swap(x_start, x_end);
 
-                for (float x = x_start; x < x_end; x++)
+                x_start = std::clamp(x_start, 0.f, static_cast<float>(buffer.color.width() - 1));
+                x_end = std::clamp(x_end, 0.f, static_cast<float>(buffer.color.width() - 1));
+
+                for (int x = static_cast<int>(x_start); x <= static_cast<int>(x_end); x++)
                 {
 					draw_texel(x, y, vertices, texture, texture_width, texture_height, buffer);
                 }
@@ -407,7 +421,7 @@ export namespace renderer
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {
-            for (float y = vertices[1].position.y; y <= vertices[2].position.y; y++)
+            for (int y = static_cast<int>(std::ceil(vertices[1].position.y)); y <= static_cast<int>(vertices[2].position.y); y++)
             {
                 float x_start = vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1;
                 float x_end = vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2;
@@ -415,7 +429,10 @@ export namespace renderer
                 if (x_start > x_end)
                     std::swap(x_start, x_end);
 
-                for (float x = x_start; x < x_end; x++)
+                x_start = std::clamp(x_start, 0.f, static_cast<float>(buffer.color.width() - 1));
+                x_end = std::clamp(x_end, 0.f, static_cast<float>(buffer.color.width() - 1));
+
+                for (int x = static_cast<int>(x_start); x <= static_cast<int>(x_end); x++)
                 {
                     draw_texel(x, y, vertices, texture, texture_width, texture_height, buffer);
                 }
