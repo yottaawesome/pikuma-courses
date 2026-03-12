@@ -147,7 +147,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mainapp.appstate.ixx" />
+    <ClCompile Include="mainapp.input.ixx" />
     <ClCompile Include="mainapp.ixx" />
+    <ClCompile Include="mainapp.core.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
