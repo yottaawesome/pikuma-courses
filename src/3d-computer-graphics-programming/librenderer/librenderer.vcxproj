@@ -48,6 +48,7 @@
     <ClCompile Include="renderer\renderer.display.ixx" />
     <ClCompile Include="mainapp\mainapp.ixx" />
     <ClCompile Include="renderer\renderer.ixx" />
+    <ClCompile Include="util\util.fixedstring.ixx" />
     <ClCompile Include="win32\win32.ixx" />
     <ClCompile Include="renderer\renderer.buffer_2d.ixx" />
     <ClCompile Include="concepts\concepts.ixx" />
@@ -87,6 +88,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -94,6 +96,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

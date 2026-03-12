@@ -22,6 +22,8 @@ Use the following controls to adjust the rendering.
 * `d`: translate along x-axis.
 * `e`: translate along z-axis.
 * `f`: translate along z-axis.
+* `[`: change mesh to render.
+* `]`: change mesh to render.
 
 ## Course notes
 

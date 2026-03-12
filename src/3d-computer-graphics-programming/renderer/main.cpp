@@ -21,34 +21,34 @@ void process_input()
 				main_app::is_running = false;
 				break;
 			case sdl::SDL_KeyCode::SDLK_RIGHT:
-				main_app::mesh_to_render.rotation.y -= increment;
+				main_app::all_meshes.get_current_mesh().mesh.rotation.y -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_LEFT:
-				main_app::mesh_to_render.rotation.y += increment;
+				main_app::all_meshes.get_current_mesh().mesh.rotation.y += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_UP:
-				main_app::mesh_to_render.rotation.x += increment;
+				main_app::all_meshes.get_current_mesh().mesh.rotation.x += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_DOWN:
-				main_app::mesh_to_render.rotation.x -= increment;
+				main_app::all_meshes.get_current_mesh().mesh.rotation.x -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_w:
-				main_app::mesh_to_render.translation.y -= increment;
+				main_app::all_meshes.get_current_mesh().mesh.translation.y -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_s:
-				main_app::mesh_to_render.translation.y += increment;
+				main_app::all_meshes.get_current_mesh().mesh.translation.y += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_a:
-				main_app::mesh_to_render.translation.x -= increment;
+				main_app::all_meshes.get_current_mesh().mesh.translation.x -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_d:
-				main_app::mesh_to_render.translation.x += increment;
+				main_app::all_meshes.get_current_mesh().mesh.translation.x += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_e:
-				main_app::mesh_to_render.translation.z += increment;
+				main_app::all_meshes.get_current_mesh().mesh.translation.z += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_f:
-				main_app::mesh_to_render.translation.z -= increment;
+				main_app::all_meshes.get_current_mesh().mesh.translation.z -= increment;
 				break;
 			default:
 				break; // do nothing for other keys
@@ -83,6 +83,12 @@ void process_input()
 				break;
 			case sdl::SDL_KeyCode::SDLK_d:
 				main_app::render_settings.culling_mode = renderer::cull_mode::disabled;
+				break;
+			case sdl::SDL_KeyCode::SDLK_LEFTBRACKET:
+				++main_app::all_meshes;
+				break;
+			case sdl::SDL_KeyCode::SDLK_RIGHTBRACKET:
+				--main_app::all_meshes;
 				break;
 			}
 		};
@@ -123,25 +129,25 @@ void update(const std::chrono::milliseconds elapsed_time)
 	main_app::elapsed += elapsed_time;
 
 	// Change to > 0 to make the cube progressively bigger.
-	main_app::mesh_to_render.additively_scale_by(0);
-	auto scaleMatrix = math::scale_matrix{ main_app::mesh_to_render.scale };
-	//main_app::mesh_to_render.translation.z = 4;
-	auto translation = math::translate_matrix{ main_app::mesh_to_render.translation };
+	main_app::all_meshes.get_current_mesh().mesh.additively_scale_by(0);
+	auto scaleMatrix = math::scale_matrix{ main_app::all_meshes.get_current_mesh().mesh.scale };
+	//main_app::all_meshes.get_current_mesh().mesh.translation.z = 4;
+	auto translation = math::translate_matrix{ main_app::all_meshes.get_current_mesh().mesh.translation };
 
-	//main_app::mesh_to_render.rotation.x += 0.01f;
-	//main_app::mesh_to_render.rotation.y += 0.01f;
-	//main_app::mesh_to_render.rotation.z += 0.01f;
-	auto rotationMatrix = math::rotation_matrix{ main_app::mesh_to_render.rotation };
+	//main_app::all_meshes.get_current_mesh().mesh.rotation.x += 0.01f;
+	//main_app::all_meshes.get_current_mesh().mesh.rotation.y += 0.01f;
+	//main_app::all_meshes.get_current_mesh().mesh.rotation.z += 0.01f;
+	auto rotationMatrix = math::rotation_matrix{ main_app::all_meshes.get_current_mesh().mesh.rotation };
 
 	constexpr auto global_light = renderer::light{ { .x = 0, .y = 0, .z = 1 }, 0xffffffff };
 
-	for (int i = 0; i < main_app::mesh_to_render.faces.size(); i++)
+	for (int i = 0; i < main_app::all_meshes.get_current_mesh().mesh.faces.size(); i++)
 	{
-		auto mesh_face = renderer::face{ main_app::mesh_to_render.faces[i] };
+		auto mesh_face = renderer::face{ main_app::all_meshes.get_current_mesh().mesh.faces[i] };
 		auto face_vertices = std::array{
-			main_app::mesh_to_render.vertices[mesh_face.a],
-			main_app::mesh_to_render.vertices[mesh_face.b],
-			main_app::mesh_to_render.vertices[mesh_face.c]
+			main_app::all_meshes.get_current_mesh().mesh.vertices[mesh_face.a],
+			main_app::all_meshes.get_current_mesh().mesh.vertices[mesh_face.b],
+			main_app::all_meshes.get_current_mesh().mesh.vertices[mesh_face.c]
 		};
 
 		auto transformed_vertices = std::array<math::vector_4f, 3>{};
@@ -235,7 +241,8 @@ void update(const std::chrono::milliseconds elapsed_time)
 void render(
 	sdl::SDL_Renderer* renderer,
 	sdl::SDL_Texture* color_buffer_texture,
-	renderer::color_buffer& buffer
+	renderer::color_buffer& buffer,
+	upng::upng_texture& texture
 )
 {
 
@@ -260,8 +267,8 @@ void render(
 
 		if (main_app::render_settings.should_draw_textured_triangles())
 		{
-			const auto [texture, width, height] = renderer::texture::get_selected();
-			renderer::draw_textured_triangle(triangle, texture, width, height, buffer);
+			//const auto [texture, width, height] = renderer::texture::get_selected();
+			renderer::draw_textured_triangle(triangle, texture.uint32_buffer(), texture.width(), texture.height(), buffer);
 		}
 
 		if (main_app::render_settings.should_draw_triangles())
@@ -290,13 +297,20 @@ void render(
 }
 
 //int main(int argc, char* argv[]) // use this on subsystem:console
-int WinMain(int argc, char* argv[])
+auto WinMain(int argc, char* argv[]) -> int // use this on subsystem:windows
 {
 	using
 		std::chrono::milliseconds, 
 		std::chrono::high_resolution_clock, 
 		std::chrono::duration_cast;
-	main_app::mesh_to_render.translation.z = 4;
+
+	// Translate all meshes away from the camera so that they're better visible
+	main_app::all_meshes.for_each(
+		[](main_app::mesh_and_texture& mat) static noexcept
+		{
+			mat.mesh.translation.z = 4;
+		}
+	);
 
 	//display::initialize_window(app);
 
@@ -309,7 +323,8 @@ int WinMain(int argc, char* argv[])
 		render(
 			main_app::sdl_renderer.get(),
 			main_app::color_buffer_texture.get(),
-			main_app::main_buffer
+			main_app::main_buffer,
+			main_app::all_meshes.get_current_mesh().texture
 		);
 		elapsed = duration_cast<milliseconds>(high_resolution_clock::now() - begin);
 	}
