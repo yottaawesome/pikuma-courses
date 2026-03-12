@@ -91,9 +91,11 @@ export namespace renderer
 		constexpr frame_buffer(std::uint32_t width, std::uint32_t height)
 			: color(width, height), depth(width, height)
 		{}
+		// Initialise to 0 because 1/w is used directly for depth
+		// testing with a > comparison (larger 1/w = closer).
 		constexpr auto clear_z_buffer(this auto&& self) noexcept -> decltype(auto)
 		{
-			self.depth.fill(std::numeric_limits<float>::infinity());
+			self.depth.fill(0.f);
 			return decltype(self)(self);
 		}
 		constexpr auto clear_color_buffer(this auto&& self, const std::uint32_t fill_color = 0xff000000) noexcept -> decltype(auto)

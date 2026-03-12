@@ -195,10 +195,10 @@ export namespace renderer
         interpolated_u /= interpolated_w_reciprocal;
         interpolated_v /= interpolated_w_reciprocal;
 
-        // Adjust 1/w so that the pixel with smaller 1/w value is closer to the camera.
-        interpolated_w_reciprocal = 1.f - interpolated_w_reciprocal;
-
-        if (interpolated_w_reciprocal < buffer.depth[y, x])
+        // Use 1/w directly for depth testing: larger 1/w means
+        // closer to the camera. Avoids the precision loss that
+        // a "1 - 1/w" transformation would introduce.
+        if (interpolated_w_reciprocal > buffer.depth[y, x])
         {
             draw_pixel(y, x, color, buffer);
             buffer.depth.set(y, x, interpolated_w_reciprocal);
@@ -349,10 +349,10 @@ export namespace renderer
         if (colorIndex >= texture_width * texture_height)
             colorIndex = texture_width * texture_height - 1;
 
-		// Adjust 1/w so that the pixel with smaller 1/w value is closer to the camera.
-		interpolated_w_reciprocal = 1.f - interpolated_w_reciprocal;
-        
-        if (interpolated_w_reciprocal < buffer.depth[y, x])
+        // Use 1/w directly for depth testing: larger 1/w means
+        // closer to the camera. Avoids the precision loss that
+        // a "1 - 1/w" transformation would introduce.
+        if (interpolated_w_reciprocal > buffer.depth[y, x])
         {
             draw_pixel(y, x, texture[colorIndex], buffer);
             buffer.depth.set(y, x, interpolated_w_reciprocal);
