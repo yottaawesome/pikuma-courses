@@ -22,6 +22,7 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="renderer\renderer.camera.ixx" />
     <ClCompile Include="renderer\renderer.settings.ixx" />
     <ClCompile Include="sdl\sdl.renderer.ixx" />
     <ClCompile Include="sdl\sdl.texture.ixx" />

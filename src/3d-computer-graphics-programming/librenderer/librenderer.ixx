@@ -7,3 +7,4 @@ export import :math;
 export import :raii;
 export import :renderer;
 export import :util;
+export import :camera;
