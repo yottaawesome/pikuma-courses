@@ -34,19 +34,19 @@ export namespace renderer
         }
     }
 
-    constexpr void draw_dot_grid(std::int32_t step, std::uint32_t color, renderer::color_buffer& buffer)
+    constexpr void draw_dot_grid(std::int32_t step, std::uint32_t color, renderer::frame_buffer& buffer)
     {
-        for (uint32_t row = 0; row < buffer.height(); row += 10)
-            for (uint32_t column = 0; column < buffer.width(); column += 10)
-                buffer.set(row, column, color);
+        for (uint32_t row = 0; row < buffer.color.height(); row += 10)
+            for (uint32_t column = 0; column < buffer.color.width(); column += 10)
+                buffer.color.set(row, column, color);
     }
 
 	// This is in row-major form. This means that if you're
 	// working with Cartesian coordinates, you need to swap 
     // x and y to get the correct pixel.
-    constexpr void draw_pixel(std::uint32_t x, std::uint32_t y, std::uint32_t color, renderer::color_buffer& buffer)
+    constexpr void draw_pixel(std::uint32_t x, std::uint32_t y, std::uint32_t color, renderer::frame_buffer& buffer)
     {
-        buffer.set(x, y, color);
+        buffer.color.set(x, y, color);
     }
 
     constexpr void draw_rect(
@@ -55,11 +55,11 @@ export namespace renderer
         std::uint32_t width,
         std::uint32_t height,
         std::uint32_t color,
-        renderer::color_buffer& buffer
+        renderer::frame_buffer& buffer
     )
     {
-        for (uint32_t row = y; row < y + width and row < buffer.height(); row++)
-            for (uint32_t column = x; column < x + height and column < buffer.width(); column++)
+        for (uint32_t row = y; row < y + width and row < buffer.color.height(); row++)
+            for (uint32_t column = x; column < x + height and column < buffer.color.width(); column++)
                 draw_pixel(row, column, color, buffer);
     }
 
@@ -90,7 +90,7 @@ export namespace renderer
         const int x1,
         const int y1,
         const std::uint32_t color,
-        renderer::color_buffer& buffer
+        renderer::frame_buffer& buffer
     )
     {
         int delta_x = x1 - x0;
@@ -120,7 +120,7 @@ export namespace renderer
     constexpr void draw_triangle(
         const renderer::triangle& triangle,
         const std::uint32_t color,
-        renderer::color_buffer& buffer
+        renderer::frame_buffer& buffer
     )
     {
         draw_line(
@@ -149,7 +149,7 @@ export namespace renderer
         ); // and back to 2 -> 0
     }
 
-    void fill_flat_bottom_triangle(const triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
+    void fill_flat_bottom_triangle(const triangle& tri, std::uint32_t color, renderer::frame_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[1].x - tri.vertices[0].x) / (tri.vertices[1].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
@@ -180,7 +180,7 @@ export namespace renderer
         }
     }
 
-    constexpr void fill_flat_top_triangle(const triangle& tri, std::uint32_t color, renderer::color_buffer& buffer)
+    constexpr void fill_flat_top_triangle(const triangle& tri, std::uint32_t color, renderer::frame_buffer& buffer)
     {
         float inv_slope_1 = static_cast<float>(tri.vertices[2].x - tri.vertices[0].x) / (tri.vertices[2].y - tri.vertices[0].y);
         float inv_slope_2 = static_cast<float>(tri.vertices[2].x - tri.vertices[1].x) / (tri.vertices[2].y - tri.vertices[1].y);
@@ -205,7 +205,7 @@ export namespace renderer
     constexpr void draw_filled_triangle(
         const triangle& triangle,
         std::uint32_t color,
-        renderer::color_buffer& buffer
+        renderer::frame_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate
@@ -289,9 +289,13 @@ export namespace renderer
         const std::uint32_t* const texture,
         size_t texture_width,
         size_t texture_height,
-		renderer::color_buffer& buffer
+		renderer::frame_buffer& buffer
     )
     {
+        // Getting huge y and x values, I think there's a rounding bug somewhere, but will look at it later.
+        if (y >= buffer.depth.height() or x >= buffer.depth.width())
+            return;
+
         auto weights = math::barycentric_weights(
             math::vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
             math::vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
@@ -334,7 +338,14 @@ export namespace renderer
         if (colorIndex >= texture_width * texture_height)
             colorIndex = texture_width * texture_height - 1;
 
-        draw_pixel(y, x, texture[colorIndex], buffer);
+		// Adjust 1/w so that the pixel with smaller 1/w value is closer to the camera.
+		interpolated_w_reciprocal = 1.f - interpolated_w_reciprocal;
+        
+        if (interpolated_w_reciprocal < buffer.depth[y, x])
+        {
+            draw_pixel(y, x, texture[colorIndex], buffer);
+            buffer.depth.set(y, x, interpolated_w_reciprocal);
+        }
 	}
 
     // Draw a textured triangle with flat-top/flat-bottom method.
@@ -343,7 +354,7 @@ export namespace renderer
         const std::uint32_t* const texture,
 		size_t texture_width,
 		size_t texture_height,
-        renderer::color_buffer& buffer
+        renderer::frame_buffer& buffer
     )
     {
         // Sort by ascending y-coordinate

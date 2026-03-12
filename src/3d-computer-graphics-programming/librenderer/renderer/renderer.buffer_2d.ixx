@@ -2,6 +2,7 @@ export module librenderer:renderer.buffer_2d;
 import std;
 import :util;
 import :concepts;
+import :sdl;
 
 export namespace renderer
 {
@@ -90,6 +91,16 @@ export namespace renderer
 		constexpr frame_buffer(std::uint32_t width, std::uint32_t height)
 			: color(width, height), depth(width, height)
 		{}
+		constexpr auto clear_z_buffer(this auto&& self) noexcept -> decltype(auto)
+		{
+			self.depth.fill(std::numeric_limits<float>::infinity());
+			return decltype(self)(self);
+		}
+		constexpr auto clear_color_buffer(this auto&& self, const std::uint32_t fill_color = 0xff000000) noexcept -> decltype(auto)
+		{
+			self.color.fill(fill_color);
+			return decltype(self)(self);
+		}
 	};
 }
 
