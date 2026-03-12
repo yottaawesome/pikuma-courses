@@ -1,13 +1,8 @@
-export module librenderer:mainapp;
+export module mainapp;
 import std;
-import :math;
-import :renderer;
-import :util;
-import :math;
-import :raii;
-import :upng;
+import librenderer;
 
-export namespace main_app
+export namespace app_state
 {
 	struct mesh_and_texture
 	{
@@ -70,7 +65,10 @@ export namespace main_app
 	auto context = std::make_unique<sdl::sdl_context>(sdl::sdl_init_everything);
 
 	constexpr auto window_dimensions = sdl::window_dimensions{};
-	auto main_buffer = renderer::color_buffer{ window_dimensions.width(), window_dimensions.height() };
+	
+	// combines the color and depth buffer into a single struct.
+	auto frame_buffer = renderer::frame_buffer{ window_dimensions.width(), window_dimensions.height() };
+
 	auto window = sdl::window{
 		window_dimensions.width(),
 		window_dimensions.height(),
@@ -93,7 +91,7 @@ export namespace main_app
 
 	const auto proj_matrix = math::projective_perspective_divide_matrix(
 		math::radians{ std::numbers::pi / 3 },
-		(float)main_app::window_dimensions.width() / (float)main_app::window_dimensions.height(),
+		(float)window_dimensions.width() / (float)window_dimensions.height(),
 		0.1f,
 		100.f
 	);

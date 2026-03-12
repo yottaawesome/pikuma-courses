@@ -3,7 +3,6 @@ export import :concepts;
 export import :win32;
 export import :sdl;
 export import :upng;
-export import :mainapp;
 export import :math;
 export import :raii;
 export import :renderer;

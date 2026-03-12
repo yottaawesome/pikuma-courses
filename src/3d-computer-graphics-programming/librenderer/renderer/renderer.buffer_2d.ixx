@@ -80,6 +80,17 @@ export namespace renderer
 	// 0x{alpha}{red}{green}{blue}
 	// 0xFFFFFFFF
 	using color_buffer = buffer_2d<uint32_t>;
+	using z_buffer = buffer_2d<float>;
+
+	struct frame_buffer
+	{
+		color_buffer color;
+		z_buffer depth;
+		constexpr frame_buffer() = default;
+		constexpr frame_buffer(std::uint32_t width, std::uint32_t height)
+			: color(width, height), depth(width, height)
+		{}
+	};
 }
 
 static_assert(

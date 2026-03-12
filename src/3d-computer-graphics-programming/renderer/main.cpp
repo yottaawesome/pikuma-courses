@@ -7,6 +7,7 @@
 
 import std;
 import librenderer;
+import mainapp;
 
 void process_input()
 {
@@ -18,37 +19,37 @@ void process_input()
 			switch (key)
 			{
 			case sdl::SDL_KeyCode::SDLK_ESCAPE:
-				main_app::is_running = false;
+				app_state::is_running = false;
 				break;
 			case sdl::SDL_KeyCode::SDLK_RIGHT:
-				main_app::all_meshes.get_current_mesh().mesh.rotation.y -= increment;
+				app_state::all_meshes.get_current_mesh().mesh.rotation.y -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_LEFT:
-				main_app::all_meshes.get_current_mesh().mesh.rotation.y += increment;
+				app_state::all_meshes.get_current_mesh().mesh.rotation.y += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_UP:
-				main_app::all_meshes.get_current_mesh().mesh.rotation.x += increment;
+				app_state::all_meshes.get_current_mesh().mesh.rotation.x += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_DOWN:
-				main_app::all_meshes.get_current_mesh().mesh.rotation.x -= increment;
+				app_state::all_meshes.get_current_mesh().mesh.rotation.x -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_w:
-				main_app::all_meshes.get_current_mesh().mesh.translation.y -= increment;
+				app_state::all_meshes.get_current_mesh().mesh.translation.y -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_s:
-				main_app::all_meshes.get_current_mesh().mesh.translation.y += increment;
+				app_state::all_meshes.get_current_mesh().mesh.translation.y += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_a:
-				main_app::all_meshes.get_current_mesh().mesh.translation.x -= increment;
+				app_state::all_meshes.get_current_mesh().mesh.translation.x -= increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_d:
-				main_app::all_meshes.get_current_mesh().mesh.translation.x += increment;
+				app_state::all_meshes.get_current_mesh().mesh.translation.x += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_e:
-				main_app::all_meshes.get_current_mesh().mesh.translation.z += increment;
+				app_state::all_meshes.get_current_mesh().mesh.translation.z += increment;
 				break;
 			case sdl::SDL_KeyCode::SDLK_f:
-				main_app::all_meshes.get_current_mesh().mesh.translation.z -= increment;
+				app_state::all_meshes.get_current_mesh().mesh.translation.z -= increment;
 				break;
 			default:
 				break; // do nothing for other keys
@@ -61,34 +62,34 @@ void process_input()
 			switch (key)
 			{
 			case sdl::SDL_KeyCode::SDLK_1:
-				main_app::render_settings.rendering_mode = renderer::render_mode::wireframe_with_dot;
+				app_state::render_settings.rendering_mode = renderer::render_mode::wireframe_with_dot;
 				break;
 			case sdl::SDL_KeyCode::SDLK_2:
-				main_app::render_settings.rendering_mode = renderer::render_mode::wireframe;
+				app_state::render_settings.rendering_mode = renderer::render_mode::wireframe;
 				break;
 			case sdl::SDL_KeyCode::SDLK_3:
-				main_app::render_settings.rendering_mode = renderer::render_mode::filled;
+				app_state::render_settings.rendering_mode = renderer::render_mode::filled;
 				break;
 			case sdl::SDL_KeyCode::SDLK_4:
-				main_app::render_settings.rendering_mode = renderer::render_mode::filled_wireframe;
+				app_state::render_settings.rendering_mode = renderer::render_mode::filled_wireframe;
 				break;
 			case sdl::SDL_KeyCode::SDLK_5:
-				main_app::render_settings.rendering_mode = renderer::render_mode::textured;
+				app_state::render_settings.rendering_mode = renderer::render_mode::textured;
 				break;
 			case sdl::SDL_KeyCode::SDLK_6:
-				main_app::render_settings.rendering_mode = renderer::render_mode::textured_wireframe;
+				app_state::render_settings.rendering_mode = renderer::render_mode::textured_wireframe;
 				break;
 			case sdl::SDL_KeyCode::SDLK_c:
-				main_app::render_settings.culling_mode = renderer::cull_mode::enabled;
+				app_state::render_settings.culling_mode = renderer::cull_mode::enabled;
 				break;
 			case sdl::SDL_KeyCode::SDLK_d:
-				main_app::render_settings.culling_mode = renderer::cull_mode::disabled;
+				app_state::render_settings.culling_mode = renderer::cull_mode::disabled;
 				break;
 			case sdl::SDL_KeyCode::SDLK_LEFTBRACKET:
-				++main_app::all_meshes;
+				++app_state::all_meshes;
 				break;
 			case sdl::SDL_KeyCode::SDLK_RIGHTBRACKET:
-				--main_app::all_meshes;
+				--app_state::all_meshes;
 				break;
 			}
 		};
@@ -99,7 +100,7 @@ void process_input()
 	{
 		case sdl::SDL_EventType::SDL_QUIT:
 		{
-			main_app::is_running = false;
+			app_state::is_running = false;
 			break;
 		}
 
@@ -122,32 +123,32 @@ void update(const std::chrono::milliseconds elapsed_time)
 	// Delay to meet target frame rate. Note: we can 
 	// do this ourselves by keeping track of the 
 	// elapsed milliseconds.
-	auto time_to_wait = std::chrono::milliseconds{ main_app::frame_target_time - elapsed_time };
-	if (time_to_wait.count() > 0 and time_to_wait <= main_app::frame_target_time)
+	auto time_to_wait = std::chrono::milliseconds{ app_state::frame_target_time - elapsed_time };
+	if (time_to_wait.count() > 0 and time_to_wait <= app_state::frame_target_time)
 		sdl::SDL_Delay(static_cast<std::uint32_t>(time_to_wait.count()));
-	main_app::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
-	main_app::elapsed += elapsed_time;
+	app_state::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
+	app_state::elapsed += elapsed_time;
 
 	// Change to > 0 to make the cube progressively bigger.
-	main_app::all_meshes.get_current_mesh().mesh.additively_scale_by(0);
-	auto scaleMatrix = math::scale_matrix{ main_app::all_meshes.get_current_mesh().mesh.scale };
-	//main_app::all_meshes.get_current_mesh().mesh.translation.z = 4;
-	auto translation = math::translate_matrix{ main_app::all_meshes.get_current_mesh().mesh.translation };
+	app_state::all_meshes.get_current_mesh().mesh.additively_scale_by(0);
+	auto scaleMatrix = math::scale_matrix{ app_state::all_meshes.get_current_mesh().mesh.scale };
+	//app_state::all_meshes.get_current_mesh().mesh.translation.z = 4;
+	auto translation = math::translate_matrix{ app_state::all_meshes.get_current_mesh().mesh.translation };
 
-	//main_app::all_meshes.get_current_mesh().mesh.rotation.x += 0.01f;
-	//main_app::all_meshes.get_current_mesh().mesh.rotation.y += 0.01f;
-	//main_app::all_meshes.get_current_mesh().mesh.rotation.z += 0.01f;
-	auto rotationMatrix = math::rotation_matrix{ main_app::all_meshes.get_current_mesh().mesh.rotation };
+	//app_state::all_meshes.get_current_mesh().mesh.rotation.x += 0.01f;
+	//app_state::all_meshes.get_current_mesh().mesh.rotation.y += 0.01f;
+	//app_state::all_meshes.get_current_mesh().mesh.rotation.z += 0.01f;
+	auto rotationMatrix = math::rotation_matrix{ app_state::all_meshes.get_current_mesh().mesh.rotation };
 
 	constexpr auto global_light = renderer::light{ { .x = 0, .y = 0, .z = 1 }, 0xffffffff };
 
-	for (int i = 0; i < main_app::all_meshes.get_current_mesh().mesh.faces.size(); i++)
+	for (int i = 0; i < app_state::all_meshes.get_current_mesh().mesh.faces.size(); i++)
 	{
-		auto mesh_face = renderer::face{ main_app::all_meshes.get_current_mesh().mesh.faces[i] };
+		auto mesh_face = renderer::face{ app_state::all_meshes.get_current_mesh().mesh.faces[i] };
 		auto face_vertices = std::array{
-			main_app::all_meshes.get_current_mesh().mesh.vertices[mesh_face.a],
-			main_app::all_meshes.get_current_mesh().mesh.vertices[mesh_face.b],
-			main_app::all_meshes.get_current_mesh().mesh.vertices[mesh_face.c]
+			app_state::all_meshes.get_current_mesh().mesh.vertices[mesh_face.a],
+			app_state::all_meshes.get_current_mesh().mesh.vertices[mesh_face.b],
+			app_state::all_meshes.get_current_mesh().mesh.vertices[mesh_face.c]
 		};
 
 		auto transformed_vertices = std::array<math::vector_4f, 3>{};
@@ -189,10 +190,10 @@ void update(const std::chrono::milliseconds elapsed_time)
 		* Note that backface culling is not the same as frustum
 		* culling.
 		*/
-		if (main_app::render_settings.culling_mode == renderer::cull_mode::enabled)
+		if (app_state::render_settings.culling_mode == renderer::cull_mode::enabled)
 		{
 			const auto& [vector_a, vector_b, _] = transformed_vertices;
-			auto camera_ray = math::vector_4f{ main_app::camera_position - vector_a };
+			auto camera_ray = math::vector_4f{ app_state::camera_position - vector_a };
 			if (math::dot_product(camera_ray, normal) <= 0) // cull the face
 				continue;
 		}
@@ -208,30 +209,30 @@ void update(const std::chrono::milliseconds elapsed_time)
 		for (int j = 0; j < 3; j++)
 		{
 			// Project the current vertex
-			auto projected_point = math::vector_4f{ main_app::proj_matrix * transformed_vertices[j] };
+			auto projected_point = math::vector_4f{ app_state::proj_matrix * transformed_vertices[j] };
 
 			// Scale into the view.
-			projected_point.x *= main_app::window_dimensions.width() / 2;
-			projected_point.y *= main_app::window_dimensions.height() / 2;
+			projected_point.x *= app_state::window_dimensions.width() / 2;
+			projected_point.y *= app_state::window_dimensions.height() / 2;
 
 			// Invert the y coordinate to account for flipped y-axis in screen space.
 			projected_point.y *= -1;
 
 			// Translate the projected points to the middle of the screen.
-			projected_point.x += main_app::window_dimensions.width() / 2;
-			projected_point.y += main_app::window_dimensions.height() / 2;
+			projected_point.x += app_state::window_dimensions.width() / 2;
+			projected_point.y += app_state::window_dimensions.height() / 2;
 			projected_triangle.vertices[j] = projected_point;
 		}
 		projected_triangle.average_depth =
 			(transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z) / 3.f;
 
 		// Save the projected triangle in the array of triangles to render
-		main_app::triangles_to_render.push_back(projected_triangle);
+		app_state::triangles_to_render.push_back(projected_triangle);
 	}
 	// Painter's algorithm -- sort triangles by average depth from back to front.
 	std::sort(
-		main_app::triangles_to_render.begin(), 
-		main_app::triangles_to_render.end(),
+		app_state::triangles_to_render.begin(), 
+		app_state::triangles_to_render.end(),
 		[](const renderer::triangle& t1, const renderer::triangle& t2) static
 		{
 			return t1.average_depth > t2.average_depth;
@@ -254,9 +255,9 @@ void render(
 	//draw_pixel(0, 50, 0xffff0000, buffer);
 	renderer::draw_dot_grid(10, 0xff464646, buffer);
 
-	for (const renderer::triangle& triangle : main_app::triangles_to_render)
+	for (const renderer::triangle& triangle : app_state::triangles_to_render)
 	{
-		if (main_app::render_settings.should_draw_filled_triangles())
+		if (app_state::render_settings.should_draw_filled_triangles())
 		{
 			renderer::draw_filled_triangle(
 				triangle,
@@ -265,16 +266,16 @@ void render(
 			);
 		}
 
-		if (main_app::render_settings.should_draw_textured_triangles())
+		if (app_state::render_settings.should_draw_textured_triangles())
 		{
 			//const auto [texture, width, height] = renderer::texture::get_selected();
 			renderer::draw_textured_triangle(triangle, texture.uint32_buffer(), texture.width(), texture.height(), buffer);
 		}
 
-		if (main_app::render_settings.should_draw_triangles())
+		if (app_state::render_settings.should_draw_triangles())
 			renderer::draw_triangle(triangle, 0xffffffff, buffer);
 
-		if (main_app::render_settings.should_draw_points())
+		if (app_state::render_settings.should_draw_points())
 		{
 			[](auto&& buffer, auto&&...point) static
 			{
@@ -291,7 +292,7 @@ void render(
 	renderer::render_color_buffer(renderer, buffer, color_buffer_texture);
 
 	buffer.fill(0xff000000);
-	main_app::triangles_to_render.clear();
+	app_state::triangles_to_render.clear();
 
 	sdl::SDL_RenderPresent(renderer);
 }
@@ -305,8 +306,8 @@ auto WinMain(int argc, char* argv[]) -> int // use this on subsystem:windows
 		std::chrono::duration_cast;
 
 	// Translate all meshes away from the camera so that they're better visible
-	main_app::all_meshes.for_each(
-		[](main_app::mesh_and_texture& mat) static noexcept
+	app_state::all_meshes.for_each(
+		[](app_state::mesh_and_texture& mat) static noexcept
 		{
 			mat.mesh.translation.z = 4;
 		}
@@ -315,16 +316,16 @@ auto WinMain(int argc, char* argv[]) -> int // use this on subsystem:windows
 	//display::initialize_window(app);
 
 	auto elapsed = milliseconds{ 0 };
-	while (main_app::is_running)
+	while (app_state::is_running)
 	{
 		auto begin = high_resolution_clock::now();
 		process_input();
 		update(elapsed);
 		render(
-			main_app::sdl_renderer.get(),
-			main_app::color_buffer_texture.get(),
-			main_app::main_buffer,
-			main_app::all_meshes.get_current_mesh().texture
+			app_state::sdl_renderer.get(),
+			app_state::color_buffer_texture.get(),
+			app_state::frame_buffer.color,
+			app_state::all_meshes.get_current_mesh().texture
 		);
 		elapsed = duration_cast<milliseconds>(high_resolution_clock::now() - begin);
 	}
