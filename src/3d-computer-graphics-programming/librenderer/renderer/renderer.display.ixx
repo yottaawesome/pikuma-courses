@@ -69,18 +69,8 @@ export namespace renderer
         sdl::SDL_Texture* color_buffer_texture
     )
     {
-        sdl::SDL_UpdateTexture(
-            color_buffer_texture,
-            nullptr,
-            buffer.raw_buffer(),
-            buffer.pitch()
-        );
-        sdl::SDL_RenderCopy(
-            renderer,
-            color_buffer_texture,
-            nullptr,
-            nullptr
-        );
+        sdl::SDL_UpdateTexture(color_buffer_texture, nullptr, buffer.raw_buffer(), buffer.pitch());
+        sdl::SDL_RenderCopy(renderer, color_buffer_texture, nullptr, nullptr);
     }
 
     // DDA algorithm
@@ -109,12 +99,7 @@ export namespace renderer
             auto px = static_cast<int>(std::round(current_x));
             auto py = static_cast<int>(std::round(current_y));
             if (px >= 0 and py >= 0)
-                draw_pixel(
-                    static_cast<uint32_t>(py),
-                    static_cast<uint32_t>(px),
-                    color,
-                    buffer
-                );
+                draw_pixel(static_cast<uint32_t>(py), static_cast<uint32_t>(px), color, buffer);
             current_x += x_inc;
             current_y += y_inc;
         }
@@ -247,11 +232,7 @@ export namespace renderer
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
-            for (
-                float y = vertices[0].position.y;
-                y <= (vertices[1].position.y);
-                y++
-            )
+            for (float y = vertices[0].position.y; y <= (vertices[1].position.y); y++)
             {
                 float x_start = (vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
                 float x_end = (vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
@@ -276,11 +257,7 @@ export namespace renderer
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {
-            for (
-                float y = (vertices[1].position.y);
-                y <= (vertices[2].position.y);
-                y++
-            )
+            for (float y = (vertices[1].position.y); y <= (vertices[2].position.y); y++)
             {
                 float x_start = (vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1);
                 float x_end = (vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2);
@@ -405,11 +382,7 @@ export namespace renderer
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
-            for (
-                float y = vertices[0].position.y;
-                y <= vertices[1].position.y;
-                y++
-            )
+            for (float y = vertices[0].position.y; y <= vertices[1].position.y; y++)
             {
                 float x_start = vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1;
                 float x_end = vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2;
@@ -434,11 +407,7 @@ export namespace renderer
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {
-            for (
-                float y = vertices[1].position.y;
-                y <= vertices[2].position.y;
-                y++
-            )
+            for (float y = vertices[1].position.y; y <= vertices[2].position.y; y++)
             {
                 float x_start = vertices[1].position.x + (y - vertices[1].position.y) * inv_slope_1;
                 float x_end = vertices[0].position.x + (y - vertices[0].position.y) * inv_slope_2;
