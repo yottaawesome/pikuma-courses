@@ -9,8 +9,8 @@ export namespace app_state
 		mesh_and_texture(std::string_view mesh_path, std::string_view texture_path)
 			: mesh{ mesh_path }, texture{ texture_path }
 		{}
-		renderer::mesh mesh{ "..\\assets\\f22.obj" };
-		upng::upng_texture texture{ "..\\assets\\f22_texture.png" };
+		renderer::mesh mesh;
+		upng::upng_texture texture;
 	};
 
 	struct all_meshes_t

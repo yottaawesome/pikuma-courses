@@ -242,7 +242,7 @@ void update(const std::chrono::milliseconds elapsed_time)
 void render(
 	sdl::SDL_Renderer* renderer,
 	sdl::SDL_Texture* color_buffer_texture,
-	renderer::color_buffer& buffer,
+	renderer::frame_buffer& frame_buffer,
 	upng::upng_texture& texture
 )
 {
@@ -253,7 +253,7 @@ void render(
 	//draw_rect(r.origin.x, r.origin.y, r.width, r.height, 0xffc0c0c0, buffer);
 	//draw_rect(50, 50, 60, 50, 0xffc0c0c0, buffer);
 	//draw_pixel(0, 50, 0xffff0000, buffer);
-	renderer::draw_dot_grid(10, 0xff464646, buffer);
+	renderer::draw_dot_grid(10, 0xff464646, frame_buffer);
 
 	for (const renderer::triangle& triangle : app_state::triangles_to_render)
 	{
@@ -262,36 +262,34 @@ void render(
 			renderer::draw_filled_triangle(
 				triangle,
 				triangle.color, 
-				buffer
+				frame_buffer
 			);
 		}
 
 		if (app_state::render_settings.should_draw_textured_triangles())
 		{
 			//const auto [texture, width, height] = renderer::texture::get_selected();
-			renderer::draw_textured_triangle(triangle, texture.uint32_buffer(), texture.width(), texture.height(), buffer);
+			renderer::draw_textured_triangle(triangle, texture.uint32_buffer(), texture.width(), texture.height(), frame_buffer);
 		}
 
 		if (app_state::render_settings.should_draw_triangles())
-			renderer::draw_triangle(triangle, 0xffffffff, buffer);
-
+			renderer::draw_triangle(triangle, 0xffffffff, frame_buffer);
 		if (app_state::render_settings.should_draw_points())
 		{
-			[](auto&& buffer, auto&&...point) static
+			[](auto&& frame_buffer, auto&&...point) static
 			{
 				(renderer::draw_pixel(
 					static_cast<std::uint32_t>(point.y),
 					static_cast<std::uint32_t>(point.x),
 					0xffff0000,
-					buffer
+					frame_buffer
 				), ...);
-			}(buffer, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]);
+			}(frame_buffer, triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]);
 		}
 	}
 
-	renderer::render_color_buffer(renderer, buffer, color_buffer_texture);
-
-	buffer.fill(0xff000000);
+	renderer::render_color_buffer(renderer, frame_buffer.color, color_buffer_texture);
+	frame_buffer.clear_color_buffer(0xff000000).clear_z_buffer();
 	app_state::triangles_to_render.clear();
 
 	sdl::SDL_RenderPresent(renderer);
@@ -324,7 +322,7 @@ auto WinMain(int argc, char* argv[]) -> int // use this on subsystem:windows
 		render(
 			app_state::sdl_renderer.get(),
 			app_state::color_buffer_texture.get(),
-			app_state::frame_buffer.color,
+			app_state::frame_buffer,
 			app_state::all_meshes.get_current_mesh().texture
 		);
 		elapsed = duration_cast<milliseconds>(high_resolution_clock::now() - begin);
