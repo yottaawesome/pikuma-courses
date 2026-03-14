@@ -35,7 +35,7 @@ export namespace renderer
 		constexpr void normalise(this triangle& self) noexcept
 		{
 			for (auto& point : self.vertices)
-				point.normalise();
+				math::normalise(point);
 		}
 
 		constexpr auto compute_normal(this const triangle& self)
@@ -48,7 +48,7 @@ export namespace renderer
 			//vector_ac.normalise();
 			//math::vector_4f vector_bc = vert_c - vert_b; // B -> C
 			math::vector_4f normal = math::cross_product(vector_ab, vector_ac);
-			normal.normalise();
+			math::normalise(normal);
 			if not consteval
 			{
 				/*auto mag = normal.magnitude();

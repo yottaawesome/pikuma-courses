@@ -59,10 +59,10 @@ export namespace renderer
 
 		auto get_look_at_matrix(this const look_at_camera& self) noexcept -> math::matrix4x4_f
 		{
-			auto z_axis = self.target - self.eye;
-			z_axis.normalise();
+			auto z_axis= self.target - self.eye;
+			math::normalise(z_axis);
 			auto x_axis = math::cross_product(self.up, z_axis);
-			x_axis.normalise();
+			math::normalise(x_axis);
 			auto y_axis = math::cross_product(z_axis, x_axis);
 			return math::matrix4x4_f{
 				x_axis.x, x_axis.y, x_axis.z, -math::dot_product(x_axis, self.eye),

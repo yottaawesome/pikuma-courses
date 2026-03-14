@@ -18,7 +18,7 @@ export namespace renderer
 
 		constexpr void normalise(this light& self) noexcept
 		{
-			self.direction.normalise();
+			math::normalise(self.direction);
 		}
 
 		constexpr auto dot(this const light& self, const math::vector_4f& other) 
@@ -27,7 +27,7 @@ export namespace renderer
 			/*return self.direction.x * other.x
 				+ self.direction.y * other.y
 				+ self.direction.z * other.z;*/
-			return self.direction.dot_product(other);
+			return math::dot_product(self.direction, other);
 		}
 
 		constexpr auto cross(this const light& self, const math::vector_4f& other) 
@@ -39,7 +39,7 @@ export namespace renderer
 		constexpr auto intensity_from_normal(this const light& self, const math::vector_4f& face_normal) 
 			noexcept -> float
 		{
-			auto dot = self.direction.dot_product(face_normal);
+			auto dot = math::dot_product(self.direction, face_normal);
 			// vector a: ---->
 			// vector b: ---->
 			// vector a: ---->

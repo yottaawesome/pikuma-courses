@@ -11,15 +11,15 @@ namespace Tests
 		TEST_METHOD(TestNormalisation)
 		{
 			math::vector_3f vec{ .x=1, .y = 9, .z = 2 };
-			vec.normalise();
-			Assert::IsTrue(vec.magnitude() == 1.f);
+			math::normalise(vec);
+			Assert::IsTrue(math::magnitude(vec) == 1.f);
 		}
 
 		TEST_METHOD(TestVectorAddition)
 		{
 			math::vector_3f vec_a{ .x=1, .y=0, .z=2 };
 			math::vector_3f vec_b{ .x=0, .y=9, .z=2 };
-			vec_a = vec_a.add(vec_b);
+			vec_a = math::add(vec_a, vec_b);
 			Assert::IsTrue(vec_a.x == 1.f);
 			Assert::IsTrue(vec_a.y == 9.f);
 			Assert::IsTrue(vec_a.z == 4.f);
@@ -29,7 +29,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x=1, .y=0, .z = 2 };
 			math::vector_3f vec_b{ .x = 0, .y = 9, .z=2 };
-			vec_a = vec_a.subtract(vec_b);
+			vec_a = math::subtract(vec_a, vec_b);
 			Assert::IsTrue(vec_a.x == 1.f);
 			Assert::IsTrue(vec_a.y == -9.f);
 			Assert::IsTrue(vec_a.z == 0.f);
@@ -39,7 +39,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x=1, .y=0, .z=0 };
 			math::vector_3f vec_b{ .x=1, .y=0, .z = 0 };
-			float dot = vec_a.dot_product(vec_b);
+			float dot = math::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == 1.f);
 		}
 
@@ -47,7 +47,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
 			math::vector_3f vec_b{ .x = -1, .y = 0, .z = 0};
-			float dot = vec_a.dot_product(vec_b);
+			float dot = math::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == -1.f);
 		}
 
@@ -55,7 +55,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
 			math::vector_3f vec_b{ .x = 0, .y = 1, .z = 0};
-			float dot = vec_a.dot_product(vec_b);
+			float dot = math::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == 0.f);
 		}
 
@@ -63,7 +63,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x = 5, .y = 0, .z = 0};
 			math::vector_3f vec_b{ .x = 5, .y = 0, .z = 0};
-			float dot = vec_a.dot_product(vec_b);
+			float dot = math::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot > 1.f);
 		}
 
@@ -71,7 +71,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x = 5, .y = 0, .z = 0};
 			math::vector_3f vec_b{ .x = -5, .y = 0, .z = 0};
-			float dot = vec_a.dot_product(vec_b);
+			float dot = math::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot < -1.f);
 		}
 
@@ -79,7 +79,7 @@ namespace Tests
 		{
 			math::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
 			math::vector_3f vec_b{.x=0, .y = 1, .z=0};
-			float dot = vec_a.dot_product(vec_b);
+			float dot = math::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == 0.f);
 		}
 

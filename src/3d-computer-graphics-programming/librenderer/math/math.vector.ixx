@@ -41,7 +41,7 @@ export namespace math
 	// f(a, b) = -1 where where θ = 180
 	// ---------------------------------
 	template<vector_like T, vector_like V>
-	auto dot_product(const T& a, const V& b) noexcept -> float
+	constexpr auto dot_product(const T& a, const V& b) noexcept -> float
 	{
 		static_assert(dot_product_defined<decltype(a), decltype(b)>, "a and b must be vectors of matching dimension.");
 
@@ -67,7 +67,7 @@ export namespace math
 
 	constexpr void normalise(vector_like auto& v) noexcept
 	{
-		float multiplicand = 1.f / v.magnitude();
+		float multiplicand = 1.f / math::magnitude(v);
 		if constexpr (requires { v.x; })
 			v.x *= multiplicand;
 		if constexpr (requires { v.y; })
@@ -133,181 +133,16 @@ export namespace math
 		};
 	}
 
-	struct euclidean_vector
-	{
-		constexpr auto dot_product(this auto&& self, auto&& other) 
-			noexcept -> float
-		{
-			return math::dot_product(self, other);
-		}
+	// Forward declaration of vector_4f for conversion operator.
+	struct vector_4f;
 
-		constexpr auto magnitude(this vector_like auto&& self) 
-			noexcept -> float
-		{
-			return math::magnitude(self);
-		}
-
-		constexpr void normalise(this auto&& self) noexcept
-		{
-			math::normalise(self);
-		}
-
-		constexpr auto to_normalised(this auto self) noexcept -> auto
-		{
-			return (math::normalise(self), self);
-		}
-
-		constexpr auto add(this const auto& self, const vector_like auto& other) 
-			noexcept -> auto
-		{
-			return math::add(self, other);
-		}
-
-		constexpr auto subtract(this const auto& self, const vector_like auto& other) 
-			noexcept -> auto
-		{
-			return math::subtract(self, other);
-		}
-
-		constexpr auto operator+(this const auto& self, const vector_like auto& other)
-			noexcept -> auto
-		{
-			return self.add(other);
-		}
-
-		constexpr auto operator+=(this auto& self, vector_like auto other) 
-			noexcept -> auto&
-		{
-			self = self.add(other);
-			return self;
-		}
-
-		constexpr auto operator-(this const auto& self, vector_like auto other) 
-			noexcept -> auto
-		{
-			return self.subtract(other);
-		}
-
-		constexpr auto operator==(this const auto& self, vector_like auto other) 
-			noexcept -> bool
-		{
-			if constexpr (vector3_like<decltype(self)> or vector4_like<decltype(self)>)
-				return self.x == other.x and self.y == other.y and self.z == other.z;
-			if constexpr (vector2_like<decltype(self)>)
-				return self.x == other.x and self.y == other.y;
-			if constexpr (vector1_like<decltype(self)>)
-				return self.x == other.x;
-		}
-	};
-
-	struct vector_2f : euclidean_vector
+	struct vector_2f
 	{
 		float x = 0;
 		float y = 0;
-		
-		constexpr auto to_rotated_z(this const auto& self, float angle) 
-			noexcept -> vector_2f
-		{
-			return {
-				.x = self.x * std::cos(angle) - self.y * std::sin(angle),
-				.y = self.x * std::sin(angle) + self.y * std::cos(angle)
-			};
-		}
-
-		auto operator-=(this auto& self, vector_like auto other) noexcept -> auto&
-		{
-			return (self = self.subtract(other), self);
-		}
-
-		auto operator*(this const auto& self, vector_like auto other) noexcept -> auto
-		{
-			return self.cross_product(self, other);
-		}
-
-		auto operator*=(this auto& self, vector_like auto other) noexcept -> auto&
-		{
-			return (self = self.cross_product(self, other), self);
-		}
 	};
 
-	struct three_space_euclidean_vector
-	{
-		constexpr auto rotate_x(this const auto& self, float angle) 
-			noexcept -> std::remove_cvref_t<decltype(self)>
-		{
-			return {
-				.x = self.x,
-				.y = self.y * std::cos(angle) - self.z * std::sin(angle),
-				.z = self.y * std::sin(angle) + self.z * std::cos(angle)
-			};
-		}
-
-		constexpr auto rotate_x_in_place(this auto& self, float angle) noexcept
-		{
-			auto newY = self.y * std::cos(angle) - self.z * std::sin(angle);
-			auto newZ = self.y * std::sin(angle) + self.z * std::cos(angle);
-			self.y = newY;
-			self.z = newZ;
-		}
-
-		constexpr auto rotate_y(this const auto& self, float angle) 
-			noexcept -> std::remove_cvref_t<decltype(self)>
-		{
-			return {
-				.x = self.x * std::cos(angle) - self.z * std::sin(angle),
-				.y = self.y,
-				.z = self.x * std::sin(angle) + self.z * std::cos(angle)
-			};
-		}
-
-		constexpr void rotate_y_in_place(this auto& self, float angle) noexcept
-		{
-			auto newX = self.x * std::cos(angle) - self.z * std::sin(angle);
-			auto newZ = self.x * std::sin(angle) + self.z * std::cos(angle);
-			self.x = newX;
-			self.z = newZ;
-		}
-
-		constexpr auto rotate_z(this const auto& self, float angle) noexcept 
-			-> std::remove_cvref_t<decltype(self)>
-		{
-			return {
-				.x = self.x * std::cos(angle) - self.y * std::sin(angle),
-				.y = self.x * std::sin(angle) + self.y * std::cos(angle),
-				.z = self.z
-			};
-		}
-
-		constexpr void rotate_z_in_place(this auto& self, float angle) noexcept
-		{
-			auto newX = self.x * std::cos(angle) - self.y * std::sin(angle);
-			auto newY = self.x * std::sin(angle) + self.y * std::cos(angle);
-			self.x = newX;
-			self.y = newY;
-		}
-
-		constexpr void rotate_xyz_in_place(
-			this auto& self, 
-			float x_angle, 
-			float y_angle, 
-			float z_angle
-		) noexcept
-		{
-			self.rotate_x_in_place(x_angle);
-			self.rotate_y_in_place(y_angle);
-			self.rotate_z_in_place(z_angle);
-		}
-
-		constexpr auto cross_product(this const auto& self, auto other)
-			noexcept -> auto
-		{
-			return math::cross_product(self, other);
-		}
-	};
-
-	// Forward declaration of vector_4f for conversion operator.
-	struct vector_4f;
-	struct vector_3f : euclidean_vector, three_space_euclidean_vector
+	struct vector_3f
 	{
 		float x = 0;
 		float y = 0;
@@ -315,7 +150,7 @@ export namespace math
 		constexpr operator vector_4f(this const vector_3f& self) noexcept;
 	};
 
-	struct vector_4f : euclidean_vector, three_space_euclidean_vector
+	struct vector_4f
 	{
 		float x = 0;
 		float y = 0;
@@ -330,6 +165,121 @@ export namespace math
 	constexpr vector_3f::operator vector_4f(this const vector_3f& self) noexcept
 	{
 		return { .x = self.x, .y = self.y, .z = self.z };
+	}
+
+	constexpr auto to_normalised(vector_like auto v) noexcept
+	{
+		return (math::normalise(v), v);
+	}
+
+	constexpr auto operator+(const vector_like auto& lhs, const vector_like auto& rhs)
+		noexcept -> std::remove_cvref_t<decltype(lhs)>
+	{
+		return math::add(lhs, rhs);
+	}
+
+	constexpr auto operator+=(vector_like auto& lhs, const vector_like auto& rhs)
+		noexcept -> decltype(lhs)&
+	{
+		return (lhs = math::add(lhs, rhs));
+	}
+
+	constexpr auto operator-(const vector_like auto& lhs, const vector_like auto& rhs)
+		noexcept -> std::remove_cvref_t<decltype(lhs)>
+	{
+		return math::subtract(lhs, rhs);
+	}
+
+	constexpr auto operator-=(vector_like auto& lhs, const vector_like auto& rhs)
+		noexcept -> decltype(lhs)&
+	{
+		return (lhs = math::subtract(lhs, rhs));
+	}
+
+	constexpr auto operator==(const vector_like auto& lhs, const vector_like auto& rhs)
+		noexcept -> bool
+	{
+		if constexpr (vector3_like<decltype(lhs)> or vector4_like<decltype(lhs)>)
+			return lhs.x == rhs.x and lhs.y == rhs.y and lhs.z == rhs.z;
+		if constexpr (vector2_like<decltype(lhs)>)
+			return lhs.x == rhs.x and lhs.y == rhs.y;
+		if constexpr (vector1_like<decltype(lhs)>)
+			return lhs.x == rhs.x;
+	}
+
+	constexpr auto rotate_x(const vector3_like auto& v, float angle)
+		noexcept -> std::remove_cvref_t<decltype(v)>
+	{
+		return {
+			.x = v.x,
+			.y = v.y * std::cos(angle) - v.z * std::sin(angle),
+			.z = v.y * std::sin(angle) + v.z * std::cos(angle)
+		};
+	}
+
+	constexpr void rotate_x_in_place(vector3_like auto& v, float angle) noexcept
+	{
+		auto newY = v.y * std::cos(angle) - v.z * std::sin(angle);
+		auto newZ = v.y * std::sin(angle) + v.z * std::cos(angle);
+		v.y = newY;
+		v.z = newZ;
+	}
+
+	constexpr auto rotate_y(const vector3_like auto& v, float angle)
+		noexcept -> std::remove_cvref_t<decltype(v)>
+	{
+		return {
+			.x = v.x * std::cos(angle) - v.z * std::sin(angle),
+			.y = v.y,
+			.z = v.x * std::sin(angle) + v.z * std::cos(angle)
+		};
+	}
+
+	constexpr void rotate_y_in_place(vector3_like auto& v, float angle) noexcept
+	{
+		auto newX = v.x * std::cos(angle) - v.z * std::sin(angle);
+		auto newZ = v.x * std::sin(angle) + v.z * std::cos(angle);
+		v.x = newX;
+		v.z = newZ;
+	}
+
+	constexpr auto rotate_z(const vector3_like auto& v, float angle)
+		noexcept -> std::remove_cvref_t<decltype(v)>
+	{
+		return {
+			.x = v.x * std::cos(angle) - v.y * std::sin(angle),
+			.y = v.x * std::sin(angle) + v.y * std::cos(angle),
+			.z = v.z
+		};
+	}
+
+	constexpr void rotate_z_in_place(vector3_like auto& v, float angle) noexcept
+	{
+		auto newX = v.x * std::cos(angle) - v.y * std::sin(angle);
+		auto newY = v.x * std::sin(angle) + v.y * std::cos(angle);
+		v.x = newX;
+		v.y = newY;
+	}
+
+	constexpr void rotate_xyz_in_place(
+		vector3_like auto& v,
+		float x_angle,
+		float y_angle,
+		float z_angle
+	) noexcept
+	{
+		math::rotate_x_in_place(v, x_angle);
+		math::rotate_y_in_place(v, y_angle);
+		math::rotate_z_in_place(v, z_angle);
+	}
+
+	constexpr auto rotate_z_2d(const vector2_like auto& v, float angle)
+		noexcept -> std::remove_cvref_t<decltype(v)>
+	{
+		return {
+			.x = v.x * std::cos(angle) - v.y * std::sin(angle),
+			.y = v.x * std::sin(angle) + v.y * std::cos(angle)
+		};
 	}
 
 	/*
