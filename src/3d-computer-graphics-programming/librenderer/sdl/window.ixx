@@ -13,9 +13,9 @@ export namespace sdl
 			static std::uint32_t value =
 				[] static
 				{
-					sdl::SDL_DisplayMode mode;
+					SDL_DisplayMode mode;
 					// https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
-					if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
+					if (SDL_GetCurrentDisplayMode(0, &mode))
 						throw std::runtime_error(print_last_error());
 					return static_cast<uint32_t>(mode.w) - 100;
 				}();
@@ -26,9 +26,9 @@ export namespace sdl
 			static std::uint32_t value =
 				[] static
 				{
-					sdl::SDL_DisplayMode mode;
+					SDL_DisplayMode mode;
 					// https://wiki.libsdl.org/SDL2/SDL_GetCurrentDisplayMode
-					if (sdl::SDL_GetCurrentDisplayMode(0, &mode))
+					if (SDL_GetCurrentDisplayMode(0, &mode))
 						throw std::runtime_error(print_last_error());
 					return static_cast<uint32_t>(mode.h) - 100;
 				}();
@@ -46,7 +46,7 @@ export namespace sdl
 		};
 
 		constexpr window() = default;
-		window(std::uint32_t width, std::uint32_t height, sdl::SDL_WindowFlags flags)
+		window(std::uint32_t width, std::uint32_t height, SDL_WindowFlags flags)
 			: sdlWindow{ create(width, height, flags) }
 		{ }
 
@@ -58,16 +58,16 @@ export namespace sdl
 		static auto create(
 			std::uint32_t width, 
 			std::uint32_t height, 
-			sdl::SDL_WindowFlags flags
-		) -> sdl::sdl_window_unique_ptr
+			SDL_WindowFlags flags
+		) -> sdl::window_unique_ptr
 		{
 			// Create a window
 			// https://wiki.libsdl.org/SDL2/SDL_CreateWindow
-			auto window = sdl::sdl_window_unique_ptr(
-				sdl::SDL_CreateWindow(
+			auto window = sdl::window_unique_ptr(
+				SDL_CreateWindow(
 					nullptr,
-					sdl::sdl_windowpos_centered,
-					sdl::sdl_windowpos_centered,
+					sdl::windowpos_centered,
+					sdl::windowpos_centered,
 					width,
 					height,
 					flags
@@ -81,31 +81,31 @@ export namespace sdl
 		auto get_width(this const window& self) noexcept -> std::uint32_t
 		{
 			int width;
-			sdl::SDL_GetWindowSize(self.get(), &width, nullptr);
+			SDL_GetWindowSize(self.get(), &width, nullptr);
 			return static_cast<std::uint32_t>(width);
 		}
 
 		auto get_height(this const window& self) noexcept -> std::uint32_t
 		{
 			int height;
-			sdl::SDL_GetWindowSize(self.get(), nullptr, &height);
+			SDL_GetWindowSize(self.get(), nullptr, &height);
 			return static_cast<std::uint32_t>(height);
 		}
 
 		auto get_dimensions(this const window& self) noexcept -> dimensions
 		{
 			int width, height;
-			sdl::SDL_GetWindowSize(self.get(), &width, &height);
+			SDL_GetWindowSize(self.get(), &width, &height);
 			return { static_cast<std::uint32_t>(width), static_cast<std::uint32_t>(height) };
 		}
 
 		void set_fullscreen(this window& self, bool should_be_fullscreen)
 		{
-			if (sdl::SDL_SetWindowFullscreen(self.get(), should_be_fullscreen ? sdl::SDL_WindowFlags::SDL_WINDOW_FULLSCREEN : 0))
+			if (SDL_SetWindowFullscreen(self.get(), should_be_fullscreen ? SDL_WindowFlags::SDL_WINDOW_FULLSCREEN : 0))
 				throw std::runtime_error(sdl::print_last_error());
 		}
 		
 	private:
-		sdl::sdl_window_unique_ptr sdlWindow;
+		sdl::window_unique_ptr sdlWindow;
 	};
 }

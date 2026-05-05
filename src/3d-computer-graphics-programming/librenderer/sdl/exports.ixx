@@ -7,9 +7,12 @@ import std;
 
 export namespace sdl
 {
-	constexpr auto sdl_init_everything = SDL_INIT_EVERYTHING;
-	constexpr auto sdl_windowpos_centered = SDL_WINDOWPOS_CENTERED;
+	constexpr auto init_everything = SDL_INIT_EVERYTHING;
+	constexpr auto windowpos_centered = SDL_WINDOWPOS_CENTERED;
+}
 
+export
+{
 	using
 		::SDL_Init,
 		::SDL_CreateWindow,

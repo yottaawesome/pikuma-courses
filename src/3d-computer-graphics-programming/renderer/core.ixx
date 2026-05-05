@@ -12,8 +12,8 @@ export namespace core
 		// elapsed milliseconds.
 		auto time_to_wait = std::chrono::milliseconds{ app_state::frame_target_time - elapsed_time };
 		if (time_to_wait.count() > 0 and time_to_wait <= app_state::frame_target_time)
-			sdl::SDL_Delay(static_cast<std::uint32_t>(time_to_wait.count()));
-		app_state::previous_frame_time = std::chrono::milliseconds{ sdl::SDL_GetTicks() };
+			SDL_Delay(static_cast<std::uint32_t>(time_to_wait.count()));
+		app_state::previous_frame_time = std::chrono::milliseconds{ SDL_GetTicks() };
 		app_state::elapsed += elapsed_time;
 
 		// Change to > 0 to make the cube progressively bigger.
@@ -117,8 +117,8 @@ export namespace core
 	}
 
 	void render(
-		sdl::SDL_Renderer* renderer,
-		sdl::SDL_Texture* color_buffer_texture,
+		SDL_Renderer* renderer,
+		SDL_Texture* color_buffer_texture,
 		renderer::frame_buffer& frame_buffer,
 		upng::upng_texture& texture
 	)
@@ -154,6 +154,6 @@ export namespace core
 		frame_buffer.clear_color_buffer(0xff000000).clear_z_buffer();
 		app_state::triangles_to_render.clear();
 
-		sdl::SDL_RenderPresent(renderer);
+		SDL_RenderPresent(renderer);
 	}
 }

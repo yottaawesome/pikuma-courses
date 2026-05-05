@@ -9,7 +9,7 @@ export namespace sdl
     {
         return util::print_debug_string(
             "SDL failed [{}] at {}:{}:{}\n",
-            sdl::SDL_GetError(),
+            SDL_GetError(),
             location.file_name(),
             location.function_name(),
             location.line()

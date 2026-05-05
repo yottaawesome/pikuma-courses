@@ -10,7 +10,7 @@ export namespace sdl
 	{
 	public:
 		texture(
-			sdl::SDL_Renderer* renderer,
+			SDL_Renderer* renderer,
 			std::uint32_t format,
 			int access,
 			int width,
@@ -20,17 +20,17 @@ export namespace sdl
 		}
 
 		static auto create(
-			sdl::SDL_Renderer* renderer,
+			SDL_Renderer* renderer,
 			std::uint32_t format,
 			int access,
 			int width,
 			int height
-		) -> sdl::sdl_texture_unique_ptr
+		) -> texture_unique_ptr
 		{
 			// Create a SDL texture
 			// https://wiki.libsdl.org/SDL2/SDL_CreateTexture
-			auto texture = sdl::sdl_texture_unique_ptr(
-				sdl::SDL_CreateTexture(renderer, format, access, width, height)
+			auto texture = texture_unique_ptr(
+				SDL_CreateTexture(renderer, format, access, width, height)
 			);
 			if (not texture)
 				throw std::runtime_error(sdl::print_last_error());
@@ -48,10 +48,10 @@ export namespace sdl
 			const SDL_Rect* rect = nullptr
 		) -> void
 		{
-			if (sdl::SDL_UpdateTexture(self.get(), rect, buffer.data(), buffer.pitch()) != 0)
+			if (SDL_UpdateTexture(self.get(), rect, buffer.data(), buffer.pitch()) != 0)
 				throw std::runtime_error(sdl::print_last_error());
 		}
 	private:
-		sdl::sdl_texture_unique_ptr sdlTexture;
+		sdl::texture_unique_ptr sdlTexture;
 	};
 }

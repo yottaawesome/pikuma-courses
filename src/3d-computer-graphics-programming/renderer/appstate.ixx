@@ -62,7 +62,7 @@ export namespace app_state
 	auto elapsed = std::chrono::milliseconds{ 0 };
 
 	auto triangles_to_render = std::vector<renderer::triangle>{}; // renderer::mesh_faces.size()
-	auto context = std::make_unique<sdl::sdl_context>(sdl::sdl_init_everything);
+	auto context = std::make_unique<sdl::sdl_context>(sdl::init_everything);
 
 	constexpr auto window_dimensions = sdl::window_dimensions{};
 
@@ -72,15 +72,15 @@ export namespace app_state
 	auto window = sdl::window{
 		window_dimensions.width(),
 		window_dimensions.height(),
-		sdl::SDL_WindowFlags::SDL_WINDOW_BORDERLESS
+		SDL_WindowFlags::SDL_WINDOW_BORDERLESS
 	};
 
 	auto sdl_renderer = sdl::renderer{ window.get(), -1, 0 };
 
 	auto color_buffer_texture = sdl::texture{
 		sdl_renderer.get(),
-		sdl::SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA32,
-		sdl::SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
+		SDL_PixelFormatEnum::SDL_PIXELFORMAT_RGBA32,
+		SDL_TextureAccess::SDL_TEXTUREACCESS_STREAMING,
 		static_cast<int>(window.get_width()),
 		static_cast<int>(window.get_height())
 	};

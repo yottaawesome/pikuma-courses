@@ -64,13 +64,13 @@ export namespace renderer
     }
 
     void render_color_buffer(
-        sdl::SDL_Renderer* renderer,
+        SDL_Renderer* renderer,
         renderer::color_buffer& buffer,
-        sdl::SDL_Texture* color_buffer_texture
+        SDL_Texture* color_buffer_texture
     )
     {
-        sdl::SDL_UpdateTexture(color_buffer_texture, nullptr, buffer.raw_buffer(), buffer.pitch());
-        sdl::SDL_RenderCopy(renderer, color_buffer_texture, nullptr, nullptr);
+        SDL_UpdateTexture(color_buffer_texture, nullptr, buffer.raw_buffer(), buffer.pitch());
+        SDL_RenderCopy(renderer, color_buffer_texture, nullptr, nullptr);
     }
 
     // DDA algorithm
