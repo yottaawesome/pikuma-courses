@@ -22,42 +22,42 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="renderer\renderer.camera.ixx" />
-    <ClCompile Include="renderer\renderer.settings.ixx" />
-    <ClCompile Include="sdl\sdl.renderer.ixx" />
-    <ClCompile Include="sdl\sdl.texture.ixx" />
-    <ClCompile Include="sdl\sdl.error.ixx" />
-    <ClCompile Include="sdl\sdl.exports.ixx" />
+    <ClCompile Include="math\primitives.ixx" />
+    <ClCompile Include="renderer\camera.ixx" />
+    <ClCompile Include="renderer\settings.ixx" />
+    <ClCompile Include="sdl\renderer.ixx" />
+    <ClCompile Include="sdl\texture.ixx" />
+    <ClCompile Include="sdl\error.ixx" />
+    <ClCompile Include="sdl\exports.ixx" />
     <ClCompile Include="sdl\sdl.ixx" />
-    <ClCompile Include="sdl\sdl.raii.ixx" />
-    <ClCompile Include="sdl\sdl.window.ixx" />
-    <ClCompile Include="upng\upng.texture.ixx" />
-    <ClCompile Include="upng\upng.error.ixx" />
-    <ClCompile Include="upng\upng.exports.ixx" />
-    <ClCompile Include="upng\upng.formatters.ixx" />
+    <ClCompile Include="sdl\raii.ixx" />
+    <ClCompile Include="sdl\window.ixx" />
+    <ClCompile Include="upng\texture.ixx" />
+    <ClCompile Include="upng\error.ixx" />
+    <ClCompile Include="upng\exports.ixx" />
+    <ClCompile Include="upng\formatters.ixx" />
     <ClCompile Include="upng\upng.ixx" />
     <ClCompile Include="upng\upng.cpp" />
-    <ClCompile Include="math\math.degreesradians.ixx" />
-    <ClCompile Include="math\math.functions.ixx" />
-    <ClCompile Include="math\math.matrix.ixx" />
+    <ClCompile Include="math\degreesradians.ixx" />
+    <ClCompile Include="math\functions.ixx" />
+    <ClCompile Include="math\matrix.ixx" />
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="librenderer.ixx" />
     <ClCompile Include="math\math.ixx" />
-    <ClCompile Include="renderer\renderer.primitives.ixx" />
-    <ClCompile Include="renderer\renderer.shading.ixx" />
-    <ClCompile Include="renderer\renderer.mesh.ixx" />
-    <ClCompile Include="renderer\renderer.display.ixx" />
+    <ClCompile Include="renderer\primitives.ixx" />
+    <ClCompile Include="renderer\shading.ixx" />
+    <ClCompile Include="renderer\mesh.ixx" />
+    <ClCompile Include="renderer\display.ixx" />
     <ClCompile Include="renderer\renderer.ixx" />
-    <ClCompile Include="util\util.fixedstring.ixx" />
+    <ClCompile Include="util\fixedstring.ixx" />
     <ClCompile Include="win32\win32.ixx" />
-    <ClCompile Include="renderer\renderer.buffer_2d.ixx" />
+    <ClCompile Include="renderer\buffer_2d.ixx" />
     <ClCompile Include="concepts\concepts.ixx" />
-    <ClCompile Include="renderer\renderer.texture.ixx" />
+    <ClCompile Include="renderer\texture.ixx" />
     <ClCompile Include="util\util.ixx" />
-    <ClCompile Include="util\util.functions.ixx" />
-    <ClCompile Include="util\util.fileline.ixx" />
-    <ClCompile Include="math\math.primitives.ixx" />
-    <ClCompile Include="math\math.vector.ixx" />
+    <ClCompile Include="util\functions.ixx" />
+    <ClCompile Include="util\fileline.ixx" />
+    <ClCompile Include="math\vector.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="upng\upng.hpp" />
@@ -88,7 +88,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -96,7 +96,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -164,6 +164,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -184,6 +187,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>
