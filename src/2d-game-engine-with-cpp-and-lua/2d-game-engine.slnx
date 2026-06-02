@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="2d-game-engine\2d-game-engine.vcxproj" Id="def7ca9e-8b35-4b7c-9725-f97506ffa52e" />
+</Solution>

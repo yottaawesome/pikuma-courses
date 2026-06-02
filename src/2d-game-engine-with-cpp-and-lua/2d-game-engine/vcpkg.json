@@ -1,0 +1,5 @@
+{
+  "name": "2d-game-engine",
+  "version": "1.0.0",
+  "dependencies": [ "sol2", "sdl3", "glm", "lua", "imgui", "sdl3-image", "sdl3-mixer", "sdl3-ttf" ]
+}
