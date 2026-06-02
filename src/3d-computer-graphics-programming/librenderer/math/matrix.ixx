@@ -98,6 +98,21 @@ export namespace math
 
 	using matrix4x4_f = matrix<float, 4, 4>;
 
+	auto look_at_matrix_4x4(vector_3f eye, vector_3f target, vector_3f up) -> matrix4x4_f
+	{
+		auto z = vector_3f{ target - eye };
+		normalise(z);
+		auto x = cross_product(up, z);
+		normalise(x);
+		auto y = cross_product(z, x);
+		return {
+			x.x, x.y, x.z, -dot_product(x, eye),
+			y.x, y.y, y.z, -dot_product(y, eye),
+			z.x, z.y, z.z, -dot_product(z, eye),
+			0.f, 0.f, 0.f, 1.f
+		};
+	}
+
 	constexpr matrix4x4_f Identity4{
 		1,0,0,0,
 		0,1,0,0,

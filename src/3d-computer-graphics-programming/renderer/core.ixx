@@ -16,6 +16,10 @@ export namespace core
 		app_state::previous_frame_time = std::chrono::milliseconds{ SDL_GetTicks() };
 		app_state::elapsed += elapsed_time;
 
+		constexpr auto target = math::vector_3f{ 0, 0, 10 };
+		constexpr auto up_direction = math::vector_3f{ 0, 1, 0 };
+		auto view_matrix = math::look_at_matrix_4x4(app_state::camera.position, target, up_direction);
+
 		// Change to > 0 to make the cube progressively bigger.
 		app_state::all_meshes.get_current_mesh().mesh.additively_scale_by(0);
 		auto scaleMatrix = math::scale_matrix{ app_state::all_meshes.get_current_mesh().mesh.scale };
@@ -48,7 +52,9 @@ export namespace core
 				// translate*rotate*scale is called the world 
 				// matrix and is responsible for placing the
 				// mesh in its correct position in the 3D world.
-				transformed_vertices[j] = translation
+				transformed_vertices[j] = 
+					view_matrix
+					* translation
 					* rotationMatrix
 					* scaleMatrix
 					* face_vertices[j];
@@ -77,10 +83,11 @@ export namespace core
 			* Note that backface culling is not the same as frustum
 			* culling.
 			*/
+			auto origin = math::vector_3f{ 0, 0, 0 };
 			if (app_state::render_settings.culling_mode == renderer::cull_mode::enabled)
 			{
 				const auto& [vector_a, vector_b, _] = transformed_vertices;
-				auto camera_ray = math::vector_4f{ app_state::camera_position - vector_a };
+				auto camera_ray = math::vector_4f{ math::vector_4f{origin.x, origin.y, origin.z, 1.0f} - vector_a };
 				if (math::dot_product(camera_ray, normal) <= 0) // cull the face
 					continue;
 			}

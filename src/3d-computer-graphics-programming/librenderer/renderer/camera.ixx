@@ -72,4 +72,10 @@ export namespace renderer
 			};
 		}
 	};
+
+	struct camera_t
+	{
+		math::vector_3f position{ };
+		math::vector_3f direction{ };
+	};
 }

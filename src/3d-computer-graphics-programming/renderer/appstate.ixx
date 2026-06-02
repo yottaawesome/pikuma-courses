@@ -54,17 +54,19 @@ export namespace app_state
 			return std::forward_like<decltype(self)>(self);
 		}
 	};
-	auto all_meshes = all_meshes_t{};
 
 	constexpr auto fps = 60;
 	constexpr auto frame_target_time = std::chrono::milliseconds{ 1000 / fps };
+	constexpr auto window_dimensions = sdl::window_dimensions{};
+
+	auto all_meshes = all_meshes_t{};
+
 	auto previous_frame_time = std::chrono::milliseconds{ 0 };
 	auto elapsed = std::chrono::milliseconds{ 0 };
 
 	auto triangles_to_render = std::vector<renderer::triangle>{}; // renderer::mesh_faces.size()
 	auto context = std::make_unique<sdl::sdl_context>(sdl::init_everything);
 
-	constexpr auto window_dimensions = sdl::window_dimensions{};
 
 	// combines the color and depth buffer into a single struct.
 	auto frame_buffer = renderer::frame_buffer{ window_dimensions.width(), window_dimensions.height() };
@@ -85,7 +87,11 @@ export namespace app_state
 		static_cast<int>(window.get_height())
 	};
 
-	auto camera_position = math::vector_4f{};
+	//auto camera = renderer::look_at_camera{};
+	auto camera = renderer::camera_t{
+		.position = {0.f, 0.f, 0.f},
+		.direction = {0.f, 0.f, 1.f}
+	};
 	auto is_running = true;
 	auto render_settings = renderer::settings{};
 
