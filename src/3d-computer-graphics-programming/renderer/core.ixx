@@ -5,7 +5,7 @@ import :appstate;
 
 export namespace core
 {
-	void update(const std::chrono::milliseconds elapsed_time)
+	void update(std::chrono::milliseconds elapsed_time)
 	{
 		// Delay to meet target frame rate. Note: we can 
 		// do this ourselves by keeping track of the 
@@ -17,9 +17,17 @@ export namespace core
 		app_state::elapsed += elapsed_time;
 
 		// Create the view matrix.
-		constexpr auto target = renderer::vector_3f{ 0, 0, 10 };
 		constexpr auto up_direction = renderer::vector_3f{ 0, 1, 0 };
+		// Find the target.
+		auto target = renderer::vector_3f{ 0, 0, 1 };
+		auto camera_yaw_rotation = renderer::rotation_matrix{ renderer::y_rotation{ app_state::camera.yaw } };
+		app_state::camera.direction = camera_yaw_rotation * target;
+
+		// Offset the target position in the direction where the camera is pointing at.
+		target = app_state::camera.position + app_state::camera.direction;
+
 		auto view_matrix = renderer::look_at_matrix_4x4(app_state::camera.position, target, up_direction);
+
 
 		auto scaleMatrix = renderer::scale_matrix{ app_state::all_meshes.get_current_mesh().mesh.scale };
 		auto translation = renderer::translate_matrix{ app_state::all_meshes.get_current_mesh().mesh.translation };

@@ -6,50 +6,107 @@ import :appstate;
 namespace input
 {
 	constexpr float increment = 0.02f;
+	constexpr float camera_increment = 3.f;
 
-	auto HandleKeyDown(SDL_Keycode key) noexcept
+	auto HandleKeyDown(SDL_Keycode key, std::chrono::milliseconds elapsed_time) noexcept
 	{
+		auto state = SDL_GetKeyboardState(nullptr);
+		auto applyTransform = state[SDL_Scancode::SDL_SCANCODE_LSHIFT];
 		switch (key)
 		{
 			case SDL_KeyCode::SDLK_ESCAPE:
+			{
 				app_state::is_running = false;
 				break;
+			}
 			case SDL_KeyCode::SDLK_RIGHT:
-				app_state::all_meshes.get_current_mesh().mesh.rotation.y -= increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.rotation.y -= increment;
 				break;
+			}
 			case SDL_KeyCode::SDLK_LEFT:
-				app_state::all_meshes.get_current_mesh().mesh.rotation.y += increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.rotation.y += increment;
 				break;
+			}
 			case SDL_KeyCode::SDLK_UP:
-				app_state::all_meshes.get_current_mesh().mesh.rotation.x += increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.rotation.x += increment;
+				else
+					app_state::camera.position.y += camera_increment * static_cast<float>(elapsed_time.count()) / 1000.f;
 				break;
+			}
 			case SDL_KeyCode::SDLK_DOWN:
-				app_state::all_meshes.get_current_mesh().mesh.rotation.x -= increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.rotation.x -= increment;
+				else
+					app_state::camera.position.y -= camera_increment * static_cast<float>(elapsed_time.count()) / 1000.f;
 				break;
+			}
 			case SDL_KeyCode::SDLK_w:
-				app_state::all_meshes.get_current_mesh().mesh.translation.y -= increment;
+			{
+				if (applyTransform)
+				{
+					app_state::all_meshes.get_current_mesh().mesh.translation.y -= increment;
+				}
+				else
+				{
+					app_state::camera.forward_velocity = renderer::scale(app_state::camera.direction, (5 * static_cast<float>(elapsed_time.count()) / 1000.f));
+					app_state::camera.position += app_state::camera.forward_velocity;
+				}
 				break;
+			}
 			case SDL_KeyCode::SDLK_s:
-				app_state::all_meshes.get_current_mesh().mesh.translation.y += increment;
+			{
+				if (applyTransform)
+				{
+					app_state::all_meshes.get_current_mesh().mesh.translation.y += increment;
+				}
+				else
+				{
+					app_state::camera.forward_velocity = renderer::scale(app_state::camera.direction, (-5 * static_cast<float>(elapsed_time.count()) / 1000.f));
+					app_state::camera.position += app_state::camera.forward_velocity;
+				}
 				break;
+			}
 			case SDL_KeyCode::SDLK_a:
-				app_state::all_meshes.get_current_mesh().mesh.translation.x -= increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.translation.x -= increment;
+				else
+					app_state::camera.yaw += 1 * static_cast<float>(elapsed_time.count()) / 1000.f;
 				break;
+			}
 			case SDL_KeyCode::SDLK_d:
-				app_state::all_meshes.get_current_mesh().mesh.translation.x += increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.translation.x += increment;
+				else
+					app_state::camera.yaw -= 1 * static_cast<float>(elapsed_time.count()) / 1000.f;
 				break;
+			}
 			case SDL_KeyCode::SDLK_e:
-				app_state::all_meshes.get_current_mesh().mesh.translation.z += increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.translation.z += increment;
 				break;
+			}
 			case SDL_KeyCode::SDLK_f:
-				app_state::all_meshes.get_current_mesh().mesh.translation.z -= increment;
+			{
+				if (applyTransform)
+					app_state::all_meshes.get_current_mesh().mesh.translation.z -= increment;
 				break;
+			}
 			default:
 				break; // do nothing for other keys
 		}
 	};
 
-	auto HandleKeyUp(SDL_Keycode key) noexcept
+	auto HandleKeyUp(SDL_Keycode key, std::chrono::milliseconds elapsed_time) noexcept
 	{
 		switch (key)
 		{
@@ -74,7 +131,7 @@ namespace input
 			case SDL_KeyCode::SDLK_c:
 				app_state::render_settings.culling_mode = renderer::cull_mode::enabled;
 				break;
-			case SDL_KeyCode::SDLK_d:
+			case SDL_KeyCode::SDLK_x:
 				app_state::render_settings.culling_mode = renderer::cull_mode::disabled;
 				break;
 			case SDL_KeyCode::SDLK_LEFTBRACKET:
@@ -89,7 +146,7 @@ namespace input
 
 export namespace input
 {
-	void process_input()
+	void process_input(std::chrono::milliseconds elapsed_time)
 	{
 		auto eventInfo = SDL_Event{};
 		SDL_PollEvent(&eventInfo);
@@ -103,13 +160,13 @@ export namespace input
 
 			case SDL_EventType::SDL_KEYDOWN:
 			{
-				HandleKeyDown(eventInfo.key.keysym.sym);
+				HandleKeyDown(eventInfo.key.keysym.sym, elapsed_time);
 				break;
 			}
 
 			case SDL_EventType::SDL_KEYUP:
 			{
-				HandleKeyUp(eventInfo.key.keysym.sym);
+				HandleKeyUp(eventInfo.key.keysym.sym, elapsed_time);
 				break;
 			}
 		}

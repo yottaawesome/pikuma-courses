@@ -76,8 +76,8 @@ export namespace renderer
 	struct camera_t
 	{
 		vector_3f position{ };
-		vector_3f direction{ };
+		vector_3f direction{ 0, 0, 1 };
 		vector_3f forward_velocity{ };
-		vector_3f right_velocity{ };
+		float yaw{ };
 	};
 }

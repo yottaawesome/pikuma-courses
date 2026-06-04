@@ -35,10 +35,12 @@ export
 		::SDL_GetTicks,
 		::SDL_GetTicks64,
 		::SDL_Delay,
-		::SDL_GetWindowSize
+		::SDL_GetWindowSize,
+		::SDL_GetKeyboardState
 		;
 
 	using
+		::SDL_Scancode,
 		::SDL_Window,
 		::SDL_Renderer,
 		::SDL_Texture,

@@ -236,26 +236,6 @@ export namespace renderer
 		return mat * scale;
 	}
 
-	static_assert(
-		[]{
-			matrix4x4_f mat{ Identity4 };
-			auto scaled = 4 * mat;
-			mat *= 4;
-			matrix4x4_f expected{
-				4,	0,	0,	0,
-				0,	4,	0,	0,
-				0,	0,	4,	0,
-				0,	0,	0,	4
-			};
-			if (mat != expected)
-				return false;
-			if (scaled != expected)
-				return false;
-			return true;
-		}(),
-		"Matrix scaling did not produce the expected results."
-	);
-
 	constexpr auto operator*(const matrix4x4_f& self, const vector_4f& other)
 		noexcept -> vector_4f
 	{
@@ -292,13 +272,15 @@ export namespace renderer
 		};
 	}
 
+	//
+	// 
+	// 
 	// Projection matrices have three main goals.
 	// * Aspect ratio: adjust x and y values based on the screen width and height.
 	// * Field of view: adjust x and y values based on the desired FOV.
 	// * Normalization: adjust x, y, and z values to be in the range [-1,1]. This
 	// is the image space that the projected coordinates will be mapped to, and is
 	// also referred to as normalized device coordinates (NDC).
-
 	struct projection_matrix : matrix4x4_f
 	{
 		constexpr projection_matrix(
@@ -358,4 +340,27 @@ export namespace renderer
 		}
 		return result;
 	}
+}
+
+namespace
+{
+	static_assert(
+		[] -> bool
+		{
+			auto mat = renderer::matrix4x4_f{ renderer::Identity4 };
+			auto scaled = 4 * mat;
+			mat *= 4;
+			auto expected = renderer::matrix4x4_f{
+				4,	0,	0,	0,
+				0,	4,	0,	0,
+				0,	0,	4,	0,
+				0,	0,	0,	4
+			};
+			if (mat != expected)
+				throw "Matrix scaling did not produce the expected results.";
+			if (scaled != expected)
+				throw "Matrix scaling did not produce the expected results.";
+			return true;
+		}(),
+		"Matrix scaling did not produce the expected results.");
 }

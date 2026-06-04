@@ -24,7 +24,7 @@ try
 	while (app_state::is_running)
 	{
 		auto begin = std::chrono::high_resolution_clock::now();
-		input::process_input();
+		input::process_input(elapsed);
 		core::update(elapsed);
 		core::render(
 			app_state::sdl_renderer.get(),
