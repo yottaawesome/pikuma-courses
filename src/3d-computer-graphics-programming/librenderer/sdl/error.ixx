@@ -1,4 +1,4 @@
-export module librenderer:sdl.error;
+export module renderer:sdl.error;
 import std;
 import :util;
 import :sdl.exports;

@@ -1,4 +1,4 @@
-export module librenderer:math.degreesradians;
+export module renderer:math.degreesradians;
 import std;
 
 export namespace renderer

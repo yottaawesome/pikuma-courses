@@ -1,4 +1,4 @@
-export module librenderer:util.fileline;
+export module renderer:util.fileline;
 import std;
 
 export namespace renderer

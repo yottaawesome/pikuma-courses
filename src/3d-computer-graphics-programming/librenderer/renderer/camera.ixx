@@ -1,4 +1,4 @@
-export module librenderer:camera;
+export module renderer:camera;
 import std;
 import :math;
 

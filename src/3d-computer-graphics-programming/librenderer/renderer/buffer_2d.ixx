@@ -1,4 +1,4 @@
-export module librenderer:renderer.buffer_2d;
+export module renderer:renderer.buffer_2d;
 import std;
 import :util;
 import :concepts;

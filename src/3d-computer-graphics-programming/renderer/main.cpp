@@ -5,7 +5,7 @@
 // With subsystem:windows, you need to use WinMain() and not regular main(), but 
 // the define is not required.
 import std;
-import librenderer;
+import renderer;
 import mainapp;
 
 //int main(int argc, char* argv[]) // use this on subsystem:console

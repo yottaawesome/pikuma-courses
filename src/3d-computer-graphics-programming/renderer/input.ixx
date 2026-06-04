@@ -1,6 +1,6 @@
 export module mainapp:input;
 import std;
-import librenderer;
+import renderer;
 import :appstate;
 
 namespace input

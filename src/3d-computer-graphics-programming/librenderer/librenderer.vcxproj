@@ -42,7 +42,7 @@
     <ClCompile Include="math\functions.ixx" />
     <ClCompile Include="math\matrix.ixx" />
     <ClCompile Include="raii\raii.ixx" />
-    <ClCompile Include="librenderer.ixx" />
+    <ClCompile Include="renderer.ixx" />
     <ClCompile Include="math\math.ixx" />
     <ClCompile Include="renderer\primitives.ixx" />
     <ClCompile Include="renderer\shading.ixx" />

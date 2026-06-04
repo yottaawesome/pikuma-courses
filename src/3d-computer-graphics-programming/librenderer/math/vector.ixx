@@ -1,4 +1,4 @@
-export module librenderer:math.vector;
+export module renderer:math.vector;
 import std;
 import :math.functions;
 

@@ -1,4 +1,4 @@
-export module librenderer:upng.error;
+export module renderer:upng.error;
 import std;
 import :upng.exports;
 import :upng.formatters;

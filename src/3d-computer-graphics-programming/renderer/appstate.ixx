@@ -1,6 +1,6 @@
 export module mainapp:appstate;
 import std;
-import librenderer;
+import renderer;
 
 export namespace app_state
 {

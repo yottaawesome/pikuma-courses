@@ -1,4 +1,4 @@
-export module librenderer:renderer.settings;
+export module renderer:renderer.settings;
 
 export namespace renderer
 {

@@ -1,4 +1,4 @@
-export module librenderer:renderer.shading;
+export module renderer:renderer.shading;
 import std;
 import :math;
 

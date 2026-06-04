@@ -1,4 +1,4 @@
-export module librenderer:util.functions;
+export module renderer:util.functions;
 import std;
 import :win32;
 

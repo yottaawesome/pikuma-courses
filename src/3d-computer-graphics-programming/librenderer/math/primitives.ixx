@@ -1,4 +1,4 @@
-export module librenderer:math.primitives;
+export module renderer:math.primitives;
 import std;
 
 export namespace renderer

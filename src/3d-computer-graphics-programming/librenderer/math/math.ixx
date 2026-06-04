@@ -1,4 +1,4 @@
-export module librenderer:math;
+export module renderer:math;
 export import :math.primitives;
 export import :math.matrix;
 export import :math.degreesradians;

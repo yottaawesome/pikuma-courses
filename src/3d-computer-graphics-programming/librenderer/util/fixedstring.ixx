@@ -1,4 +1,4 @@
-export module librenderer:util.fixedstring;
+export module renderer:util.fixedstring;
 import std;
 
 export namespace renderer

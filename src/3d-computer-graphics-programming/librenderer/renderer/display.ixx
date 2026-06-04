@@ -1,4 +1,4 @@
-export module librenderer:renderer.display;
+export module renderer:renderer.display;
 import std;
 import :math;
 import :sdl;

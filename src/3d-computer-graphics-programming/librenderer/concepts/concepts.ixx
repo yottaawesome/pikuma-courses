@@ -1,4 +1,4 @@
-export module librenderer:concepts;
+export module renderer:concepts;
 import std;
 
 // for general utility concepts and templates

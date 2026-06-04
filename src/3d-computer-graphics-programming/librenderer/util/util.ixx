@@ -1,4 +1,4 @@
-export module librenderer:util;
+export module renderer:util;
 export import :util.functions;
 export import :util.fileline;
 export import :util.fixedstring;

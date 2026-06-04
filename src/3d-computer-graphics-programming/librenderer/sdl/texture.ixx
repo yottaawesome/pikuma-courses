@@ -1,4 +1,4 @@
-export module librenderer:sdl.texture;
+export module renderer:sdl.texture;
 import std;
 import :sdl.exports;
 import :sdl.raii;

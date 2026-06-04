@@ -7,7 +7,7 @@ module;
 // module fragment) or compile it as C++, which is cleaner.
 #include "upng.hpp"
 
-export module librenderer:upng.exports;
+export module renderer:upng.exports;
 import std;
 import :raii;
 

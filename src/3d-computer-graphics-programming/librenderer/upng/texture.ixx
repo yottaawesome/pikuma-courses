@@ -1,4 +1,4 @@
-export module librenderer:upng.texture;
+export module renderer:upng.texture;
 import std;
 import :raii;
 import :upng.exports;

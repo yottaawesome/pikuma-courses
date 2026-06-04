@@ -1,4 +1,4 @@
-export module librenderer:renderer;
+export module renderer:renderer;
 export import :renderer.display;
 export import :renderer.mesh;
 export import :renderer.shading;

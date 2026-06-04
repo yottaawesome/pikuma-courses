@@ -1,4 +1,4 @@
-export module librenderer;
+export module renderer;
 export import :concepts;
 export import :win32;
 export import :sdl;

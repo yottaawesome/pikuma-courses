@@ -1,4 +1,4 @@
-export module librenderer:raii;
+export module renderer:raii;
 import std;
 
 export namespace renderer

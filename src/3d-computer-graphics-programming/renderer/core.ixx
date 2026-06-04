@@ -1,6 +1,6 @@
 export module mainapp:core;
 import std;
-import librenderer;
+import renderer;
 import :appstate;
 
 export namespace core

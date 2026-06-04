@@ -1,4 +1,4 @@
-export module librenderer:upng.formatters;
+export module renderer:upng.formatters;
 import std;
 import :upng.exports;
 
