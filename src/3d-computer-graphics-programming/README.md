@@ -12,14 +12,20 @@ Use the following controls to adjust the rendering.
 * `6`: render a textuted mesh with wireframe.
 * `c`: enables backface culling.
 * `d`: disables backface culling.
-* `up arrow`: rotates the mesh.
-* `down arrow`: rotates the mesh.
-* `left arrow`: rotates the mesh.
-* `right arrow`: rotates the mesh.
-* `w`: translate along y-axis.
-* `a`: translate along y-axis.
-* `s`: translate along x-axis.
-* `d`: translate along x-axis.
+* `left-shift+up arrow`: rotates the mesh.
+* `up-arrow`: adjust camera height.
+* `left-shift+down arrow`: rotates the mesh.
+* `down-arrow`: adjust camera height.
+* `left-shift+left arrow`: rotates the mesh.
+* `left-shift+right arrow`: rotates the mesh.
+* `w`: move camera forward.
+* `left-shift+w`: translate along y-axis.
+* `a`: move camera back.
+* `left-shift+a`: translate along y-axis.
+* `shift+s`: rotate camera.
+* `left-shift+s`: translate along x-axis.
+* `shift+d`: rotate camera.
+* `left-shift+d`: translate along x-axis.
 * `e`: translate along z-axis.
 * `f`: translate along z-axis.
 * `[`: change mesh to render.
