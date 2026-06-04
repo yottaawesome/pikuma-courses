@@ -15,14 +15,14 @@ namespace
 
 	constexpr auto cube_vertices = std::array
 	{
-		math::vector_4f{.x = -1, .y = -1, .z = -1 }, // 1
-		math::vector_4f{.x = -1, .y = 1, .z = -1 }, // 2
-		math::vector_4f{.x = 1, .y = 1, .z = -1 }, // 3
-		math::vector_4f{.x = 1, .y = -1, .z = -1 }, // 4
-		math::vector_4f{.x = 1, .y = 1, .z = 1 }, // 5
-		math::vector_4f{.x = 1, .y = -1, .z = 1 }, // 6
-		math::vector_4f{.x = -1, .y = 1, .z = 1 }, // 7
-		math::vector_4f{.x = -1, .y = -1, .z = 1 } // 8
+		renderer::vector_4f{.x = -1, .y = -1, .z = -1 }, // 1
+		renderer::vector_4f{.x = -1, .y = 1, .z = -1 }, // 2
+		renderer::vector_4f{.x = 1, .y = 1, .z = -1 }, // 3
+		renderer::vector_4f{.x = 1, .y = -1, .z = -1 }, // 4
+		renderer::vector_4f{.x = 1, .y = 1, .z = 1 }, // 5
+		renderer::vector_4f{.x = 1, .y = -1, .z = 1 }, // 6
+		renderer::vector_4f{.x = -1, .y = 1, .z = 1 }, // 7
+		renderer::vector_4f{.x = -1, .y = -1, .z = 1 } // 8
 	};
 
 	constexpr auto cube_faces = std::array{
@@ -62,8 +62,8 @@ export namespace renderer
 	{
 		constexpr mesh() = default;
 		mesh(
-			const std::vector<math::vector_4f>& vertices,
-			const std::vector<renderer::face>& faces
+			const std::vector<vector_4f>& vertices,
+			const std::vector<face>& faces
 		) : vertices(vertices), faces(faces) 
 		{ }
 
@@ -71,11 +71,11 @@ export namespace renderer
 		{
 			*this = from_file(p);
 		}
-		std::vector<math::vector_4f> vertices;
-		std::vector<renderer::face> faces;
-		math::vector_4f rotation;
-		math::vector_4f scale{.x=1,.y=1,.z=1};
-		math::vector_4f translation;
+		std::vector<vector_4f> vertices;
+		std::vector<face> faces;
+		vector_4f rotation;
+		vector_4f scale{.x=1,.y=1,.z=1};
+		vector_4f translation;
 
 		constexpr void additively_scale_by(float s) noexcept
 		{
@@ -95,7 +95,7 @@ export namespace renderer
 			while (std::fgets(line, 1024, file)) {
 				// Vertex information
 				if (std::strncmp(line, "v ", 2) == 0) {
-					math::vector_4f vertex;
+					vector_4f vertex;
 					sscanf_s(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
 					m.vertices.push_back(vertex);
 				}
@@ -141,9 +141,9 @@ export namespace renderer
 			if (file.fail())
 				throw std::runtime_error("Stream in bad state");
 
-			auto filter = std::views::istream<util::file_line>(file)
+			auto filter = std::views::istream<file_line>(file)
 				| std::views::filter(
-					[](util::file_line& s) static -> bool
+					[](file_line& s) static -> bool
 					{ 
 						return s.line.starts_with("v ") 
 							or s.line.starts_with("vt ")

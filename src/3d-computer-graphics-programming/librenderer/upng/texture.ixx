@@ -6,7 +6,7 @@ import :upng.error;
 
 export namespace upng
 {
-	using upng_unique_ptr = raii::direct_unique_ptr<upng_t, upng_free>;
+	using upng_unique_ptr = renderer::direct_unique_ptr<upng_t, upng_free>;
 
 	class upng_texture final
 	{

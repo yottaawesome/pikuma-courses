@@ -1,7 +1,7 @@
 export module librenderer:math.primitives;
 import std;
 
-export namespace math
+export namespace renderer
 {
 	struct point_2d
 	{

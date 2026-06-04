@@ -2,7 +2,7 @@ export module librenderer:math.vector;
 import std;
 import :math.functions;
 
-export namespace math
+export namespace renderer
 {
 	template<typename T>
 	concept vector1_like = requires(T v) { { v.x } -> std::convertible_to<float>; };
@@ -56,18 +56,18 @@ export namespace math
 	constexpr auto magnitude(vector_like auto&& v) noexcept -> float
 	{
 		if constexpr (vector4_like<decltype(v)>)
-			return math::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+			return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector3_like<decltype(v)>)
-			return math::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+			return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 		if constexpr (vector2_like<decltype(v)>)
-			return math::sqrt(v.x * v.x + v.y * v.y);
+			return sqrt(v.x * v.x + v.y * v.y);
 		/*if constexpr (vector1_like<decltype(v)>)
 			return std::sqrt(v.x * v.x);*/
 	}
 
 	constexpr void normalise(vector_like auto& v) noexcept
 	{
-		float multiplicand = 1.f / math::magnitude(v);
+		float multiplicand = 1.f / magnitude(v);
 		if constexpr (requires { v.x; })
 			v.x *= multiplicand;
 		if constexpr (requires { v.y; })
@@ -169,31 +169,31 @@ export namespace math
 
 	constexpr auto to_normalised(vector_like auto v) noexcept
 	{
-		return (math::normalise(v), v);
+		return (normalise(v), v);
 	}
 
 	constexpr auto operator+(const vector_like auto& lhs, const vector_like auto& rhs)
 		noexcept -> std::remove_cvref_t<decltype(lhs)>
 	{
-		return math::add(lhs, rhs);
+		return add(lhs, rhs);
 	}
 
 	constexpr auto operator+=(vector_like auto& lhs, const vector_like auto& rhs)
 		noexcept -> decltype(lhs)&
 	{
-		return (lhs = math::add(lhs, rhs));
+		return (lhs = add(lhs, rhs));
 	}
 
 	constexpr auto operator-(const vector_like auto& lhs, const vector_like auto& rhs)
 		noexcept -> std::remove_cvref_t<decltype(lhs)>
 	{
-		return math::subtract(lhs, rhs);
+		return subtract(lhs, rhs);
 	}
 
 	constexpr auto operator-=(vector_like auto& lhs, const vector_like auto& rhs)
 		noexcept -> decltype(lhs)&
 	{
-		return (lhs = math::subtract(lhs, rhs));
+		return (lhs = subtract(lhs, rhs));
 	}
 
 	constexpr auto operator==(const vector_like auto& lhs, const vector_like auto& rhs)
@@ -268,9 +268,9 @@ export namespace math
 		float z_angle
 	) noexcept
 	{
-		math::rotate_x_in_place(v, x_angle);
-		math::rotate_y_in_place(v, y_angle);
-		math::rotate_z_in_place(v, z_angle);
+		rotate_x_in_place(v, x_angle);
+		rotate_y_in_place(v, y_angle);
+		rotate_z_in_place(v, z_angle);
 	}
 
 	constexpr auto rotate_z_2d(const vector2_like auto& v, float angle)

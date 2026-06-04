@@ -16,20 +16,15 @@ export namespace core
 		app_state::previous_frame_time = std::chrono::milliseconds{ SDL_GetTicks() };
 		app_state::elapsed += elapsed_time;
 
-		constexpr auto target = math::vector_3f{ 0, 0, 10 };
-		constexpr auto up_direction = math::vector_3f{ 0, 1, 0 };
-		auto view_matrix = math::look_at_matrix_4x4(app_state::camera.position, target, up_direction);
+		// Create the view matrix.
+		constexpr auto target = renderer::vector_3f{ 0, 0, 10 };
+		constexpr auto up_direction = renderer::vector_3f{ 0, 1, 0 };
+		auto view_matrix = renderer::look_at_matrix_4x4(app_state::camera.position, target, up_direction);
 
-		// Change to > 0 to make the cube progressively bigger.
-		app_state::all_meshes.get_current_mesh().mesh.additively_scale_by(0);
-		auto scaleMatrix = math::scale_matrix{ app_state::all_meshes.get_current_mesh().mesh.scale };
-		//app_state::all_meshes.get_current_mesh().mesh.translation.z = 4;
-		auto translation = math::translate_matrix{ app_state::all_meshes.get_current_mesh().mesh.translation };
+		auto scaleMatrix = renderer::scale_matrix{ app_state::all_meshes.get_current_mesh().mesh.scale };
+		auto translation = renderer::translate_matrix{ app_state::all_meshes.get_current_mesh().mesh.translation };
 
-		//app_state::all_meshes.get_current_mesh().mesh.rotation.x += 0.01f;
-		//app_state::all_meshes.get_current_mesh().mesh.rotation.y += 0.01f;
-		//app_state::all_meshes.get_current_mesh().mesh.rotation.z += 0.01f;
-		auto rotationMatrix = math::rotation_matrix{ app_state::all_meshes.get_current_mesh().mesh.rotation };
+		auto rotationMatrix = renderer::rotation_matrix{ app_state::all_meshes.get_current_mesh().mesh.rotation };
 
 		constexpr auto global_light = renderer::light{ {.x = 0, .y = 0, .z = 1 }, 0xffffffff };
 
@@ -42,7 +37,7 @@ export namespace core
 				app_state::all_meshes.get_current_mesh().mesh.vertices[mesh_face.c]
 			};
 
-			auto transformed_vertices = std::array<math::vector_4f, 3>{};
+			auto transformed_vertices = std::array<renderer::vector_4f, 3>{};
 			for (int j = 0; j < 3; j++)
 			{
 				// These need to be applied in the correct order: 
@@ -67,7 +62,7 @@ export namespace core
 					transformed_vertices[2]
 				}
 			};
-			auto normal = math::vector_4f{ transformed_triangle.compute_normal() };
+			auto normal = renderer::vector_4f{ transformed_triangle.compute_normal() };
 
 			/* Backface culling -- bypass rendering triangles that
 			* are not facing the camera.
@@ -83,12 +78,12 @@ export namespace core
 			* Note that backface culling is not the same as frustum
 			* culling.
 			*/
-			auto origin = math::vector_3f{ 0, 0, 0 };
+			auto origin = renderer::vector_3f{ 0, 0, 0 };
 			if (app_state::render_settings.culling_mode == renderer::cull_mode::enabled)
 			{
 				const auto& [vector_a, vector_b, _] = transformed_vertices;
-				auto camera_ray = math::vector_4f{ math::vector_4f{origin.x, origin.y, origin.z, 1.0f} - vector_a };
-				if (math::dot_product(camera_ray, normal) <= 0) // cull the face
+				auto camera_ray = renderer::vector_4f{ renderer::vector_4f{origin.x, origin.y, origin.z, 1.0f} - vector_a };
+				if (renderer::dot_product(camera_ray, normal) <= 0) // cull the face
 					continue;
 			}
 
@@ -103,7 +98,7 @@ export namespace core
 			for (int j = 0; j < 3; j++)
 			{
 				// Project the current vertex
-				auto projected_point = math::vector_4f{ app_state::proj_matrix * transformed_vertices[j] };
+				auto projected_point = renderer::vector_4f{ app_state::proj_matrix * transformed_vertices[j] };
 
 				// Scale into the view.
 				projected_point.x *= app_state::window_dimensions.width() / 2;

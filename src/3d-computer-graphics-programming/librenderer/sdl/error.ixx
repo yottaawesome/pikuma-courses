@@ -7,7 +7,7 @@ export namespace sdl
 {
     auto print_last_error(const std::source_location location = std::source_location::current()) -> std::string
     {
-        return util::print_debug_string(
+        return renderer::print_debug_string(
             "SDL failed [{}] at {}:{}:{}\n",
             SDL_GetError(),
             location.file_name(),

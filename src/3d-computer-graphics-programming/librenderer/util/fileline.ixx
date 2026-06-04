@@ -1,7 +1,7 @@
 export module librenderer:util.fileline;
 import std;
 
-export namespace util
+export namespace renderer
 {
     // adapted from https://mobiarch.wordpress.com/2023/12/17/reading-a-file-line-by-line-using-c-ranges/
     struct file_line

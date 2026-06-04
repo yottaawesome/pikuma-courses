@@ -1,7 +1,7 @@
 export module librenderer:raii;
 import std;
 
-export namespace raii
+export namespace renderer
 {
     template<auto VDeleteFn>
     struct deleter

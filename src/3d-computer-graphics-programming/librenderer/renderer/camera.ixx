@@ -53,21 +53,21 @@ export namespace renderer
 	// | 0,    0,    0,   1            |
 	struct look_at_camera
 	{
-		math::vector_4f eye{ .x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f };
-		math::vector_4f target{ .x = 0.f, .y = 0.f, .z = 1.f, .w = 0.f };
-		const math::vector_4f up{ .x = 0.f, .y = 1.f, .z = 0.f, .w = 0.f };
+		vector_4f eye{ .x = 0.f, .y = 0.f, .z = 0.f, .w = 0.f };
+		vector_4f target{ .x = 0.f, .y = 0.f, .z = 1.f, .w = 0.f };
+		const vector_4f up{ .x = 0.f, .y = 1.f, .z = 0.f, .w = 0.f };
 
-		auto get_look_at_matrix(this const look_at_camera& self) noexcept -> math::matrix4x4_f
+		auto get_look_at_matrix(this const look_at_camera& self) noexcept -> matrix4x4_f
 		{
 			auto z_axis= self.target - self.eye;
-			math::normalise(z_axis);
-			auto x_axis = math::cross_product(self.up, z_axis);
-			math::normalise(x_axis);
-			auto y_axis = math::cross_product(z_axis, x_axis);
-			return math::matrix4x4_f{
-				x_axis.x, x_axis.y, x_axis.z, -math::dot_product(x_axis, self.eye),
-				y_axis.x, y_axis.y, y_axis.z, -math::dot_product(y_axis, self.eye),
-				z_axis.x, z_axis.y, z_axis.z, -math::dot_product(z_axis, self.eye),
+			normalise(z_axis);
+			auto x_axis = cross_product(self.up, z_axis);
+			normalise(x_axis);
+			auto y_axis = cross_product(z_axis, x_axis);
+			return matrix4x4_f{
+				x_axis.x, x_axis.y, x_axis.z, -dot_product(x_axis, self.eye),
+				y_axis.x, y_axis.y, y_axis.z, -dot_product(y_axis, self.eye),
+				z_axis.x, z_axis.y, z_axis.z, -dot_product(z_axis, self.eye),
 				0.f,      0.f,      0.f,      1.f
 			};
 		}
@@ -75,7 +75,9 @@ export namespace renderer
 
 	struct camera_t
 	{
-		math::vector_3f position{ };
-		math::vector_3f direction{ };
+		vector_3f position{ };
+		vector_3f direction{ };
+		vector_3f forward_velocity{ };
+		vector_3f right_velocity{ };
 	};
 }

@@ -1,7 +1,7 @@
 export module librenderer:util.fixedstring;
 import std;
 
-export namespace util
+export namespace renderer
 {
 	template<typename T>
 	struct always_false : std::false_type {};

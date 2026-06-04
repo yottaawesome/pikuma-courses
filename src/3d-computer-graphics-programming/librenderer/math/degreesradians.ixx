@@ -1,7 +1,7 @@
 export module librenderer:math.degreesradians;
 import std;
 
-export namespace math
+export namespace renderer
 {
 	struct degrees;
 	struct radians final

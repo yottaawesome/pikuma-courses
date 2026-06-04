@@ -4,7 +4,7 @@ import :concepts;
 import :math.vector;
 import :math.degreesradians;
 
-export namespace math
+export namespace renderer
 {
 	// Linear transformation matrices define a space as 
 	// an orthogonal basis with respect to the origin.
@@ -24,7 +24,7 @@ export namespace math
 	// vectors and multiplied on the right side of 
 	// matrices (post-multiplication).
 
-	template<concepts::is_arithmetic TArithmetic, std::uint32_t VRows, std::uint32_t VColumns>
+	template<is_arithmetic TArithmetic, std::uint32_t VRows, std::uint32_t VColumns>
 	struct matrix
 	{
 		static_assert(VRows > 0 and VColumns > 0, "Matrix must have at least one row and one column.");
@@ -268,7 +268,7 @@ export namespace math
 	}
 
 	[[deprecated("Use the projection_matrix type.")]]
-	auto project(float fov_factor, math::vector_4f vec) -> math::vector_4f
+	auto project(float fov_factor, vector_4f vec) -> vector_4f
 	{
 		/*
 		* Perspective divide (perspective projection lecture):

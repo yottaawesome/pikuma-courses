@@ -2,7 +2,7 @@ export module librenderer:concepts;
 import std;
 
 // for general utility concepts and templates
-export namespace concepts
+export namespace renderer
 {
 	template<typename T>
 	struct false_type : std::false_type {};

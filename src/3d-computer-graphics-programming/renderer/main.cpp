@@ -12,9 +12,6 @@ import mainapp;
 auto WinMain(int argc, char* argv[]) -> int
 try
 {
-	auto x = std::vector< std::uint32_t>{ size_t{10}, 0};
-
-
 	// Translate all meshes away from the camera so that they're better visible
 	app_state::all_meshes.for_each(
 		[](app_state::mesh_and_texture& mat) static noexcept

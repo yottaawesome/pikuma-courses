@@ -11,7 +11,7 @@ export namespace renderer
 
 	struct textured_vertex
 	{
-		math::vector_4f position;
+		vector_4f position;
 		tex2_coordinates texcoords;
 	};
 
@@ -28,27 +28,27 @@ export namespace renderer
 
 	struct triangle
 	{
-		math::vector_4f vertices[3];
+		vector_4f vertices[3];
 		tex2_coordinates texcoords[3];
 		std::uint32_t color = 0xffffffff;
 
 		constexpr void normalise(this triangle& self) noexcept
 		{
 			for (auto& point : self.vertices)
-				math::normalise(point);
+				::renderer::normalise(point);
 		}
 
 		constexpr auto compute_normal(this const triangle& self)
-			noexcept -> math::vector_4f
+			noexcept -> vector_4f
 		{
 			const auto& [vert_a, vert_b, vert_c] = self.vertices;
-			math::vector_4f vector_ab = vert_b - vert_a; // A -> B
+			vector_4f vector_ab = vert_b - vert_a; // A -> B
 			//vector_ab.normalise();
-			math::vector_4f vector_ac = vert_c - vert_a; // A -> C
+			vector_4f vector_ac = vert_c - vert_a; // A -> C
 			//vector_ac.normalise();
-			//math::vector_4f vector_bc = vert_c - vert_b; // B -> C
-			math::vector_4f normal = math::cross_product(vector_ab, vector_ac);
-			math::normalise(normal);
+			//vector_4f vector_bc = vert_c - vert_b; // B -> C
+			vector_4f normal = cross_product(vector_ab, vector_ac);
+			::renderer::normalise(normal);
 			if not consteval
 			{
 				/*auto mag = normal.magnitude();

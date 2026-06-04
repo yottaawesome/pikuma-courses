@@ -8,6 +8,20 @@
 #include <imgui.h>
 #include <sol/sol.hpp>
 import std;
+import engine;
+
+void Init()
+{
+	auto lua = sol::state{};
+	lua.open_libraries(sol::lib::base, sol::lib::package);
+
+	auto velocity = glm::vec2{ 5.0f, -2.0f };
+	velocity = glm::normalize(velocity);
+
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS);
+}
+
+
 
 auto wWinMain(
     HINSTANCE hInstance,
@@ -17,13 +31,10 @@ auto wWinMain(
 ) -> int
 try
 {
-    auto lua = sol::state{};
-	lua.open_libraries(sol::lib::base, sol::lib::package);
-
-	auto velocity = glm::vec2{ 5.0f, -2.0f };
-	velocity = glm::normalize(velocity);
-
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS);
+	auto game = Engine::Game{};
+	game.Initialize();
+	game.Run();
+	game.Destroy();
     return 0;
 }
 catch (const std::exception& e)

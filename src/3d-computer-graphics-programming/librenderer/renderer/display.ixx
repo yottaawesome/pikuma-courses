@@ -150,11 +150,11 @@ export namespace renderer
             or static_cast<std::uint32_t>(x) >= buffer.depth.width())
             return;
 
-        auto weights = math::barycentric_weights(
-            math::vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
-            math::vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
-            math::vector_2f{ .x = vertex[2].position.x, .y = vertex[2].position.y },
-            math::vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
+        auto weights = barycentric_weights(
+            vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
+            vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
+            vector_2f{ .x = vertex[2].position.x, .y = vertex[2].position.y },
+            vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
         );
 
         auto alpha = float{ weights.x };
@@ -226,9 +226,9 @@ export namespace renderer
         float inv_slope_1 = 0;
         float inv_slope_2 = 0;
         if (vertices[1].position.y - vertices[0].position.y != 0)
-            inv_slope_1 = static_cast<float>((vertices[1].position.x - vertices[0].position.x) / math::abs(vertices[1].position.y - vertices[0].position.y));
+            inv_slope_1 = static_cast<float>((vertices[1].position.x - vertices[0].position.x) / abs(vertices[1].position.y - vertices[0].position.y));
         if (vertices[2].position.y - vertices[0].position.y != 0)
-            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / abs(vertices[2].position.y - vertices[0].position.y));
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
@@ -259,9 +259,9 @@ export namespace renderer
         inv_slope_1 = 0;
         inv_slope_2 = 0;
         if (vertices[2].position.y - vertices[1].position.y != 0)
-            inv_slope_1 = static_cast<float>((vertices[2].position.x - vertices[1].position.x) / math::abs(vertices[2].position.y - vertices[1].position.y));
+            inv_slope_1 = static_cast<float>((vertices[2].position.x - vertices[1].position.x) / abs(vertices[2].position.y - vertices[1].position.y));
         if (vertices[2].position.y - vertices[0].position.y != 0)
-            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / abs(vertices[2].position.y - vertices[0].position.y));
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {
@@ -300,11 +300,11 @@ export namespace renderer
             or static_cast<std::uint32_t>(x) >= buffer.depth.width())
             return;
 
-        auto weights = math::barycentric_weights(
-            math::vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
-            math::vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
-            math::vector_2f{ .x = vertex[2].position.x, .y = vertex[2].position.y },
-            math::vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
+        auto weights = barycentric_weights(
+            vector_2f{ .x = vertex[0].position.x, .y = vertex[0].position.y },
+            vector_2f{ .x = vertex[1].position.x, .y = vertex[1].position.y },
+            vector_2f{ .x = vertex[2].position.x, .y = vertex[2].position.y },
+            vector_2f{ .x = static_cast<float>(x), .y = static_cast<float>(y) }
         );
 
         auto alpha = float{weights.x};
@@ -335,8 +335,8 @@ export namespace renderer
         interpolated_v /= interpolated_w_reciprocal;
 
 		// Map the UV coordinate to the full texture width and height.
-        auto tex_x = math::abs(static_cast<int>(interpolated_u * texture_width)) % static_cast<int>(texture_width);
-        auto tex_y = math::abs(static_cast<int>(interpolated_v * texture_height)) % static_cast<int>(texture_height);
+        auto tex_x = abs(static_cast<int>(interpolated_u * texture_width)) % static_cast<int>(texture_width);
+        auto tex_y = abs(static_cast<int>(interpolated_v * texture_height)) % static_cast<int>(texture_height);
 
         auto colorIndex = (texture_width * tex_y) + tex_x;
         if (colorIndex >= texture_width * texture_height)
@@ -387,9 +387,9 @@ export namespace renderer
         float inv_slope_1 = 0;
         float inv_slope_2 = 0;
         if (vertices[1].position.y - vertices[0].position.y != 0)
-			inv_slope_1 = static_cast<float>((vertices[1].position.x - vertices[0].position.x) / math::abs(vertices[1].position.y - vertices[0].position.y));
+			inv_slope_1 = static_cast<float>((vertices[1].position.x - vertices[0].position.x) / abs(vertices[1].position.y - vertices[0].position.y));
 		if (vertices[2].position.y - vertices[0].position.y != 0)
-			inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+			inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / abs(vertices[2].position.y - vertices[0].position.y));
 
         if (vertices[1].position.y - vertices[0].position.y != 0)
         {
@@ -415,9 +415,9 @@ export namespace renderer
         inv_slope_1 = 0;
         inv_slope_2 = 0;
         if (vertices[2].position.y - vertices[1].position.y != 0)
-            inv_slope_1 = static_cast<float>((vertices[2].position.x - vertices[1].position.x) / math::abs(vertices[2].position.y - vertices[1].position.y));
+            inv_slope_1 = static_cast<float>((vertices[2].position.x - vertices[1].position.x) / abs(vertices[2].position.y - vertices[1].position.y));
         if (vertices[2].position.y - vertices[0].position.y != 0)
-            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / math::abs(vertices[2].position.y - vertices[0].position.y));
+            inv_slope_2 = static_cast<float>((vertices[2].position.x - vertices[0].position.x) / abs(vertices[2].position.y - vertices[0].position.y));
 
         if (vertices[2].position.y - vertices[1].position.y != 0)
         {

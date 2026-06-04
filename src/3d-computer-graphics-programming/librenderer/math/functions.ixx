@@ -12,9 +12,9 @@ namespace
 	}
 }
 
-export namespace math
+export namespace renderer
 {
-	constexpr auto abs(concepts::is_arithmetic auto value)
+	constexpr auto abs(is_arithmetic auto value)
 	{
 		if constexpr(std::unsigned_integral<decltype(value)>)
 			return value;

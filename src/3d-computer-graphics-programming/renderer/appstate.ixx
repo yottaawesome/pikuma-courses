@@ -95,8 +95,8 @@ export namespace app_state
 	auto is_running = true;
 	auto render_settings = renderer::settings{};
 
-	const auto proj_matrix = math::projective_perspective_divide_matrix(
-		math::radians{ std::numbers::pi / 3 },
+	const auto proj_matrix = renderer::projective_perspective_divide_matrix(
+		renderer::radians{ std::numbers::pi / 3 },
 		(float)window_dimensions.width() / (float)window_dimensions.height(),
 		0.1f,
 		100.f

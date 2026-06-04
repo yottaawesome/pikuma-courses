@@ -2,7 +2,7 @@ export module librenderer:util.functions;
 import std;
 import :win32;
 
-export namespace util
+export namespace renderer
 {
     constexpr bool is_debug =
 #ifdef _DEBUG

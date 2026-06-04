@@ -7,7 +7,7 @@ import :sdl;
 export namespace renderer
 {
 	// represents a 2D buffer of an underlying numeric type.
-	template<concepts::is_arithmetic T>
+	template<is_arithmetic T>
 	struct buffer_2d final
 	{
 		using backing_type = T;
@@ -31,7 +31,7 @@ export namespace renderer
 		constexpr auto raw_buffer()     noexcept        -> T* { return m_buffer.data(); }
 		constexpr auto data()           noexcept        -> T* { return m_buffer.data(); }
 
-		constexpr void set(std::uint64_t row, std::uint64_t column, T value) noexcept(util::is_release)
+		constexpr void set(std::uint64_t row, std::uint64_t column, T value) noexcept(is_release)
 		{
 			if (check_bounds(row, column, std::nothrow))
 				m_buffer[row * m_width + column] = value;
@@ -55,7 +55,7 @@ export namespace renderer
 
 		constexpr void check_bounds(this auto&& self, std::uint64_t row, std::uint64_t column)
 		{
-			if constexpr (util::is_debug) // for debugging only
+			if constexpr (is_debug) // for debugging only
 				if (not self.check_bounds(row, column, std::nothrow))
 					throw std::runtime_error(std::format("Index out of bounds {}:{} against {}:{}", row, column, self.m_width, self.m_height));
 		}

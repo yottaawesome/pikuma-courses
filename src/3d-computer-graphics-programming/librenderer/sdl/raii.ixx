@@ -5,9 +5,9 @@ import :sdl.exports;
 
 export namespace sdl
 {
-	using window_unique_ptr = raii::direct_unique_ptr<SDL_Window, SDL_DestroyWindow>;
-	using renderer_unique_ptr = raii::direct_unique_ptr<SDL_Renderer, SDL_DestroyRenderer>;
-	using texture_unique_ptr = raii::direct_unique_ptr<SDL_Texture, SDL_DestroyTexture>;
+	using window_unique_ptr = renderer::direct_unique_ptr<SDL_Window, SDL_DestroyWindow>;
+	using renderer_unique_ptr = renderer::direct_unique_ptr<SDL_Renderer, SDL_DestroyRenderer>;
+	using texture_unique_ptr = renderer::direct_unique_ptr<SDL_Texture, SDL_DestroyTexture>;
 
 	struct sdl_context final
 	{

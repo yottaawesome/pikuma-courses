@@ -10,16 +10,16 @@ namespace Tests
 	{
 		TEST_METHOD(TestNormalisation)
 		{
-			math::vector_3f vec{ .x=1, .y = 9, .z = 2 };
-			math::normalise(vec);
-			Assert::IsTrue(math::magnitude(vec) == 1.f);
+			renderer::vector_3f vec{ .x=1, .y = 9, .z = 2 };
+			renderer::normalise(vec);
+			Assert::IsTrue(renderer::magnitude(vec) == 1.f);
 		}
 
 		TEST_METHOD(TestVectorAddition)
 		{
-			math::vector_3f vec_a{ .x=1, .y=0, .z=2 };
-			math::vector_3f vec_b{ .x=0, .y=9, .z=2 };
-			vec_a = math::add(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x=1, .y=0, .z=2 };
+			renderer::vector_3f vec_b{ .x=0, .y=9, .z=2 };
+			vec_a = renderer::add(vec_a, vec_b);
 			Assert::IsTrue(vec_a.x == 1.f);
 			Assert::IsTrue(vec_a.y == 9.f);
 			Assert::IsTrue(vec_a.z == 4.f);
@@ -27,9 +27,9 @@ namespace Tests
 
 		TEST_METHOD(TestVectorSubtraction)
 		{
-			math::vector_3f vec_a{ .x=1, .y=0, .z = 2 };
-			math::vector_3f vec_b{ .x = 0, .y = 9, .z=2 };
-			vec_a = math::subtract(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x=1, .y=0, .z = 2 };
+			renderer::vector_3f vec_b{ .x = 0, .y = 9, .z=2 };
+			vec_a = renderer::subtract(vec_a, vec_b);
 			Assert::IsTrue(vec_a.x == 1.f);
 			Assert::IsTrue(vec_a.y == -9.f);
 			Assert::IsTrue(vec_a.z == 0.f);
@@ -37,63 +37,63 @@ namespace Tests
 
 		TEST_METHOD(TestVectorDotProductUnitParallel)
 		{
-			math::vector_3f vec_a{ .x=1, .y=0, .z=0 };
-			math::vector_3f vec_b{ .x=1, .y=0, .z = 0 };
-			float dot = math::dot_product(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x=1, .y=0, .z=0 };
+			renderer::vector_3f vec_b{ .x=1, .y=0, .z = 0 };
+			float dot = renderer::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == 1.f);
 		}
 
 		TEST_METHOD(TestVectorDotProductUnitAntiParallel)
 		{
-			math::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
-			math::vector_3f vec_b{ .x = -1, .y = 0, .z = 0};
-			float dot = math::dot_product(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
+			renderer::vector_3f vec_b{ .x = -1, .y = 0, .z = 0};
+			float dot = renderer::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == -1.f);
 		}
 
 		TEST_METHOD(TestVectorDotProductUnitOrthogonal)
 		{
-			math::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
-			math::vector_3f vec_b{ .x = 0, .y = 1, .z = 0};
-			float dot = math::dot_product(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
+			renderer::vector_3f vec_b{ .x = 0, .y = 1, .z = 0};
+			float dot = renderer::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == 0.f);
 		}
 
 		TEST_METHOD(TestVectorDotProductParallel)
 		{
-			math::vector_3f vec_a{ .x = 5, .y = 0, .z = 0};
-			math::vector_3f vec_b{ .x = 5, .y = 0, .z = 0};
-			float dot = math::dot_product(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x = 5, .y = 0, .z = 0};
+			renderer::vector_3f vec_b{ .x = 5, .y = 0, .z = 0};
+			float dot = renderer::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot > 1.f);
 		}
 
 		TEST_METHOD(TestVectorDotProductAntiParallel)
 		{
-			math::vector_3f vec_a{ .x = 5, .y = 0, .z = 0};
-			math::vector_3f vec_b{ .x = -5, .y = 0, .z = 0};
-			float dot = math::dot_product(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x = 5, .y = 0, .z = 0};
+			renderer::vector_3f vec_b{ .x = -5, .y = 0, .z = 0};
+			float dot = renderer::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot < -1.f);
 		}
 
 		TEST_METHOD(TestVectorDotProductOrthogonal)
 		{
-			math::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
-			math::vector_3f vec_b{.x=0, .y = 1, .z=0};
-			float dot = math::dot_product(vec_a, vec_b);
+			renderer::vector_3f vec_a{ .x = 1, .y = 0, .z = 0};
+			renderer::vector_3f vec_b{.x=0, .y = 1, .z=0};
+			float dot = renderer::dot_product(vec_a, vec_b);
 			Assert::IsTrue(dot == 0.f);
 		}
 
 		TEST_METHOD(TestRadiansToDegrees)
 		{
-			math::radians value{std::numbers::pi};
-			auto converted = math::degrees(value).value;
+			renderer::radians value{std::numbers::pi};
+			auto converted = renderer::degrees(value).value;
 			Assert::IsTrue(converted == 180.f);
 		}
 
 		TEST_METHOD(TestDegreesToRadians)
 		{
-			math::degrees value{180};
-			auto converted = math::radians(value).value;
+			renderer::degrees value{180};
+			auto converted = renderer::radians(value).value;
 			Assert::IsTrue(converted == 3.14159274f);
 		}
 	};
