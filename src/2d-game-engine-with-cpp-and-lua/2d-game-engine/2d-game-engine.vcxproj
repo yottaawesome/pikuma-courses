@@ -151,11 +151,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="engine.ixx" />
+    <ClCompile Include="glm\exports.ixx" />
+    <ClCompile Include="glm\glm.ixx" />
+    <ClCompile Include="imgui\exports.ixx" />
+    <ClCompile Include="imgui\imgui.ixx" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="game.ixx" />
+    <ClCompile Include="game\game.ixx" />
     <ClCompile Include="sdl3\error.ixx" />
     <ClCompile Include="sdl3\exports.ixx" />
     <ClCompile Include="sdl3\sdl3.ixx" />
+    <ClCompile Include="sol\exports.ixx" />
+    <ClCompile Include="sol\sol.ixx" />
+    <ClCompile Include="win32\exports.ixx" />
+    <ClCompile Include="win32\util.ixx" />
+    <ClCompile Include="win32\win32.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
