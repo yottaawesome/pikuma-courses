@@ -152,6 +152,10 @@
   <ItemGroup>
     <ClCompile Include="engine.ixx" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="game.ixx" />
+    <ClCompile Include="sdl3\error.ixx" />
+    <ClCompile Include="sdl3\exports.ixx" />
+    <ClCompile Include="sdl3\sdl3.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />

@@ -21,8 +21,6 @@ void Init()
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS);
 }
 
-
-
 auto wWinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
