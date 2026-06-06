@@ -14,6 +14,7 @@ export namespace SDL
 		::SDL_Renderer,
 		::SDL_Event,
 		::SDL_EventType,
+		::SDL_CreateWindowAndRenderer,
 		::SDL_SetWindowPosition,
 		::SDL_RenderClear,
 		::SDL_RenderPresent,

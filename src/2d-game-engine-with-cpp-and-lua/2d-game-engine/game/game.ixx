@@ -26,18 +26,20 @@ export namespace Engine
 		{
 			if (not SDL::SDL_Init(SDL::InitFlags::Video))
 				throw SDL::SdlError{"Failed to initialize SDL"};
-			self.window = SDL::SDL_CreateWindow(
-				nullptr, 
-				800, 
-				600, 
-				SDL::Window::Borderless
+
+			auto success = SDL::SDL_CreateWindowAndRenderer(
+				nullptr,
+				800,
+				600,
+				SDL::Window::Borderless,
+				&self.window,
+				&self.renderer
 			);
-			SDL::SDL_SetWindowPosition(self.window, SDL::Windowpos::Centered, SDL::Windowpos::Centered);
-			if (not self.window)
-				throw SDL::SdlError{"Failed to create SDL window"};
-			self.renderer = SDL::SDL_CreateRenderer(self.window, nullptr);
-			if (not self.renderer)
-				throw SDL::SdlError{"Failed to create SDL renderer"};
+			if (not success)
+				throw SDL::SdlError{ "Failed to create SDL window and renderer" };
+			success = SDL::SDL_SetWindowPosition(self.window, SDL::Windowpos::Centered, SDL::Windowpos::Centered);
+			if (not success)
+				throw SDL::SdlError{ "Failed to set SDL window position" };
 			self.isRunning = true;
 		}
 
