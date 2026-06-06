@@ -18,6 +18,11 @@ export namespace SDL
 		::SDL_PixelFormat,
 		::SDL_Rect,
 		::SDL_FRect,
+		::SDL_Surface,
+		::SDL_DestroyTexture,
+		::SDL_RenderTexture,
+		::SDL_DestroySurface,
+		::SDL_CreateTextureFromSurface,
 		::SDL_RenderFillRect,
 		::SDL_CreateWindowAndRenderer,
 		::SDL_SetWindowPosition,
@@ -32,6 +37,10 @@ export namespace SDL
 		::SDL_Init,
 		::SDL_CreateWindow,
 		::SDL_GetError
+		;
+
+	using
+		::IMG_Load
 		;
 
 	enum InitFlags : Uint32

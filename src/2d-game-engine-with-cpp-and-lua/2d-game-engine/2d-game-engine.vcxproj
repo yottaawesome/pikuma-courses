@@ -157,6 +157,7 @@
     <ClCompile Include="imgui\imgui.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="game\game.ixx" />
+    <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="sdl3\error.ixx" />
     <ClCompile Include="sdl3\exports.ixx" />
     <ClCompile Include="sdl3\sdl3.ixx" />

@@ -1,25 +1,25 @@
 export module engine:game;
 import std;
 import :sdl3;
+import :raii;
 
 export namespace Engine
 {
+	
+
 	class Game
 	{
 	private:
 		bool isRunning = false;
-		SDL::SDL_Window* window = nullptr;
-		SDL::SDL_Renderer* renderer = nullptr;
+		WindowUniquePtr window = nullptr;
+		RendererUniquePtr renderer = nullptr;
 
 	public:
 		~Game()
 		{
-			if (renderer)
-			{
-				SDL::SDL_DestroyRenderer(renderer);
-				SDL::SDL_DestroyWindow(window);
-				SDL::SDL_Quit();
-			}
+			renderer.reset();
+			window.reset();
+			SDL::SDL_Quit();
 		}
 
 		void Initialize(this Game& self)
@@ -27,19 +27,25 @@ export namespace Engine
 			if (not SDL::SDL_Init(SDL::InitFlags::Video))
 				throw SDL::SdlError{"Failed to initialize SDL"};
 
+			auto wnd = static_cast<SDL::SDL_Window*>(nullptr);
+			auto rnd = static_cast<SDL::SDL_Renderer*>(nullptr);
 			auto success = SDL::SDL_CreateWindowAndRenderer(
 				nullptr,
 				800,
 				600,
 				SDL::Window::Borderless | SDL::Window::Fullscreen,
-				&self.window,
-				&self.renderer
+				&wnd,
+				&rnd
 			);
 			if (not success)
 				throw SDL::SdlError{ "Failed to create SDL window and renderer" };
-			success = SDL::SDL_SetWindowPosition(self.window, SDL::Windowpos::Centered, SDL::Windowpos::Centered);
+
+			self.window = WindowUniquePtr{ wnd };
+			self.renderer = RendererUniquePtr{ rnd };
+			success = SDL::SDL_SetWindowPosition(self.window.get(), SDL::Windowpos::Centered, SDL::Windowpos::Centered);
 			if (not success)
 				throw SDL::SdlError{ "Failed to set SDL window position" };
+
 			self.isRunning = true;
 		}
 
@@ -91,14 +97,21 @@ export namespace Engine
 			constexpr auto royalBlue = SDL::SDL_Color{ 48, 92, 222, 255 };
 			constexpr auto clearColor = darkSapphire;
 
-			SDL::SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-			SDL::SDL_RenderClear(renderer);
+			SDL::SDL_SetRenderDrawColor(renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+			SDL::SDL_RenderClear(renderer.get());
 
-			auto player = SDL::SDL_FRect{ 10, 10, 50, 50 };
-			SDL::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-			SDL::SDL_RenderFillRect(renderer, &player);
+			auto surface = SDL::IMG_Load("./assets/images/tank-tiger-right.png");
+			if (!surface)
+				throw SDL::SdlError{ "Failed to load image" };
+			auto texture = SDL::SDL_CreateTextureFromSurface(renderer.get(), surface);
+			if (!texture)
+				throw SDL::SdlError{ "Failed to create texture from surface" };
+			SDL::SDL_DestroySurface(surface);
+			auto dstRect = SDL::SDL_FRect{ 10, 10, 32, 32 };
+			SDL::SDL_RenderTexture(renderer.get(), texture, nullptr, &dstRect);
+			SDL::SDL_DestroyTexture(texture);
 
-			SDL::SDL_RenderPresent(renderer);
+			SDL::SDL_RenderPresent(renderer.get());
 		}
 
 		void Destroy()
