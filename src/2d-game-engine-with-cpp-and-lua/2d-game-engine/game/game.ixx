@@ -43,8 +43,12 @@ export namespace Engine
 			self.isRunning = true;
 		}
 
+		void Setup(this Game& self)
+		{}
+
 		void Run(this Game& self)
 		{
+			self.Setup();
 			while (self.isRunning)
 			{
 				self.ProcessInput();
@@ -89,6 +93,11 @@ export namespace Engine
 
 			SDL::SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(renderer);
+
+			auto player = SDL::SDL_FRect{ 10, 10, 50, 50 };
+			SDL::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+			SDL::SDL_RenderFillRect(renderer, &player);
+
 			SDL::SDL_RenderPresent(renderer);
 		}
 
