@@ -31,7 +31,7 @@ export namespace Engine
 				nullptr,
 				800,
 				600,
-				SDL::Window::Borderless,
+				SDL::Window::Borderless | SDL::Window::Fullscreen,
 				&self.window,
 				&self.renderer
 			);
@@ -83,7 +83,11 @@ export namespace Engine
 
 		void Render()
 		{
-			SDL::SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+			constexpr auto darkSapphire = SDL::SDL_Color{ 31, 48, 94, 255 };
+			constexpr auto royalBlue = SDL::SDL_Color{ 48, 92, 222, 255 };
+			constexpr auto clearColor = darkSapphire;
+
+			SDL::SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(renderer);
 			SDL::SDL_RenderPresent(renderer);
 		}

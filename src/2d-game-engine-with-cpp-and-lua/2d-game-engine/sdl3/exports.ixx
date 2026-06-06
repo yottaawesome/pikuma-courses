@@ -14,6 +14,8 @@ export namespace SDL
 		::SDL_Renderer,
 		::SDL_Event,
 		::SDL_EventType,
+		::SDL_Color,
+		::SDL_PixelFormat,
 		::SDL_CreateWindowAndRenderer,
 		::SDL_SetWindowPosition,
 		::SDL_RenderClear,
@@ -46,6 +48,7 @@ export namespace SDL
 	enum Window
 	{
 		Borderless = SDL_WINDOW_BORDERLESS,
+		Fullscreen = SDL_WINDOW_FULLSCREEN,
 	};
 
 	enum EventType
