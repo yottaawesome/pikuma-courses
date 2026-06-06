@@ -1,5 +1,11 @@
 # 3D Computer Graphics Programming from Scratch
 
+## Credits
+
+* The f22.obj, efa.obj, and f117.obj aircraft files were created by Artem Katrych.
+* The file crab.obj file was created by [Bohdan Lvov](https://sketchfab.com/ostapblendercg).
+* The drone.obj file was created by [Willy Decarpentrie](https://sketchfab.com/skudgee).
+
 ## Controls
 
 Use the following controls to adjust the rendering.
