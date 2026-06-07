@@ -20,22 +20,15 @@ export namespace Engine
 	private:
 		bool isRunning = false;
 		std::uint64_t millisecsPreviousFrame = 0;
+		SDL::SdlScope sdlScope{ SDL::InitFlags::Video };
 		WindowUniquePtr window = nullptr;
 		RendererUniquePtr renderer = nullptr;
 
 	public:
-		~Game()
-		{
-			renderer.reset();
-			window.reset();
-			SDL::SDL_Quit();
-		}
+		~Game() = default;
 
 		void Initialize(this Game& self)
 		{
-			if (not SDL::SDL_Init(SDL::InitFlags::Video))
-				throw SDL::SdlError{"Failed to initialize SDL"};
-
 			auto wnd = static_cast<SDL::SDL_Window*>(nullptr);
 			auto rnd = static_cast<SDL::SDL_Renderer*>(nullptr);
 			auto success = SDL::SDL_CreateWindowAndRenderer(

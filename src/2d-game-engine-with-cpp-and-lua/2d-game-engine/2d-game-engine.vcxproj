@@ -160,6 +160,7 @@
     <ClCompile Include="raii\raii.ixx" />
     <ClCompile Include="sdl3\error.ixx" />
     <ClCompile Include="sdl3\exports.ixx" />
+    <ClCompile Include="sdl3\raii.ixx" />
     <ClCompile Include="sdl3\sdl3.ixx" />
     <ClCompile Include="sol\exports.ixx" />
     <ClCompile Include="sol\sol.ixx" />
