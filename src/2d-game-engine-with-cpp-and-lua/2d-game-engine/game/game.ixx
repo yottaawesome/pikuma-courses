@@ -2,15 +2,24 @@ export module engine:game;
 import std;
 import :sdl3;
 import :raii;
+import :glm;
+
+namespace Engine
+{
+	auto playerPosition = glm::vec2{ 0.0f, 0.0f };
+	auto playerVelocity = glm::vec2{ 0.0f, 0.0f };
+}
 
 export namespace Engine
 {
-	
+	constexpr auto FPS = 30;
+	constexpr auto MillisPerFrame = 1000 / FPS;
 
 	class Game
 	{
 	private:
 		bool isRunning = false;
+		std::uint64_t millisecsPreviousFrame = 0;
 		WindowUniquePtr window = nullptr;
 		RendererUniquePtr renderer = nullptr;
 
@@ -50,7 +59,10 @@ export namespace Engine
 		}
 
 		void Setup(this Game& self)
-		{}
+		{
+			playerPosition = glm::vec2{ 10.0f, 20.0f };
+			playerVelocity = glm::vec2{ 1.0f, 0.0f };
+		}
 
 		void Run(this Game& self)
 		{
@@ -63,7 +75,7 @@ export namespace Engine
 			}
 		}
 
-		void ProcessInput()
+		void ProcessInput(this Game& self)
 		{
 			auto sdlEvent = SDL::SDL_Event{};
 			while (SDL::SDL_PollEvent(&sdlEvent))
@@ -72,14 +84,14 @@ export namespace Engine
 				{
 					case SDL::SDL_EventType::SDL_EVENT_QUIT:
 					{
-						isRunning = false;
+						self.isRunning = false;
 						break;
 					}
 					case SDL::SDL_EventType::SDL_EVENT_KEY_DOWN:
 					{
 						if (sdlEvent.key.scancode == SDL::Scancode::Escape)
 						{
-							isRunning = false;
+							self.isRunning = false;
 							return;
 						}
 						break;
@@ -88,33 +100,39 @@ export namespace Engine
 			}
 		}
 
-		void Update()
-		{}
+		void Update(this Game& self)
+		{
+			// deliberately empty loop to wait until enough time has passed since the last frame
+			while (SDL::SDL_GetTicks() < self.millisecsPreviousFrame + MillisPerFrame) { }
 
-		void Render()
+			self.millisecsPreviousFrame = SDL::SDL_GetTicks(); // ms since SDL was initialized
+			playerPosition += playerVelocity;
+		}
+
+		void Render(this Game& self)
 		{
 			constexpr auto darkSapphire = SDL::SDL_Color{ 31, 48, 94, 255 };
 			constexpr auto royalBlue = SDL::SDL_Color{ 48, 92, 222, 255 };
 			constexpr auto clearColor = darkSapphire;
 
-			SDL::SDL_SetRenderDrawColor(renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-			SDL::SDL_RenderClear(renderer.get());
+			SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+			SDL::SDL_RenderClear(self.renderer.get());
 
 			auto surface = SDL::IMG_Load("./assets/images/tank-tiger-right.png");
 			if (!surface)
 				throw SDL::SdlError{ "Failed to load image" };
-			auto texture = SDL::SDL_CreateTextureFromSurface(renderer.get(), surface);
+			auto texture = SDL::SDL_CreateTextureFromSurface(self.renderer.get(), surface);
 			if (!texture)
 				throw SDL::SdlError{ "Failed to create texture from surface" };
 			SDL::SDL_DestroySurface(surface);
-			auto dstRect = SDL::SDL_FRect{ 10, 10, 32, 32 };
-			SDL::SDL_RenderTexture(renderer.get(), texture, nullptr, &dstRect);
+			auto dstRect = SDL::SDL_FRect{ playerPosition.x, playerPosition.y, 32, 32 };
+			SDL::SDL_RenderTexture(self.renderer.get(), texture, nullptr, &dstRect);
 			SDL::SDL_DestroyTexture(texture);
 
-			SDL::SDL_RenderPresent(renderer.get());
+			SDL::SDL_RenderPresent(self.renderer.get());
 		}
 
-		void Destroy()
+		void Destroy(this Game& self)
 		{}
 	private:
 	};

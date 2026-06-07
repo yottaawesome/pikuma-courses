@@ -19,6 +19,7 @@ export namespace SDL
 		::SDL_Rect,
 		::SDL_FRect,
 		::SDL_Surface,
+		::SDL_GetTicks,
 		::SDL_DestroyTexture,
 		::SDL_RenderTexture,
 		::SDL_DestroySurface,
@@ -73,6 +74,12 @@ export namespace SDL
 	{
 		Escape = SDL_SCANCODE_ESCAPE,
 	};
+
+	[[deprecated("SDL_TICKS_PASSED macro was removed in SDL3, see migration guide at https://github.com/c-smile/SDL3/blob/main/docs/README-migration.md")]]
+	inline constexpr auto TicksPassed(int64_t a, int64_t startTicks) noexcept -> bool
+	{
+		return a - startTicks <= 0;
+	}
 }
 
 namespace SDL::Mixer

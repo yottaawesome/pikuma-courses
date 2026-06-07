@@ -11,7 +11,7 @@
     "sdl3-ttf",
     {
       "name": "sdl3-image",
-      "features": [ "png" ]
+      "features": [ "png", "jpeg", "webp" ]
     }
   ]
 }
