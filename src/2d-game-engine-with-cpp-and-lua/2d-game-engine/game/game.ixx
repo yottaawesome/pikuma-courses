@@ -102,8 +102,10 @@ export namespace Engine
 
 		void Update(this Game& self)
 		{
-			// deliberately empty loop to wait until enough time has passed since the last frame
-			while (SDL::SDL_GetTicks() < self.millisecsPreviousFrame + MillisPerFrame) { }
+			// Naive time limiting and update loop.
+			auto result = SDL::SDL_GetTicks() - self.millisecsPreviousFrame;
+			if (result and result <= MillisPerFrame)
+				SDL::SDL_Delay(static_cast<std::uint32_t>(MillisPerFrame - result));
 
 			self.millisecsPreviousFrame = SDL::SDL_GetTicks(); // ms since SDL was initialized
 			playerPosition += playerVelocity;

@@ -19,6 +19,7 @@ export namespace SDL
 		::SDL_Rect,
 		::SDL_FRect,
 		::SDL_Surface,
+		::SDL_Delay,
 		::SDL_GetTicks,
 		::SDL_DestroyTexture,
 		::SDL_RenderTexture,
