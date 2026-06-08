@@ -3,6 +3,7 @@ import std;
 import :sdl3;
 import :raii;
 import :glm;
+import :log;
 
 namespace Engine
 {
@@ -12,7 +13,7 @@ namespace Engine
 
 export namespace Engine
 {
-	constexpr auto FPS = 30;
+	constexpr auto FPS = 60;
 	constexpr auto MillisPerFrame = 1000 / FPS;
 
 	class Game
@@ -27,8 +28,14 @@ export namespace Engine
 	public:
 		~Game() = default;
 
+		consteval auto IsFrameRateCapped() const noexcept -> bool
+		{
+			return true;
+		}
+
 		void Initialize(this Game& self)
 		{
+			Log::Info("Initializing game...");
 			auto wnd = static_cast<SDL::SDL_Window*>(nullptr);
 			auto rnd = static_cast<SDL::SDL_Renderer*>(nullptr);
 			auto success = SDL::SDL_CreateWindowAndRenderer(
@@ -54,7 +61,7 @@ export namespace Engine
 		void Setup(this Game& self)
 		{
 			playerPosition = glm::vec2{ 10.0f, 20.0f };
-			playerVelocity = glm::vec2{ 1.0f, 0.0f };
+			playerVelocity = glm::vec2{ 100.0f, 0.0f };
 		}
 
 		void Run(this Game& self)
@@ -96,12 +103,17 @@ export namespace Engine
 		void Update(this Game& self)
 		{
 			// Naive time limiting and update loop.
-			auto result = SDL::SDL_GetTicks() - self.millisecsPreviousFrame;
-			if (result and result <= MillisPerFrame)
-				SDL::SDL_Delay(static_cast<std::uint32_t>(MillisPerFrame - result));
+			auto elapsedTicks = SDL::SDL_GetTicks() - self.millisecsPreviousFrame;
+			if constexpr (self.IsFrameRateCapped())
+				if (elapsedTicks and elapsedTicks <= MillisPerFrame)
+					SDL::SDL_Delay(static_cast<std::uint32_t>(MillisPerFrame - elapsedTicks));
+			auto elapsedSeconds = double{ static_cast<double>(elapsedTicks) } / 1000.0;
+
+			auto velocity = playerVelocity;
+			velocity *= elapsedSeconds;
 
 			self.millisecsPreviousFrame = SDL::SDL_GetTicks(); // ms since SDL was initialized
-			playerPosition += playerVelocity;
+			playerPosition += velocity;
 		}
 
 		void Render(this Game& self)

@@ -155,6 +155,7 @@
     <ClCompile Include="glm\glm.ixx" />
     <ClCompile Include="imgui\exports.ixx" />
     <ClCompile Include="imgui\imgui.ixx" />
+    <ClCompile Include="logger\logger.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="game\game.ixx" />
     <ClCompile Include="raii\raii.ixx" />
