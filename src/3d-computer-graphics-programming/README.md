@@ -122,6 +122,10 @@ $$
 Mx = \dfrac{(x_2-x_0)(y_1-y_0)}{(y_2-y_0)} + x_0
 $$
 
+# Planes
+
+Defined by a point **P** and a normal vector *n*.
+
 Given three triangles that constitute a face, sorted by increasing _y_, find the midpoint $(x, y)$.
 
 ## Additional resources

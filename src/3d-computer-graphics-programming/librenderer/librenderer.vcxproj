@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClCompile Include="math\primitives.ixx" />
     <ClCompile Include="renderer\camera.ixx" />
+    <ClCompile Include="renderer\clipping.ixx" />
     <ClCompile Include="renderer\settings.ixx" />
     <ClCompile Include="sdl\renderer.ixx" />
     <ClCompile Include="sdl\texture.ixx" />
