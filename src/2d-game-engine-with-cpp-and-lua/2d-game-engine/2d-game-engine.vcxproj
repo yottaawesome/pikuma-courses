@@ -150,6 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="concepts\concepts.ixx" />
     <ClCompile Include="engine.ixx" />
     <ClCompile Include="glm\exports.ixx" />
     <ClCompile Include="glm\glm.ixx" />

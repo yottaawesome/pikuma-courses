@@ -1,10 +1,11 @@
 export module engine:win32.error;
 import std;
+import :concepts;
 import :win32.exports;
 
 namespace Win32
 {
-	auto GetLastErrorMessage(DWORD errorCode) noexcept -> std::string
+	auto GetErrorMessage(Concepts::OneOf<DWORD, HRESULT> auto&& errorCode) noexcept -> std::string
 	{
 		if (errorCode == 0)
 			return "No error";
@@ -38,11 +39,52 @@ export namespace Win32
 	{
 	public:
 		explicit Win32Error(DWORD errorCode)
-			: std::runtime_error{ GetLastErrorMessage(errorCode) }
+			: std::runtime_error{ GetErrorMessage(errorCode) }
 			, code{ errorCode }
 		{}
 		auto Code() const noexcept -> DWORD { return code; }
 	private:
 		DWORD code{};
+	};
+
+	struct HResult
+	{
+		HRESULT value{};
+		
+		explicit HResult(HRESULT hr) noexcept
+			: value{ hr }
+		{}
+
+		constexpr auto Succeeded() const noexcept -> bool
+		{
+			return ::Win32::Succeeded(value);
+		}
+
+		constexpr auto Failed() const noexcept -> bool
+		{
+			return ::Win32::Failed(value);
+		}
+
+		constexpr operator bool() const noexcept
+		{
+			return Succeeded();
+		}
+
+		constexpr auto operator==(const Win32::HResult& other) const noexcept -> bool
+		{
+			return value == other.value;
+		}
+	};
+
+	class ComError : public std::runtime_error
+	{
+	public:
+		explicit ComError(HRESULT hr)
+			: std::runtime_error{ GetErrorMessage(hr) }
+			, result{ hr }
+		{}
+		auto Result() const noexcept -> HRESULT { return result; }
+	private:
+		HRESULT result{};
 	};
 }

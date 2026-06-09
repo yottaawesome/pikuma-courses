@@ -10,12 +10,13 @@ export namespace Win32
 	template<auto Value>
 	struct Constant
 	{
-		constexpr auto operator()() const noexcept -> decltype(Value)
+		using Type = decltype(Value);
+		static constexpr auto operator()() noexcept -> Type
 		{
 			return Value;
 		}
 
-		constexpr operator decltype(Value)() const noexcept
+		constexpr operator Type(this auto&&) noexcept
 		{
 			return Value;
 		}
@@ -23,9 +24,13 @@ export namespace Win32
 
 	using
 		::HANDLE,
+		::HMODULE,
 		::HINSTANCE,
 		::LPWSTR,
 		::DWORD,
+		::HRESULT,
+		::LPCSTR,
+		::CloseHandle,
 		::LocalFree,
 		::FormatMessageA,
 		::GetLastError,
@@ -53,4 +58,13 @@ export namespace Win32
 		FromSystem = FORMAT_MESSAGE_FROM_SYSTEM,
 		IgnoreInserts = FORMAT_MESSAGE_IGNORE_INSERTS
 	};
+
+	constexpr auto Succeeded(HRESULT hr) noexcept -> bool
+	{
+		return SUCCEEDED(hr);
+	}
+	constexpr auto Failed(HRESULT hr) noexcept -> bool
+	{
+		return FAILED(hr);
+	}
 }
