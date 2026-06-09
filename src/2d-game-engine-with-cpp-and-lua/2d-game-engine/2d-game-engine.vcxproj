@@ -165,6 +165,7 @@
     <ClCompile Include="sdl3\sdl3.ixx" />
     <ClCompile Include="sol\exports.ixx" />
     <ClCompile Include="sol\sol.ixx" />
+    <ClCompile Include="win32\error.ixx" />
     <ClCompile Include="win32\exports.ixx" />
     <ClCompile Include="win32\util.ixx" />
     <ClCompile Include="win32\win32.ixx" />

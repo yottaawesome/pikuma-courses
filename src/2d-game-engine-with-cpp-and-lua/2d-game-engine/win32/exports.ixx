@@ -25,6 +25,10 @@ export namespace Win32
 		::HANDLE,
 		::HINSTANCE,
 		::LPWSTR,
+		::DWORD,
+		::LocalFree,
+		::FormatMessageA,
+		::GetLastError,
 		::AllocConsole,
 		::FreeConsole,
 		::MessageBoxA,
@@ -41,5 +45,12 @@ export namespace Win32
 	{
 		OK = MB_OK,
 		IconError = MB_ICONERROR
+	};
+
+	enum FormatMessageFlags
+	{
+		AllocateBuffer = FORMAT_MESSAGE_ALLOCATE_BUFFER,
+		FromSystem = FORMAT_MESSAGE_FROM_SYSTEM,
+		IgnoreInserts = FORMAT_MESSAGE_IGNORE_INSERTS
 	};
 }
