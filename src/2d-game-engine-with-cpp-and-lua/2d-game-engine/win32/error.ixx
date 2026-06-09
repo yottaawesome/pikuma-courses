@@ -55,19 +55,19 @@ export namespace Win32
 			: value{ hr }
 		{}
 
-		constexpr auto Succeeded() const noexcept -> bool
+		constexpr auto Succeeded(this auto&& self) noexcept -> bool
 		{
-			return ::Win32::Succeeded(value);
+			return ::Win32::Succeeded(self.value);
 		}
 
-		constexpr auto Failed() const noexcept -> bool
+		constexpr auto Failed(this auto&& self) noexcept -> bool
 		{
-			return ::Win32::Failed(value);
+			return ::Win32::Failed(self.value);
 		}
 
-		constexpr operator bool() const noexcept
+		constexpr operator bool(this auto&& self) noexcept
 		{
-			return Succeeded();
+			return self.Succeeded();
 		}
 
 		constexpr auto operator==(const Win32::HResult& other) const noexcept -> bool
