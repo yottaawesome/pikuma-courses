@@ -153,7 +153,11 @@
     <ClCompile Include="engine\components\components.ixx" />
     <ClCompile Include="engine\components\transformcomponent.ixx" />
     <ClCompile Include="engine\concepts\concepts.ixx" />
+    <ClCompile Include="engine\ecs\component.ixx" />
     <ClCompile Include="engine\ecs\ecs.ixx" />
+    <ClCompile Include="engine\ecs\entity.ixx" />
+    <ClCompile Include="engine\ecs\registry.ixx" />
+    <ClCompile Include="engine\ecs\system.ixx" />
     <ClCompile Include="engine\engine.ixx" />
     <ClCompile Include="engine\glm\exports.ixx" />
     <ClCompile Include="engine\glm\glm.ixx" />
