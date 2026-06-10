@@ -14,4 +14,4 @@ The assets used were created by others, which I'm crediting below.
 
 * [Gustavo Pezzi](https://pikuma.com/)
 * [Dr. Feng](http://pixeljoint.com/pixelart/8020.htm) (tanks, trucks, army, etc.)
-* [Pyromatical](https://www.deviantart.com/phyromatical/art/Tons-of-Tileset-1-10-Light-jungle-trees-485775828) (trees and vegetion).
+* [Pyromatical](https://www.deviantart.com/phyromatical/art/Tons-of-Tileset-1-10-Light-jungle-trees-485775828) (trees and vegetation).
