@@ -150,22 +150,27 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="concepts\concepts.ixx" />
-    <ClCompile Include="engine.ixx" />
-    <ClCompile Include="glm\exports.ixx" />
-    <ClCompile Include="glm\glm.ixx" />
-    <ClCompile Include="imgui\exports.ixx" />
-    <ClCompile Include="imgui\imgui.ixx" />
-    <ClCompile Include="logger\logger.ixx" />
+    <ClCompile Include="engine\components\components.ixx" />
+    <ClCompile Include="engine\components\transformcomponent.ixx" />
+    <ClCompile Include="engine\concepts\concepts.ixx" />
+    <ClCompile Include="engine\ecs\ecs.ixx" />
+    <ClCompile Include="engine\engine.ixx" />
+    <ClCompile Include="engine\glm\exports.ixx" />
+    <ClCompile Include="engine\glm\glm.ixx" />
+    <ClCompile Include="engine\imgui\exports.ixx" />
+    <ClCompile Include="engine\imgui\imgui.ixx" />
+    <ClCompile Include="engine\logger\logger.ixx" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="game\game.ixx" />
-    <ClCompile Include="raii\raii.ixx" />
-    <ClCompile Include="sdl3\error.ixx" />
-    <ClCompile Include="sdl3\exports.ixx" />
-    <ClCompile Include="sdl3\raii.ixx" />
-    <ClCompile Include="sdl3\sdl3.ixx" />
-    <ClCompile Include="sol\exports.ixx" />
-    <ClCompile Include="sol\sol.ixx" />
+    <ClCompile Include="engine\game\game.ixx" />
+    <ClCompile Include="engine\raii\raii.ixx" />
+    <ClCompile Include="engine\sdl3\error.ixx" />
+    <ClCompile Include="engine\sdl3\exports.ixx" />
+    <ClCompile Include="engine\sdl3\raii.ixx" />
+    <ClCompile Include="engine\sdl3\sdl3.ixx" />
+    <ClCompile Include="engine\sol\exports.ixx" />
+    <ClCompile Include="engine\sol\sol.ixx" />
+    <ClCompile Include="engine\systems\systems.ixx" />
+    <ClCompile Include="engine\systems\movementsystem.ixx" />
     <ClCompile Include="win32\error.ixx" />
     <ClCompile Include="win32\exports.ixx" />
     <ClCompile Include="win32\util.ixx" />

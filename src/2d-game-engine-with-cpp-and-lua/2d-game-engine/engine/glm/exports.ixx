@@ -16,3 +16,4 @@ export namespace SDL
 		::glm::normalize
 		;
 }
+
