@@ -9,7 +9,7 @@ export namespace Engine
 	class IComponent
 	{
 	protected:
-		static inline int nextId{};
+		static inline int nextId = 0;
 	};
 
 	template<typename T>

@@ -57,18 +57,23 @@ export namespace Engine
 				componentPool->resize(numEntities);
 
 			componentPool->Set(entityId, TComponent{ std::forward<TArgs>(args)... });
-			entitySignatures[entityId].set(componentId);
+			entityComponentSignatures[entityId].set(componentId);
 		}
 
 		template<typename T>
 		void RemoveComponent(Entity entity)
 		{
+			auto componentId = Component<T>::GetId();
+			auto entityId = entity.GetId();
+			entityComponentSignatures[entityId].set(componentId, false); //.reset(componentId) also works;
 		}
 
 		template<typename T>
 		auto HasComponent(Entity entity) -> bool
 		{
-			return false;
+			auto componentId = Component<T>::GetId();
+			auto entityId = entity.GetId();
+			return entityComponentSignatures[entityId].test(componentId);
 		}
 
 		template<typename T>
@@ -80,7 +85,7 @@ export namespace Engine
 	private:
 		unsigned numEntities = 0;
 		std::vector<IPool*> componentPools{};
-		std::vector<Signature> entitySignatures{};
+		std::vector<Signature> entityComponentSignatures{};
 		std::unordered_map<std::type_index, System*> systems{};
 
 		std::set<Entity> entitiesToBeAdded{};
