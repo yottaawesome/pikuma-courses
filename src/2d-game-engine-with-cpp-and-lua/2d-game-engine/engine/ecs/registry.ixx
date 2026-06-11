@@ -82,6 +82,49 @@ export namespace Engine
 			return {};
 		}
 
+		template<typename TSystem, typename...TArgs>
+		void AddSystem(TArgs&&... args)
+		{
+			auto newSystem = new TSystem{ std::forward<TArgs>(args)... };
+			systems[typeid(TSystem)] = newSystem;
+			// Course code uses an unnecessarily verbose way
+			//systems.insert(std::make_pair(typeid(TSystem), newSystem));
+		}
+		
+		template<typename TSystem>
+		void RemoveSystem(TSystem&& system)
+		{
+			systems.erase(typeid(TSystem));
+		}
+
+		template<typename TSystem>
+		auto HasSystem() -> bool
+		{
+			return systems.contains(typeid(TSystem));
+			//return systems.find(typeid(TSystem)) != systems.end();
+		}
+
+		template<typename TSystem>
+		auto GetSystem() -> TSystem&
+		{
+			if (not HasSystem<TSystem>())
+				throw std::runtime_error{ "System not found" };
+			//return *static_cast<TSystem*>(systems.find(typeid(TSystem))->second);
+			return *static_cast<TSystem*>(systems[typeid(TSystem)]);
+		}
+
+		void AddEntityToSystems(Entity entity)
+		{
+			auto entitySignature = entityComponentSignatures[entity.GetId()];
+			for (auto& [_, system] : systems)
+			{
+				auto systemSignature = system->GetSignature();
+				auto isInterested = (entitySignature & systemSignature) == systemSignature;
+				if (isInterested)
+					system->AddEntity(entity);
+			}
+		}
+
 	private:
 		unsigned numEntities = 0;
 		std::vector<IPool*> componentPools{};
