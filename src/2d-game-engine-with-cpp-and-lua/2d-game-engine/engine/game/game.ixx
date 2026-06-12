@@ -5,6 +5,8 @@ import :raii;
 import :glm;
 import :log;
 import :ecs;
+import :components;
+import :systems;
 
 namespace Engine
 {
@@ -57,8 +59,11 @@ export namespace Engine
 			playerPosition = glm::vec2{ 10.0f, 20.0f };
 			playerVelocity = glm::vec2{ 100.0f, 0.0f };
 
+			self.registry.AddSystem<MovementSystem>(self.registry);
+
 			auto tank = Entity{self.registry.CreateEntity()};
-			auto truck = Entity{self.registry.CreateEntity()};
+			self.registry.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 2.0f }, 0.0);
+			self.registry.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f);
 		}
 
 		void Run(this Game& self)
@@ -104,13 +109,13 @@ export namespace Engine
 			if constexpr (self.IsFrameRateCapped())
 				if (elapsedTicks and elapsedTicks <= MillisPerFrame)
 					SDL::SDL_Delay(static_cast<std::uint32_t>(MillisPerFrame - elapsedTicks));
-			auto elapsedSeconds = double{ static_cast<double>(elapsedTicks) } / 1000.0;
-
-			auto velocity = playerVelocity;
-			velocity *= elapsedSeconds;
+			auto deltaTime = double{ static_cast<double>(elapsedTicks) } / 1000.0;
 
 			self.millisecsPreviousFrame = SDL::SDL_GetTicks(); // ms since SDL was initialized
-			playerPosition += velocity;
+
+			self.registry.GetSystem<MovementSystem>().Update(deltaTime);
+
+			self.registry.Update(); // Add or remove entities from systems after the update loop
 		}
 
 		void Render(this Game& self)
@@ -122,16 +127,16 @@ export namespace Engine
 			SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(self.renderer.get());
 
-			auto surface = SDL::IMG_Load("./assets/images/tank-tiger-right.png");
-			if (!surface)
+			/*auto surface = SDL::IMG_Load("./assets/images/tank-tiger-right.png");
+			if (not surface)
 				throw SDL::SdlError{ "Failed to load image" };
 			auto texture = SDL::SDL_CreateTextureFromSurface(self.renderer.get(), surface);
-			if (!texture)
+			if (not texture)
 				throw SDL::SdlError{ "Failed to create texture from surface" };
 			SDL::SDL_DestroySurface(surface);
 			auto dstRect = SDL::SDL_FRect{ playerPosition.x, playerPosition.y, 32, 32 };
 			SDL::SDL_RenderTexture(self.renderer.get(), texture, nullptr, &dstRect);
-			SDL::SDL_DestroyTexture(texture);
+			SDL::SDL_DestroyTexture(texture);*/
 
 			SDL::SDL_RenderPresent(self.renderer.get());
 		}

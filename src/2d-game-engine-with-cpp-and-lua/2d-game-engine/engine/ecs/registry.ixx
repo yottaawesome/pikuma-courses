@@ -41,8 +41,8 @@ export namespace Engine
 				
 			auto componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
 			auto entityId = entity.GetId();
-			if (entityId >= componentPool->size())
-				componentPool->resize(numEntities);
+			if (entityId >= componentPool->GetSize())
+				componentPool->Resize(numEntities);
 
 			componentPool->Set(entityId, TComponent{ std::forward<TArgs>(args)... });
 			entityComponentSignatures[entityId].set(componentId);
@@ -67,7 +67,9 @@ export namespace Engine
 		template<typename T>
 		auto GetComponent(Entity entity) -> T&
 		{
-			return {};
+			auto componentId = Component<T>::GetId();
+			auto entityId = entity.GetId();
+			return std::static_pointer_cast<Pool<T>>(componentPools[componentId])->Get(entityId);
 		}
 
 		template<typename TSystem, typename...TArgs>
