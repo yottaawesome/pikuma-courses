@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="engine\components\components.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />
+    <ClCompile Include="engine\components\spritecomponent.ixx" />
     <ClCompile Include="engine\components\transformcomponent.ixx" />
     <ClCompile Include="engine\concepts\concepts.ixx" />
     <ClCompile Include="engine\ecs\component.ixx" />
@@ -166,6 +167,7 @@
     <ClCompile Include="engine\imgui\exports.ixx" />
     <ClCompile Include="engine\imgui\imgui.ixx" />
     <ClCompile Include="engine\logger\logger.ixx" />
+    <ClCompile Include="engine\systems\rendersystem.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="engine\game\game.ixx" />
     <ClCompile Include="engine\raii\raii.ixx" />
