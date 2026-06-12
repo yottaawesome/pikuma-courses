@@ -1,5 +1,6 @@
 export module engine:sdl.raii;
 import std;
+import :raii;
 import :sdl3.exports;
 import :sdl3.error;
 
@@ -23,4 +24,7 @@ namespace SDL
 		SdlScope(SdlScope&&) = delete;
 		auto operator=(SdlScope&&) -> SdlScope & = delete;
 	};
+
+	using RendererUniquePtr = Engine::UniquePtr<SDL::SDL_Renderer, SDL::SDL_DestroyRenderer>;
+	using WindowUniquePtr = Engine::UniquePtr<SDL::SDL_Window, SDL::SDL_DestroyWindow>;
 }

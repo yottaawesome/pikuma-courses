@@ -4,6 +4,7 @@ import :sdl3;
 import :raii;
 import :glm;
 import :log;
+import :ecs;
 
 namespace Engine
 {
@@ -18,13 +19,6 @@ export namespace Engine
 
 	class Game
 	{
-	private:
-		bool isRunning = false;
-		std::uint64_t millisecsPreviousFrame = 0;
-		SDL::SdlScope sdlScope{ SDL::InitFlags::Video };
-		WindowUniquePtr window = nullptr;
-		RendererUniquePtr renderer = nullptr;
-
 	public:
 		~Game() = default;
 
@@ -49,8 +43,8 @@ export namespace Engine
 			if (not success)
 				throw SDL::SdlError{ "Failed to create SDL window and renderer" };
 
-			self.window = WindowUniquePtr{ wnd };
-			self.renderer = RendererUniquePtr{ rnd };
+			self.window = SDL::WindowUniquePtr{ wnd };
+			self.renderer = SDL::RendererUniquePtr{ rnd };
 			success = SDL::SDL_SetWindowPosition(self.window.get(), SDL::Windowpos::Centered, SDL::Windowpos::Centered);
 			if (not success)
 				throw SDL::SdlError{ "Failed to set SDL window position" };
@@ -62,6 +56,9 @@ export namespace Engine
 		{
 			playerPosition = glm::vec2{ 10.0f, 20.0f };
 			playerVelocity = glm::vec2{ 100.0f, 0.0f };
+
+			auto tank = Entity{self.registry.CreateEntity()};
+			auto truck = Entity{self.registry.CreateEntity()};
 		}
 
 		void Run(this Game& self)
@@ -141,6 +138,14 @@ export namespace Engine
 
 		void Destroy(this Game& self)
 		{}
+
 	private:
+		bool isRunning = false;
+		std::uint64_t millisecsPreviousFrame = 0;
+		SDL::SdlScope sdlScope{ SDL::InitFlags::Video };
+		SDL::WindowUniquePtr window = nullptr;
+		SDL::RendererUniquePtr renderer = nullptr;
+		// Course code allocates this on the heap, but there's no actual reason to do that.
+		Registry registry;
 	};
 }

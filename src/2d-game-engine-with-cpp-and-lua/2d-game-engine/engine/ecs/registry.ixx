@@ -11,22 +11,13 @@ export namespace Engine
 	class Registry
 	{
 	public:
-		~Registry()
-		{
-			for (auto& pool : componentPools)
-			{
-				delete pool;
-			}
-			for (auto& [_, system] : systems)
-			{
-				delete system;
-			}
-		}
-
 		auto CreateEntity() -> Entity
 		{
 			auto entity = Entity{ numEntities++ };
 			entitiesToBeAdded.insert(entity);
+			auto entityId = entity.GetId();
+			if (entityId >= entityComponentSignatures.size())
+				entityComponentSignatures.resize(entityId + 1);
 			Log::Info("Created entity with ID: {}", entity.GetId());
 			return entity;
 		}
@@ -34,24 +25,21 @@ export namespace Engine
 		// Add or remove entities after the update loop to avoid modifying collections while iterating
 		void Update()
 		{
-
-		}
-
-		void AddEntityToSystem(Entity entity)
-		{
+			for (auto entity : entitiesToBeAdded)
+				AddEntityToSystems(entity);
+			entitiesToBeAdded.clear();
 		}
 
 		template<typename TComponent, typename...TArgs>
 		void AddComponent(Entity entity, TArgs&&... args)
 		{
 			auto componentId = Component<TComponent>::GetId();
-
 			if (componentId >= componentPools.size())
 				componentPools.resize(componentId + 1, nullptr);
 			if (not componentPools[componentId])
-				componentPools[componentId] = new Pool<TComponent>();
+				componentPools[componentId] = std::make_shared<Pool<TComponent>>();
 				
-			auto componentPool = static_cast<Pool<TComponent>*>(componentPools[componentId]);
+			auto componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
 			auto entityId = entity.GetId();
 			if (entityId >= componentPool->size())
 				componentPool->resize(numEntities);
@@ -85,8 +73,7 @@ export namespace Engine
 		template<typename TSystem, typename...TArgs>
 		void AddSystem(TArgs&&... args)
 		{
-			auto newSystem = new TSystem{ std::forward<TArgs>(args)... };
-			systems[typeid(TSystem)] = newSystem;
+			systems[typeid(TSystem)] = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
 			// Course code uses an unnecessarily verbose way
 			//systems.insert(std::make_pair(typeid(TSystem), newSystem));
 		}
@@ -101,7 +88,6 @@ export namespace Engine
 		auto HasSystem() -> bool
 		{
 			return systems.contains(typeid(TSystem));
-			//return systems.find(typeid(TSystem)) != systems.end();
 		}
 
 		template<typename TSystem>
@@ -110,7 +96,7 @@ export namespace Engine
 			if (not HasSystem<TSystem>())
 				throw std::runtime_error{ "System not found" };
 			//return *static_cast<TSystem*>(systems.find(typeid(TSystem))->second);
-			return *static_cast<TSystem*>(systems[typeid(TSystem)]);
+			return *static_cast<TSystem*>(systems[typeid(TSystem)].get());
 		}
 
 		void AddEntityToSystems(Entity entity)
@@ -127,9 +113,9 @@ export namespace Engine
 
 	private:
 		unsigned numEntities = 0;
-		std::vector<IPool*> componentPools{};
+		std::vector<std::shared_ptr<IPool>> componentPools{};
 		std::vector<Signature> entityComponentSignatures{};
-		std::unordered_map<std::type_index, System*> systems{};
+		std::unordered_map<std::type_index, std::shared_ptr<System>> systems{};
 
 		std::set<Entity> entitiesToBeAdded{};
 		std::set<Entity> entitiesToBeKilled{};
