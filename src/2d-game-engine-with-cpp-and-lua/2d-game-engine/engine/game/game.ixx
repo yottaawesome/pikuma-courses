@@ -67,12 +67,12 @@ export namespace Engine
 			self.assetStore.AddTexture(self.renderer.get(), "truck-image", "./assets/images/truck-ford-right.png");
 
 			auto tank = Entity{self.registry.CreateEntity()};
-			self.registry.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 2.0f }, 0.0);
+			self.registry.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0);
 			self.registry.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f);
 			self.registry.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32);
 
 			auto truck = Entity{ self.registry.CreateEntity() };
-			self.registry.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 2.0f }, 0.0);
+			self.registry.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0);
 			self.registry.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f);
 			self.registry.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32);
 		}
@@ -135,7 +135,7 @@ export namespace Engine
 			constexpr auto royalBlue = SDL::SDL_Color{ 48, 92, 222, 255 };
 			constexpr auto clearColor = darkSapphire;
 
-			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get());
+			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore);
 
 
 			//SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);

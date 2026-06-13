@@ -21,10 +21,13 @@ export namespace SDL
 		::SDL_Surface,
 		::SDL_Texture,
 		::SDL_InitFlags,
+		::SDL_FlipMode,
+		::SDL_WindowFlags,
 		::SDL_Delay,
 		::SDL_GetTicks,
 		::SDL_DestroyTexture,
-		::SDL_RenderTexture,
+		::SDL_RenderTexture, // replacement for SDL_RenderCopy, which was removed in SDL3
+		::SDL_RenderTextureRotated, // replacement for SDL_RenderCopyEx, which was removed in SDL3
 		::SDL_DestroySurface,
 		::SDL_CreateTextureFromSurface,
 		::SDL_RenderFillRect,
