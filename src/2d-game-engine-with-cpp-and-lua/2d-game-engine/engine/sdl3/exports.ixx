@@ -19,6 +19,8 @@ export namespace SDL
 		::SDL_Rect,
 		::SDL_FRect,
 		::SDL_Surface,
+		::SDL_Texture,
+		::SDL_InitFlags,
 		::SDL_Delay,
 		::SDL_GetTicks,
 		::SDL_DestroyTexture,
@@ -42,7 +44,8 @@ export namespace SDL
 		;
 
 	using
-		::IMG_Load
+		::IMG_Load,
+		::IMG_LoadTexture
 		;
 
 	enum InitFlags : Uint32

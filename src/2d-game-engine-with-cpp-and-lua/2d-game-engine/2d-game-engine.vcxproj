@@ -150,6 +150,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="engine\assetstore\assetstore.ixx" />
+    <ClCompile Include="engine\assetstore\store.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />
     <ClCompile Include="engine\components\spritecomponent.ixx" />

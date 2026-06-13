@@ -7,6 +7,7 @@ import :log;
 import :ecs;
 import :components;
 import :systems;
+import :assetstore;
 
 namespace Engine
 {
@@ -62,15 +63,18 @@ export namespace Engine
 			self.registry.AddSystem<MovementSystem>(self.registry);
 			self.registry.AddSystem<RenderSystem>(self.registry);
 
+			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
+			self.assetStore.AddTexture(self.renderer.get(), "truck-image", "./assets/images/truck-ford-right.png");
+
 			auto tank = Entity{self.registry.CreateEntity()};
 			self.registry.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 2.0f }, 0.0);
 			self.registry.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f);
-			self.registry.AddComponent<SpriteComponent>(tank, 32, 32);
+			self.registry.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32);
 
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 2.0f }, 0.0);
 			self.registry.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f);
-			self.registry.AddComponent<SpriteComponent>(truck, 32, 32);
+			self.registry.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32);
 		}
 
 		void Run(this Game& self)
@@ -162,5 +166,6 @@ export namespace Engine
 		SDL::RendererUniquePtr renderer = nullptr;
 		// Course code allocates this on the heap, but there's no actual reason to do that.
 		Registry registry;
+		AssetStore assetStore;
 	};
 }

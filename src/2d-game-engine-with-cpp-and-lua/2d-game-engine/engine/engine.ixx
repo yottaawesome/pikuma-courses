@@ -10,3 +10,4 @@ export import :concepts;
 export import :components;
 export import :ecs;
 export import :systems;
+export import :assetstore;
