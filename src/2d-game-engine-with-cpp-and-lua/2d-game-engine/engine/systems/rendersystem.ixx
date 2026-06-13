@@ -25,10 +25,29 @@ export namespace Engine
 			SDL::SDL_SetRenderDrawColor(renderer, clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(renderer);
 
-			for (auto entity : GetEntities())
+			// Sort by z-index before rendering to ensure correct layering.
+			// This is not efficient, as sorting happens every frame, there
+			// may be better ways of doing things, such as sorting at the
+			// time of entity creation.
+			auto basicEntities = GetEntities();
+			struct RenderableEntity
 			{
-				auto& transform = registry.GetComponent<TransformComponent>(entity);
-				auto& sprite = registry.GetComponent<SpriteComponent>(entity);
+				TransformComponent transformComponent;
+				SpriteComponent spriteComponent;
+			};
+			auto renderableEntities = basicEntities
+				| std::views::transform(
+					[this](auto entity) -> RenderableEntity
+					{
+						return { registry.GetComponent<TransformComponent>(entity), registry.GetComponent<SpriteComponent>(entity) };
+					})
+				| std::ranges::to<std::vector<RenderableEntity>>();
+			std::ranges::sort(renderableEntities, [](auto& lhs, auto& rhs) -> bool { return lhs.spriteComponent.zIndex < rhs.spriteComponent.zIndex; });
+
+			for (const auto& renderableEntity : renderableEntities)
+			{
+				auto& transform = renderableEntity.transformComponent;
+				auto& sprite = renderableEntity.spriteComponent;
 
 				auto texture = assetStore.GetTexture(sprite.assetId);
 				auto rect = SDL::SDL_FRect{
@@ -41,7 +60,6 @@ export namespace Engine
 				//SDL::SDL_RenderTexture(renderer, texture, &srcRect, &rect);
 
 				SDL::SDL_RenderTextureRotated(renderer, texture, &srcRect, &rect, transform.rotation, nullptr, SDL::SDL_FlipMode::SDL_FLIP_NONE);
-
 			}
 			SDL::SDL_RenderPresent(renderer);
 		}

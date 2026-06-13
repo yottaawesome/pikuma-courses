@@ -9,12 +9,6 @@ import :components;
 import :systems;
 import :assetstore;
 
-namespace Engine
-{
-	auto playerPosition = glm::vec2{ 0.0f, 0.0f };
-	auto playerVelocity = glm::vec2{ 0.0f, 0.0f };
-}
-
 export namespace Engine
 {
 	constexpr auto FPS = 60;
@@ -55,26 +49,52 @@ export namespace Engine
 			self.isRunning = true;
 		}
 
-		void Setup(this Game& self)
+		void LoadLevel(this Game& self, int level)
 		{
-			playerPosition = glm::vec2{ 10.0f, 20.0f };
-			playerVelocity = glm::vec2{ 100.0f, 0.0f };
-
 			self.registry.AddSystem<MovementSystem>(self.registry);
 			self.registry.AddSystem<RenderSystem>(self.registry);
 
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
 			self.assetStore.AddTexture(self.renderer.get(), "truck-image", "./assets/images/truck-ford-right.png");
 
-			auto tank = Entity{self.registry.CreateEntity()};
+			// parse tileset, there are 30 tiles in 3 rows of 10 columns, each tile is 32x32 pixels, index is 0-29
+			self.assetStore.AddTexture(self.renderer.get(), "tilemap-image", "./assets/tilemaps/jungle.png");
+			auto tileSize = 32;
+			auto tileScale = 3.0;
+			auto mapNumCols = 25;
+			auto mapNumRows = 20;
+			auto mapFile = std::fstream{ "./assets/tilemaps/jungle.map" };
+			for (int y = 0; y < mapNumRows; y++) 
+			{
+				for (int x = 0; x < mapNumCols; x++) 
+				{
+					auto ch = char{};
+					mapFile.get(ch);
+					auto srcRectY = std::atoi(&ch) * tileSize;
+					mapFile.get(ch);
+					auto srcRectX = std::atoi(&ch) * tileSize;
+					mapFile.ignore();
+
+					auto tile = Entity{self.registry.CreateEntity()};
+					self.registry.AddComponent<TransformComponent>(tile, glm::vec2{x * (tileScale * tileSize), y * (tileScale * tileSize)}, glm::vec2{tileScale, tileScale}, 0.0);
+					self.registry.AddComponent<SpriteComponent>(tile, "tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
+				}
+			}
+
+			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0);
 			self.registry.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f);
-			self.registry.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32);
+			self.registry.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1);
 
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0);
 			self.registry.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f);
-			self.registry.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32);
+			self.registry.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1);
+		}
+
+		void Setup(this Game& self)
+		{
+			self.LoadLevel(1);
 		}
 
 		void Run(this Game& self)
