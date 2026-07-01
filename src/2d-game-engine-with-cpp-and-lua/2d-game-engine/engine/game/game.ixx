@@ -13,6 +13,8 @@ export namespace Engine
 {
 	constexpr auto FPS = 60;
 	constexpr auto MillisPerFrame = 1000 / FPS;
+	constexpr auto WindowWidth = 800;
+	constexpr auto WindowHeight = 600;
 
 	class Game
 	{
@@ -31,8 +33,8 @@ export namespace Engine
 			auto rnd = static_cast<SDL::SDL_Renderer*>(nullptr);
 			auto success = SDL::SDL_CreateWindowAndRenderer(
 				nullptr,
-				800,
-				600,
+				WindowWidth,
+				WindowHeight,
 				SDL::Window::Borderless | SDL::Window::Fullscreen,
 				&wnd,
 				&rnd
@@ -53,10 +55,12 @@ export namespace Engine
 		{
 			self.registry.AddSystem<MovementSystem>(self.registry);
 			self.registry.AddSystem<RenderSystem>(self.registry);
+			self.registry.AddSystem<AnimationSystem>(self.registry);
 
+			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
 			self.assetStore.AddTexture(self.renderer.get(), "truck-image", "./assets/images/truck-ford-right.png");
-
+			self.assetStore.AddTexture(self.renderer.get(), "radar-image", "./assets/images/radar.png");
 			// parse tileset, there are 30 tiles in 3 rows of 10 columns, each tile is 32x32 pixels, index is 0-29
 			self.assetStore.AddTexture(self.renderer.get(), "tilemap-image", "./assets/tilemaps/jungle.png");
 			auto tileSize = 32;
@@ -81,15 +85,31 @@ export namespace Engine
 				}
 			}
 
+			auto chopper = Entity{ self.registry.CreateEntity() };
+			self.registry
+				.AddComponent<TransformComponent>(chopper, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
+				.AddComponent<RigidbodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1)
+				.AddComponent<AnimationComponent>(chopper, 2, 15, true);
+
+			auto radar = Entity{ self.registry.CreateEntity() };
+			self.registry
+				.AddComponent<TransformComponent>(radar, glm::vec2{ WindowWidth* tileScale - 74, 10 }, glm::vec2{ 1.0f, 1.0f }, 0.0)
+				.AddComponent<RigidbodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
+				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2)
+				.AddComponent<AnimationComponent>(radar, 8, 5, true);
+
 			auto tank = Entity{ self.registry.CreateEntity() };
-			self.registry.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0);
-			self.registry.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f);
-			self.registry.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1);
+			self.registry
+				.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
+				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1);
 
 			auto truck = Entity{ self.registry.CreateEntity() };
-			self.registry.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0);
-			self.registry.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f);
-			self.registry.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1);
+			self.registry
+				.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
+				.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1);
 		}
 
 		void Setup(this Game& self)
@@ -144,9 +164,12 @@ export namespace Engine
 
 			self.millisecsPreviousFrame = SDL::SDL_GetTicks(); // ms since SDL was initialized
 
-			self.registry.GetSystem<MovementSystem>().Update(deltaTime);
+			// Add or remove entities from systems after the update loop
+			self.registry.Update(); 
 
-			self.registry.Update(); // Add or remove entities from systems after the update loop
+			// Should this be done before Update()? Course doesn't do that.
+			self.registry.GetSystem<MovementSystem>().Update(deltaTime);
+			self.registry.GetSystem<AnimationSystem>().Update();
 		}
 
 		void Render(this Game& self)

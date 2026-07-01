@@ -31,7 +31,7 @@ export namespace Engine
 		}
 
 		template<typename TComponent, typename...TArgs>
-		void AddComponent(Entity entity, TArgs&&... args)
+		auto AddComponent(Entity entity, TArgs&&... args) -> Registry&
 		{
 			auto componentId = Component<TComponent>::GetId();
 			if (componentId >= componentPools.size())
@@ -46,6 +46,7 @@ export namespace Engine
 
 			componentPool->Set(entityId, TComponent{ std::forward<TArgs>(args)... });
 			entityComponentSignatures[entityId].set(componentId);
+			return *this;
 		}
 
 		template<typename T>
