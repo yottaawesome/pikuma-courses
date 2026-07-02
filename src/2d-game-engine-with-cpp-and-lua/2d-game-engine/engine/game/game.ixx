@@ -157,8 +157,7 @@ export namespace Engine
 						else if (sdlEvent.key.scancode == SDL::Scancode::D)
 						{
 							auto& debugRenderSystem = self.registry.GetSystem<DebugRenderSystem>();
-							debugRenderSystem.ToggleDebugRendering();
-							self.debugMode = true;
+							self.debugMode = debugRenderSystem.ToggleDebugRendering();
 						}
 						break;
 					}
