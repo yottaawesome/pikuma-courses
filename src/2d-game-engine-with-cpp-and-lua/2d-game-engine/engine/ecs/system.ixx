@@ -10,9 +10,10 @@ export namespace Engine
 	public:
 		System() = default;
 
-		constexpr void AddEntity(this System& self, Entity entity)
+		constexpr auto AddEntity(this auto& self, Entity entity) -> decltype(auto)
 		{
 			self.entities.push_back(entity);
+			return std::forward_like<decltype(self)>(self);
 		}
 		constexpr void RemoveEntity(this System& self, Entity entity)
 		{
@@ -50,15 +51,14 @@ namespace
 		[] -> bool
 		{
 			auto s = System{};
-			s.AddEntity(Entity{ 1 });
-			s.AddEntity(Entity{ 2 });
+			s.AddEntity(Entity{ 1 }).AddEntity(Entity{ 2 });
 			auto e = s.GetEntities();
 			if (e.size() != 2)
-				throw std::runtime_error{ "Expected 2 entities" };
+				throw "Expected 2 entities";
 			s.RemoveEntity(Entity{ 1 });
 			e = s.GetEntities();
 			if (e.size() != 1 or e[0].GetId() != 2)
-				throw std::runtime_error{ "Expected 1 entity of id 2" };
+				throw "Expected 1 entity of id 2";
 			return true;
 		}()
 	);
