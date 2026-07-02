@@ -23,6 +23,7 @@ export namespace SDL
 		::SDL_InitFlags,
 		::SDL_FlipMode,
 		::SDL_WindowFlags,
+		::SDL_RenderRect,
 		::SDL_Delay,
 		::SDL_GetTicks,
 		::SDL_DestroyTexture,
@@ -80,6 +81,7 @@ export namespace SDL
 	enum Scancode
 	{
 		Escape = SDL_SCANCODE_ESCAPE,
+		D = SDL_SCANCODE_D,
 	};
 
 	[[deprecated("SDL_TICKS_PASSED macro was removed in SDL3, see migration guide at https://github.com/c-smile/SDL3/blob/main/docs/README-migration.md")]]

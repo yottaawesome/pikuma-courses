@@ -173,6 +173,7 @@
     <ClCompile Include="engine\logger\logger.ixx" />
     <ClCompile Include="engine\systems\animationsystem.ixx" />
     <ClCompile Include="engine\systems\collisionsystem.ixx" />
+    <ClCompile Include="engine\systems\debugrendersystem.ixx" />
     <ClCompile Include="engine\systems\rendersystem.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="engine\game\game.ixx" />

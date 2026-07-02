@@ -57,6 +57,7 @@ export namespace Engine
 			self.registry.AddSystem<RenderSystem>(self.registry);
 			self.registry.AddSystem<AnimationSystem>(self.registry);
 			self.registry.AddSystem<CollisionSystem>(self.registry);
+			self.registry.AddSystem<DebugRenderSystem>(self.registry);
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -153,6 +154,12 @@ export namespace Engine
 							self.isRunning = false;
 							return;
 						}
+						else if (sdlEvent.key.scancode == SDL::Scancode::D)
+						{
+							auto& debugRenderSystem = self.registry.GetSystem<DebugRenderSystem>();
+							debugRenderSystem.ToggleDebugRendering();
+							self.debugMode = true;
+						}
 						break;
 					}
 				}
@@ -185,7 +192,11 @@ export namespace Engine
 			constexpr auto royalBlue = SDL::SDL_Color{ 48, 92, 222, 255 };
 			constexpr auto clearColor = darkSapphire;
 
+			SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+			SDL::SDL_RenderClear(self.renderer.get());
 			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore);
+			self.registry.GetSystem<DebugRenderSystem>().Update(self.renderer.get());
+			SDL::SDL_RenderPresent(self.renderer.get());
 
 
 			//SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
@@ -210,6 +221,7 @@ export namespace Engine
 
 	private:
 		bool isRunning = false;
+		bool debugMode = false;
 		std::uint64_t millisecsPreviousFrame = 0;
 		SDL::SdlScope sdlScope{ SDL::InitFlags::Video };
 		SDL::WindowUniquePtr window = nullptr;
