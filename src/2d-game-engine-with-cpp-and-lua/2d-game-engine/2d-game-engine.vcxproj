@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="engine\assetstore\assetstore.ixx" />
     <ClCompile Include="engine\assetstore\store.ixx" />
+    <ClCompile Include="engine\build\build.ixx" />
     <ClCompile Include="engine\components\animationcomponent.ixx" />
     <ClCompile Include="engine\components\boxcollidercomponent.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
