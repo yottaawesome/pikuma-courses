@@ -13,13 +13,36 @@ export namespace Engine
 	public:
 		auto CreateEntity() -> Entity
 		{
-			auto entity = Entity{ numEntities++ };
+			auto entityId =
+				[this] -> std::uint64_t
+				{
+					// If there are any free IDs, reuse them; otherwise, create a new ID.
+					if (freeIds.empty())
+					{
+						auto id = numEntities++;
+						if (id >= entityComponentSignatures.size())
+							entityComponentSignatures.resize(id + 1);
+						return id;
+					}
+					else
+					{
+						auto id = freeIds.front();
+						freeIds.pop_front();
+						return id;
+					}
+				}();
+			
+			auto entity = Entity{ entityId };
 			entitiesToBeAdded.insert(entity);
-			auto entityId = entity.GetId();
-			if (entityId >= entityComponentSignatures.size())
-				entityComponentSignatures.resize(entityId + 1);
-			Log::Info("Created entity with ID: {}", entity.GetId());
+			Log::Info("Created entity with ID: {}", entityId);
+
 			return entity;
+		}
+
+		void KillEntity(Entity entity)
+		{
+			entitiesToBeKilled.insert(entity);
+			Log::Info("Killed entity with ID: {}", entity.GetId());
 		}
 
 		// Add or remove entities after the update loop to avoid modifying collections while iterating
@@ -28,6 +51,16 @@ export namespace Engine
 			for (auto entity : entitiesToBeAdded)
 				AddEntityToSystems(entity);
 			entitiesToBeAdded.clear();
+
+			// process entities to be killed
+			for (auto entity : entitiesToBeKilled)
+			{
+				RemoveEntityFromSystems(entity);
+				// make the id free for reuse
+				freeIds.push_back(entity.GetId());
+				entityComponentSignatures[entity.GetId()].reset();
+			}
+			entitiesToBeKilled.clear();
 		}
 
 		template<typename TComponent, typename...TArgs>
@@ -114,6 +147,12 @@ export namespace Engine
 			}
 		}
 
+		void RemoveEntityFromSystems(Entity entity)
+		{
+			for (auto& [_, system] : systems)
+				system->RemoveEntity(entity);
+		}
+
 	private:
 		unsigned numEntities = 0;
 		std::vector<std::shared_ptr<IPool>> componentPools{};
@@ -122,5 +161,7 @@ export namespace Engine
 
 		std::set<Entity> entitiesToBeAdded{};
 		std::set<Entity> entitiesToBeKilled{};
+
+		std::deque<std::uint64_t> freeIds{};
 	};
 }

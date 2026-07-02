@@ -48,7 +48,11 @@ export namespace Engine
 					auto& transformB = registry.GetComponent<TransformComponent>(entityB);
 					auto& colliderB = registry.GetComponent<BoxColliderComponent>(entityB);
 					if (CheckAABBCollision(transformA, colliderA, transformB, colliderB))
+					{
 						Log::Info("Collision detected between entities {} and {}", entityA.GetId(), entityB.GetId());
+						registry.KillEntity(entityA);
+						registry.KillEntity(entityB);
+					}
 				}
 			}
 		}

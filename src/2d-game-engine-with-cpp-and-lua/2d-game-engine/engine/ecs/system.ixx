@@ -17,7 +17,8 @@ export namespace Engine
 		constexpr void RemoveEntity(this System& self, Entity entity)
 		{
 			auto it = std::ranges::find_if(self.entities, [&](const auto& e) { return e == entity; });
-			self.entities.erase(it);
+			if (it != self.entities.end())
+				self.entities.erase(it);
 		}
 		constexpr auto GetEntities(this const System& self) -> std::vector<Entity>
 		{

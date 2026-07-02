@@ -105,7 +105,7 @@ export namespace Engine
 			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(tank, glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ -30, 0.0f }, 1.0f)
+				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ -500, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(tank, 32, 32)
 				;
@@ -113,7 +113,7 @@ export namespace Engine
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(truck, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(truck, 32, 32)
 				;
