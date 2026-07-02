@@ -24,7 +24,7 @@ export namespace Engine
 				animation.CurrentFrame = 
 					(((SDL::SDL_GetTicks() - animation.StartTime) 
 						* animation.FrameSpeedRate) / 1000) % animation.NumFrames;
-				sprite.srcRect.x = animation.CurrentFrame*sprite.width;
+				sprite.srcRect.x = static_cast<float>(animation.CurrentFrame * sprite.width);
 			}
 		}
 	private:

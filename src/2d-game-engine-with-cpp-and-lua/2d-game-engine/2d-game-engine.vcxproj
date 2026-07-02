@@ -153,6 +153,7 @@
     <ClCompile Include="engine\assetstore\assetstore.ixx" />
     <ClCompile Include="engine\assetstore\store.ixx" />
     <ClCompile Include="engine\components\animationcomponent.ixx" />
+    <ClCompile Include="engine\components\boxcollidercomponent.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />
     <ClCompile Include="engine\components\spritecomponent.ixx" />
@@ -171,6 +172,7 @@
     <ClCompile Include="engine\imgui\imgui.ixx" />
     <ClCompile Include="engine\logger\logger.ixx" />
     <ClCompile Include="engine\systems\animationsystem.ixx" />
+    <ClCompile Include="engine\systems\collisionsystem.ixx" />
     <ClCompile Include="engine\systems\rendersystem.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="engine\game\game.ixx" />

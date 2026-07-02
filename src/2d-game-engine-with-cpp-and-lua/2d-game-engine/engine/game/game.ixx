@@ -56,6 +56,7 @@ export namespace Engine
 			self.registry.AddSystem<MovementSystem>(self.registry);
 			self.registry.AddSystem<RenderSystem>(self.registry);
 			self.registry.AddSystem<AnimationSystem>(self.registry);
+			self.registry.AddSystem<CollisionSystem>(self.registry);
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -80,8 +81,9 @@ export namespace Engine
 					mapFile.ignore();
 
 					auto tile = Entity{self.registry.CreateEntity()};
-					self.registry.AddComponent<TransformComponent>(tile, glm::vec2{x * (tileScale * tileSize), y * (tileScale * tileSize)}, glm::vec2{tileScale, tileScale}, 0.0);
-					self.registry.AddComponent<SpriteComponent>(tile, "tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
+					self.registry
+						.AddComponent<TransformComponent>(tile, glm::vec2{x * (tileScale * tileSize), y * (tileScale * tileSize)}, glm::vec2{tileScale, tileScale}, 0.0)
+						.AddComponent<SpriteComponent>(tile, "tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
 				}
 			}
 
@@ -101,15 +103,19 @@ export namespace Engine
 
 			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry
-				.AddComponent<TransformComponent>(tank, glm::vec2{ 10.0f, 20.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ 100.0f, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1);
+				.AddComponent<TransformComponent>(tank, glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
+				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ -30, 0.0f }, 1.0f)
+				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1)
+				.AddComponent<BoxColliderComponent>(tank, 32, 32)
+				;
 
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry
-				.AddComponent<TransformComponent>(truck, glm::vec2{ 50.0f, 50.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
+				.AddComponent<TransformComponent>(truck, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
 				.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 100.0f, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1);
+				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1)
+				.AddComponent<BoxColliderComponent>(truck, 32, 32)
+				;
 		}
 
 		void Setup(this Game& self)
@@ -170,6 +176,7 @@ export namespace Engine
 			// Should this be done before Update()? Course doesn't do that.
 			self.registry.GetSystem<MovementSystem>().Update(deltaTime);
 			self.registry.GetSystem<AnimationSystem>().Update();
+			self.registry.GetSystem<CollisionSystem>().Update();
 		}
 
 		void Render(this Game& self)
