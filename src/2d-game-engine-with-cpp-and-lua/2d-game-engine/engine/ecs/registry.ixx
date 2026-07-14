@@ -107,11 +107,12 @@ export namespace Engine
 		}
 
 		template<typename TSystem, typename...TArgs>
-		void AddSystem(TArgs&&... args)
+		auto AddSystem(TArgs&&... args) -> Registry&
 		{
 			systems[typeid(TSystem)] = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
 			// Course code uses an unnecessarily verbose way
 			//systems.insert(std::make_pair(typeid(TSystem), newSystem));
+			return *this;
 		}
 		
 		template<typename TSystem>

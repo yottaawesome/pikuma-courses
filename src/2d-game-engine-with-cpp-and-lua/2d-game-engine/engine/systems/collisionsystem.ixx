@@ -3,6 +3,8 @@ import std;
 import :ecs;
 import :components;
 import :log;
+import :eventbus;
+import :events;
 
 export namespace Engine
 {
@@ -15,7 +17,7 @@ export namespace Engine
 			RequireComponent<TransformComponent>();
 			RequireComponent<BoxColliderComponent>();
 		}
-		void Update()
+		void Update(EventBus& eventBus)
 		{
 			auto entities = GetEntities();
 
@@ -50,8 +52,7 @@ export namespace Engine
 					if (CheckAABBCollision(transformA, colliderA, transformB, colliderB))
 					{
 						Log::Info("Collision detected between entities {} and {}", entityA.GetId(), entityB.GetId());
-						registry.KillEntity(entityA);
-						registry.KillEntity(entityB);
+						eventBus.EmitEvent<CollisionEvent>(entityA, entityB);
 					}
 				}
 			}

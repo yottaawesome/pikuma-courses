@@ -22,13 +22,20 @@ export namespace Engine
 		template<typename TEvent, typename...TArgs>
 		void EmitEvent(TArgs&&... args)
 		{
-			auto handlers = subscribers[typeid(TEvent)].get_allocator();//  subscribers.find(typeid(TEvent));
+			//auto handlers = subscribers[typeid(TEvent)];//  subscribers.find(typeid(TEvent));
+			auto handlers = subscribers.find(typeid(TEvent));
 			if (handlers == subscribers.end())
 				return;
 			for (auto& handler : handlers->second)
 			{
-				handler->Execute(TEvent{ std::forward<TArgs>(args)... });
+				auto event = TEvent{std::forward<TArgs>(args)...};
+				handler->Execute(event);
 			}
+		}
+
+		void Reset()
+		{
+			subscribers.clear();
 		}
 
 	private:

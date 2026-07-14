@@ -5,6 +5,7 @@ import :raii;
 import :glm;
 import :log;
 import :ecs;
+import :eventbus;
 import :components;
 import :systems;
 import :assetstore;
@@ -53,11 +54,13 @@ export namespace Engine
 
 		void LoadLevel(this Game& self, int level)
 		{
-			self.registry.AddSystem<MovementSystem>(self.registry);
-			self.registry.AddSystem<RenderSystem>(self.registry);
-			self.registry.AddSystem<AnimationSystem>(self.registry);
-			self.registry.AddSystem<CollisionSystem>(self.registry);
-			self.registry.AddSystem<DebugRenderSystem>(self.registry);
+			self.registry
+				.AddSystem<MovementSystem>(self.registry)
+				.AddSystem<RenderSystem>(self.registry)
+				.AddSystem<AnimationSystem>(self.registry)
+				.AddSystem<CollisionSystem>(self.registry)
+				.AddSystem<DamageSystem>(self.registry)
+				.AddSystem<DebugRenderSystem>(self.registry);
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -175,6 +178,12 @@ export namespace Engine
 			auto deltaTime = double{ static_cast<double>(elapsedTicks) } / 1000.0;
 
 			self.millisecsPreviousFrame = SDL::SDL_GetTicks(); // ms since SDL was initialized
+			
+			// Reset all events for the current frame
+			self.eventBus.Reset();
+
+			// Perform the subscription of the events for all systems.
+			self.registry.GetSystem<DamageSystem>().SubscribeToEvents(self.eventBus);
 
 			// Add or remove entities from systems after the update loop
 			self.registry.Update(); 
@@ -182,7 +191,8 @@ export namespace Engine
 			// Should this be done before Update()? Course doesn't do that.
 			self.registry.GetSystem<MovementSystem>().Update(deltaTime);
 			self.registry.GetSystem<AnimationSystem>().Update();
-			self.registry.GetSystem<CollisionSystem>().Update();
+			self.registry.GetSystem<CollisionSystem>().Update(self.eventBus);
+			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
 		}
 
 		void Render(this Game& self)
@@ -228,5 +238,6 @@ export namespace Engine
 		// Course code allocates this on the heap, but there's no actual reason to do that.
 		Registry registry;
 		AssetStore assetStore;
+		EventBus eventBus;
 	};
 }
