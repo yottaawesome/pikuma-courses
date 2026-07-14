@@ -2,7 +2,7 @@
 
 ## Introduction
 
-My code and exercises as part of doing [Pikuma's](https://pikuma.com/) 3D graphics related courses. Currently, I'm going through [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming).
+My code and exercises as part of doing [Pikuma's](https://pikuma.com/) 3D graphics and games related courses.
 
 ## Building and running
 
@@ -10,7 +10,7 @@ You'll need Visual Studio 2026 with the _Desktop development with C++_ workload 
 
 ## Changes
 
-The [3D Graphics Programming from Scratch](https://courses.pikuma.com/courses/learn-computer-graphics-programming) coursework is implemented in C on Pikuma, whereas I've chosen to implement the coursework in C++23.
+The coursework is implemented in C on Pikuma, whereas I've chosen to implement my coursework in C++23, as I find C is too cumbersome, error-prone and primitive to work with. I use `vcpkg` to manage dependencies such as sdl, and I've used newer versions of said dependencies.
 
 ## Additional resources
 
