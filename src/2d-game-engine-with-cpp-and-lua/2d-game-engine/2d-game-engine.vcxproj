@@ -167,6 +167,10 @@
     <ClCompile Include="engine\ecs\registry.ixx" />
     <ClCompile Include="engine\ecs\system.ixx" />
     <ClCompile Include="engine\engine.ixx" />
+    <ClCompile Include="engine\eventbus\bus.ixx" />
+    <ClCompile Include="engine\eventbus\event.ixx" />
+    <ClCompile Include="engine\eventbus\eventbus.ixx" />
+    <ClCompile Include="engine\eventbus\eventcallback.ixx" />
     <ClCompile Include="engine\glm\exports.ixx" />
     <ClCompile Include="engine\glm\glm.ixx" />
     <ClCompile Include="engine\imgui\exports.ixx" />
@@ -176,6 +180,8 @@
     <ClCompile Include="engine\systems\collisionsystem.ixx" />
     <ClCompile Include="engine\systems\debugrendersystem.ixx" />
     <ClCompile Include="engine\systems\rendersystem.ixx" />
+    <ClCompile Include="events\collisionevent.ixx" />
+    <ClCompile Include="events\events.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="engine\game\game.ixx" />
     <ClCompile Include="engine\raii\raii.ixx" />
