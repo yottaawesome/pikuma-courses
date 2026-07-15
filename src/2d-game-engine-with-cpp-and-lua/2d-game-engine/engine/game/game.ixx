@@ -60,7 +60,8 @@ export namespace Engine
 				.AddSystem<AnimationSystem>(self.registry)
 				.AddSystem<CollisionSystem>(self.registry)
 				.AddSystem<DamageSystem>(self.registry)
-				.AddSystem<DebugRenderSystem>(self.registry);
+				.AddSystem<DebugRenderSystem>(self.registry)
+				.AddSystem<KeyboardMovementSystem>(self.registry);
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");

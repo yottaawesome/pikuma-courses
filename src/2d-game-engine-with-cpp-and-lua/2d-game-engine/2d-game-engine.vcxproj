@@ -180,9 +180,11 @@
     <ClCompile Include="engine\systems\collisionsystem.ixx" />
     <ClCompile Include="engine\systems\damagesystem.ixx" />
     <ClCompile Include="engine\systems\debugrendersystem.ixx" />
+    <ClCompile Include="engine\systems\keyboardmovementsystem.ixx" />
     <ClCompile Include="engine\systems\rendersystem.ixx" />
-    <ClCompile Include="events\collisionevent.ixx" />
-    <ClCompile Include="events\events.ixx" />
+    <ClCompile Include="engine\events\collisionevent.ixx" />
+    <ClCompile Include="engine\events\events.ixx" />
+    <ClCompile Include="engine\events\keypressedevent.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="engine\game\game.ixx" />
     <ClCompile Include="engine\raii\raii.ixx" />
