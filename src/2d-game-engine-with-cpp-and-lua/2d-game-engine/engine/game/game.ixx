@@ -9,6 +9,7 @@ import :eventbus;
 import :components;
 import :systems;
 import :assetstore;
+import :events;
 
 export namespace Engine
 {
@@ -153,6 +154,7 @@ export namespace Engine
 					}
 					case SDL::SDL_EventType::SDL_EVENT_KEY_DOWN:
 					{
+						self.eventBus.EmitEvent<KeyPressedEvent>(sdlEvent.key.scancode);
 						if (sdlEvent.key.scancode == SDL::Scancode::Escape)
 						{
 							self.isRunning = false;
@@ -185,6 +187,7 @@ export namespace Engine
 
 			// Perform the subscription of the events for all systems.
 			self.registry.GetSystem<DamageSystem>().SubscribeToEvents(self.eventBus);
+			self.registry.GetSystem<KeyboardMovementSystem>().SubscribeToEvents(self.eventBus);
 
 			// Add or remove entities from systems after the update loop
 			self.registry.Update(); 
@@ -194,6 +197,7 @@ export namespace Engine
 			self.registry.GetSystem<AnimationSystem>().Update();
 			self.registry.GetSystem<CollisionSystem>().Update(self.eventBus);
 			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
+			self.registry.GetSystem<KeyboardMovementSystem>().Update(deltaTime);
 		}
 
 		void Render(this Game& self)

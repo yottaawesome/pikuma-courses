@@ -23,6 +23,7 @@ export namespace SDL
 		::SDL_InitFlags,
 		::SDL_FlipMode,
 		::SDL_WindowFlags,
+		::SDL_Scancode,
 		::SDL_RenderRect,
 		::SDL_Delay,
 		::SDL_GetTicks,

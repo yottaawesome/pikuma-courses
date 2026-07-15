@@ -1,5 +1,8 @@
 export module engine:systems.keyboardmovementsystem;
 import :ecs;
+import :eventbus;
+import :events;
+import :log;
 
 export namespace Engine
 {
@@ -11,7 +14,18 @@ export namespace Engine
 		{
 
 		}
+		void SubscribeToEvents(EventBus& eventBus)
+		{
+			// Subscribe to keyboard events if needed
+			eventBus.SubscribeToEvent<KeyPressedEvent>(this, &KeyboardMovementSystem::OnKeyPressedEvent);
+		}
 	private:
+		void OnKeyPressedEvent(const KeyPressedEvent& event)
+		{
+			Log::Info("KeyboardMovementSystem received key pressed event: {}", static_cast<int>(event.Scancode));
+			// Handle keyboard event
+		}
+
 		Registry& registry;
 	};
 }
