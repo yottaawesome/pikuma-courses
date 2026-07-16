@@ -10,7 +10,7 @@ You'll need Visual Studio 2026 with the _Desktop development with C++_ workload 
 
 ## Changes
 
-The coursework is implemented in C on Pikuma, whereas I've chosen to implement my coursework in C++23, as I find C is too cumbersome, error-prone and primitive to work with. I use `vcpkg` to manage dependencies such as sdl, and I've used newer versions of said dependencies.
+The coursework is implemented in C on Pikuma, whereas I've chosen to implement my coursework in C++23, as I find C is too cumbersome, error-prone and primitive to work with. I work on Windows and don't have easy access to a Linux or Mac device, so I haven't bothered making anything cross-platform. I use `vcpkg` to manage dependencies such as sdl, and I've used newer versions of said dependencies.
 
 ## Additional resources
 
