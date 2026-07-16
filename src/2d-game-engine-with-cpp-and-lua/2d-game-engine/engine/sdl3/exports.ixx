@@ -24,6 +24,8 @@ export namespace SDL
 		::SDL_FlipMode,
 		::SDL_WindowFlags,
 		::SDL_Scancode,
+		::SDL_KeyboardEvent,
+		::SDL_GetKeyName,
 		::SDL_RenderRect,
 		::SDL_Delay,
 		::SDL_GetTicks,

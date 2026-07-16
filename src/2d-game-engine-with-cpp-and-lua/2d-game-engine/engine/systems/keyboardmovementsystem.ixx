@@ -22,8 +22,7 @@ export namespace Engine
 	private:
 		void OnKeyPressedEvent(const KeyPressedEvent& event)
 		{
-			Log::Info("KeyboardMovementSystem received key pressed event: {}", static_cast<int>(event.Scancode));
-			// Handle keyboard event
+			Log::Info("KeyboardMovementSystem received key pressed event: {}", SDL::SDL_GetKeyName(event.Event.key));
 		}
 
 		Registry& registry;

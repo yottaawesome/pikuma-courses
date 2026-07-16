@@ -154,7 +154,7 @@ export namespace Engine
 					}
 					case SDL::SDL_EventType::SDL_EVENT_KEY_DOWN:
 					{
-						self.eventBus.EmitEvent<KeyPressedEvent>(sdlEvent.key.scancode);
+						self.eventBus.EmitEvent<KeyPressedEvent>(sdlEvent.key);
 						if (sdlEvent.key.scancode == SDL::Scancode::Escape)
 						{
 							self.isRunning = false;

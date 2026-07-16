@@ -7,7 +7,7 @@ export namespace Engine
 {
 	struct KeyPressedEvent : public Event
 	{
-		KeyPressedEvent(SDL::SDL_Scancode scancode) : Scancode(scancode) {}
-		SDL::SDL_Scancode Scancode;
+		KeyPressedEvent(SDL::SDL_KeyboardEvent event) : Event(event) {}
+		SDL::SDL_KeyboardEvent Event;
 	};
 }
