@@ -180,7 +180,7 @@
     <ClCompile Include="engine\systems\collisionsystem.ixx" />
     <ClCompile Include="engine\systems\damagesystem.ixx" />
     <ClCompile Include="engine\systems\debugrendersystem.ixx" />
-    <ClCompile Include="engine\systems\keyboardmovementsystem.ixx" />
+    <ClCompile Include="engine\systems\keyboardcontrolsystem.ixx" />
     <ClCompile Include="engine\systems\rendersystem.ixx" />
     <ClCompile Include="engine\events\collisionevent.ixx" />
     <ClCompile Include="engine\events\events.ixx" />
