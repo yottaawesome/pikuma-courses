@@ -156,6 +156,7 @@
     <ClCompile Include="engine\components\animationcomponent.ixx" />
     <ClCompile Include="engine\components\boxcollidercomponent.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
+    <ClCompile Include="engine\components\keyboardcontrolledcomponent.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />
     <ClCompile Include="engine\components\spritecomponent.ixx" />
     <ClCompile Include="engine\components\transformcomponent.ixx" />

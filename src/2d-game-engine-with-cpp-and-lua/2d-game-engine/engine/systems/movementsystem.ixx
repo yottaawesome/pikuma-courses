@@ -11,7 +11,7 @@ export namespace Engine
 		MovementSystem(Registry& registry) : registry{ registry }
 		{
 			RequireComponent<TransformComponent>();
-			RequireComponent<RigidbodyComponent>();
+			RequireComponent<RigidBodyComponent>();
 		}
 
 		void Update(double deltaTime)
@@ -19,7 +19,7 @@ export namespace Engine
 			for (auto entity : GetEntities())
 			{
 				auto& transform = registry.GetComponent<TransformComponent>(entity);
-				auto& rigidbody = registry.GetComponent<RigidbodyComponent>(entity);
+				auto& rigidbody = registry.GetComponent<RigidBodyComponent>(entity);
 
 				transform.position += glm::vec2{
 					rigidbody.velocity.x * static_cast<float>(deltaTime),

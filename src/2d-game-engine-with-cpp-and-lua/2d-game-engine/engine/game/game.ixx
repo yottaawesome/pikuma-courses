@@ -64,7 +64,7 @@ export namespace Engine
 				.AddSystem<DebugRenderSystem>(self.registry)
 				.AddSystem<KeyboardControlSystem>(self.registry);
 
-			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
+			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
 			self.assetStore.AddTexture(self.renderer.get(), "truck-image", "./assets/images/truck-ford-right.png");
 			self.assetStore.AddTexture(self.renderer.get(), "radar-image", "./assets/images/radar.png");
@@ -96,21 +96,23 @@ export namespace Engine
 			auto chopper = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(chopper, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1)
-				.AddComponent<AnimationComponent>(chopper, 2, 15, true);
+				.AddComponent<RigidBodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				// Since the initial velocity is to the right, the initial srcRect.y should be 32 * 1 (the second row of the spritesheet)
+				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1, 0, 32*1)
+				.AddComponent<AnimationComponent>(chopper, 2, 15, true)
+				.AddComponent<KeyboardControlledComponent>(chopper, glm::vec2{0, -80}, glm::vec2{80, 0}, glm::vec2{0, 80}, glm::vec2{-80, 0});
 
 			auto radar = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(radar, glm::vec2{ WindowWidth* tileScale - 74, 10 }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
+				.AddComponent<RigidBodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2)
 				.AddComponent<AnimationComponent>(radar, 8, 5, true);
 
 			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(tank, glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ -500, 0.0f }, 1.0f)
+				.AddComponent<RigidBodyComponent>(tank, glm::vec2{ -500, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(tank, 32, 32)
 				;
@@ -118,7 +120,7 @@ export namespace Engine
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(truck, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
+				.AddComponent<RigidBodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(truck, 32, 32)
 				;
