@@ -113,7 +113,7 @@ export namespace Engine
 			self.registry
 				.AddComponent<TransformComponent>(radar, glm::vec2{ WindowWidth* tileScale - 74, 10 }, glm::vec2{ 1.0f, 1.0f }, 0.0)
 				.AddComponent<RigidBodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2)
+				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2, 0, 0, true)
 				.AddComponent<AnimationComponent>(radar, 8, 5, true);
 
 			auto tank = Entity{ self.registry.CreateEntity() };
@@ -219,7 +219,7 @@ export namespace Engine
 			SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(self.renderer.get());
 			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore, self.camera);
-			self.registry.GetSystem<DebugRenderSystem>().Update(self.renderer.get());
+			self.registry.GetSystem<DebugRenderSystem>().Update(self.renderer.get(), self.camera);
 			SDL::SDL_RenderPresent(self.renderer.get());
 
 

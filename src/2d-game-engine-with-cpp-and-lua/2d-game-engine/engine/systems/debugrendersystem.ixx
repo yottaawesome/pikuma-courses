@@ -15,7 +15,7 @@ export namespace Engine
 			RequireComponent<TransformComponent>();
 			RequireComponent<BoxColliderComponent>();
 		}
-		void Update(SDL::SDL_Renderer* renderer)
+		void Update(SDL::SDL_Renderer* renderer, SDL::SDL_Rect& camera)
 		{
 			if (not debugRenderingEnabled)
 				return;
@@ -24,10 +24,10 @@ export namespace Engine
 				auto& transform = registry.GetComponent<TransformComponent>(entity);
 				auto& collider = registry.GetComponent<BoxColliderComponent>(entity);
 				auto rect = SDL::SDL_FRect{
-					.x = transform.position.x + collider.Offset.x,
-					.y = transform.position.y + collider.Offset.y,
-					.w = static_cast<float>(collider.Width),
-					.h = static_cast<float>(collider.Height),
+					.x = transform.position.x + collider.Offset.x - camera.x,
+					.y = transform.position.y + collider.Offset.y - camera.y,
+					.w = static_cast<float>(collider.Width * transform.scale.x),
+					.h = static_cast<float>(collider.Height * transform.scale.y),
 				};
 				SDL::SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green color for debug boxes
 				SDL::SDL_RenderRect(renderer, &rect);

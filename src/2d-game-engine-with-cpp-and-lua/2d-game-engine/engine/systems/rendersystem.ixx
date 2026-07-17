@@ -51,8 +51,8 @@ export namespace Engine
 
 				auto texture = assetStore.GetTexture(sprite.assetId);
 				auto rect = SDL::SDL_FRect{
-					transform.position.x - camera.x,
-					transform.position.y - camera.y,
+					sprite.isFixed ? transform.position.x : transform.position.x - camera.x,
+					sprite.isFixed ? transform.position.y : transform.position.y - camera.y,
 					static_cast<float>(sprite.width * transform.scale.x),
 					static_cast<float>(sprite.height * transform.scale.y)
 				};

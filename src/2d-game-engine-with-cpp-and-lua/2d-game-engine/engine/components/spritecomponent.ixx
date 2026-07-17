@@ -12,6 +12,7 @@ export namespace Engine
 		int zIndex = 0;
 		int srcRectX = 0;
 		int srcRectY = 0;
+		bool isFixed = false;
 		SDL::SDL_FRect srcRect{ static_cast<float>(srcRectX), static_cast<float>(srcRectY), static_cast<float>(width), static_cast<float>(height) };
 	};
 }
