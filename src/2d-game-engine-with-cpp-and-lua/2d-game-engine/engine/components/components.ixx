@@ -5,3 +5,4 @@ export import :components.spritecomponent;
 export import :components.animationcomponent;
 export import :components.boxcollidercomponent;
 export import :components.keyboardcontrolledcomponent;
+export import :components.camerafollowcomponent;

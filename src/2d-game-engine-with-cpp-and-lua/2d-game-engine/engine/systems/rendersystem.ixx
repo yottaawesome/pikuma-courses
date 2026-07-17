@@ -16,7 +16,7 @@ export namespace Engine
 			RequireComponent<SpriteComponent>();
 		}
 
-		void Update(SDL::SDL_Renderer* renderer, AssetStore& assetStore)
+		void Update(SDL::SDL_Renderer* renderer, AssetStore& assetStore, SDL::SDL_Rect& camera)
 		{
 			constexpr auto darkSapphire = SDL::SDL_Color{ 31, 48, 94, 255 };
 			constexpr auto royalBlue = SDL::SDL_Color{ 48, 92, 222, 255 };
@@ -51,8 +51,8 @@ export namespace Engine
 
 				auto texture = assetStore.GetTexture(sprite.assetId);
 				auto rect = SDL::SDL_FRect{
-					transform.position.x,
-					transform.position.y,
+					transform.position.x - camera.x,
+					transform.position.y - camera.y,
 					static_cast<float>(sprite.width * transform.scale.x),
 					static_cast<float>(sprite.height * transform.scale.y)
 				};

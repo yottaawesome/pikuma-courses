@@ -155,6 +155,7 @@
     <ClCompile Include="engine\build\build.ixx" />
     <ClCompile Include="engine\components\animationcomponent.ixx" />
     <ClCompile Include="engine\components\boxcollidercomponent.ixx" />
+    <ClCompile Include="engine\components\camerafollowcomponent.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
     <ClCompile Include="engine\components\keyboardcontrolledcomponent.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />
@@ -178,6 +179,7 @@
     <ClCompile Include="engine\imgui\imgui.ixx" />
     <ClCompile Include="engine\logger\logger.ixx" />
     <ClCompile Include="engine\systems\animationsystem.ixx" />
+    <ClCompile Include="engine\systems\cameramovementsystem.ixx" />
     <ClCompile Include="engine\systems\collisionsystem.ixx" />
     <ClCompile Include="engine\systems\damagesystem.ixx" />
     <ClCompile Include="engine\systems\debugrendersystem.ixx" />

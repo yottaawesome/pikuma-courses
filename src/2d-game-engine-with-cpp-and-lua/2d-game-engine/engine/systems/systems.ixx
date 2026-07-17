@@ -5,4 +5,5 @@ export import :systems.animationsystem;
 export import :systems.collisionsystem;
 export import :systems.debugrendersystem;
 export import :systems.damagesystem;
+export import :systems.cameramovementsystem;
 export import :systems.keyboardcontrolsystem;

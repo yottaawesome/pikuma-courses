@@ -17,6 +17,8 @@ export namespace Engine
 	constexpr auto MillisPerFrame = 1000 / FPS;
 	constexpr auto WindowWidth = 800;
 	constexpr auto WindowHeight = 600;
+	auto MapWidth = 800;
+	auto MapHeight = 600;
 
 	class Game
 	{
@@ -62,7 +64,8 @@ export namespace Engine
 				.AddSystem<CollisionSystem>(self.registry)
 				.AddSystem<DamageSystem>(self.registry)
 				.AddSystem<DebugRenderSystem>(self.registry)
-				.AddSystem<KeyboardControlSystem>(self.registry);
+				.AddSystem<KeyboardControlSystem>(self.registry)
+				.AddSystem<CameraMovementSystem>(self.registry);
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -75,9 +78,9 @@ export namespace Engine
 			auto mapNumCols = 25;
 			auto mapNumRows = 20;
 			auto mapFile = std::fstream{ "./assets/tilemaps/jungle.map" };
-			for (int y = 0; y < mapNumRows; y++) 
+			for (int y = 0; y < mapNumRows; y++)
 			{
-				for (int x = 0; x < mapNumCols; x++) 
+				for (int x = 0; x < mapNumCols; x++)
 				{
 					auto ch = char{};
 					mapFile.get(ch);
@@ -86,21 +89,25 @@ export namespace Engine
 					auto srcRectX = std::atoi(&ch) * tileSize;
 					mapFile.ignore();
 
-					auto tile = Entity{self.registry.CreateEntity()};
+					auto tile = Entity{ self.registry.CreateEntity() };
 					self.registry
-						.AddComponent<TransformComponent>(tile, glm::vec2{x * (tileScale * tileSize), y * (tileScale * tileSize)}, glm::vec2{tileScale, tileScale}, 0.0)
+						.AddComponent<TransformComponent>(tile, glm::vec2{ x * (tileScale * tileSize), y * (tileScale * tileSize) }, glm::vec2{ tileScale, tileScale }, 0.0)
 						.AddComponent<SpriteComponent>(tile, "tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
 				}
 			}
+			MapWidth = mapNumCols * tileSize * tileScale;
+			MapHeight = mapNumRows * tileSize * tileScale;
 
 			auto chopper = Entity{ self.registry.CreateEntity() };
+			constexpr auto Speed = 1500.f;
 			self.registry
 				.AddComponent<TransformComponent>(chopper, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
 				.AddComponent<RigidBodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
 				// Since the initial velocity is to the right, the initial srcRect.y should be 32 * 1 (the second row of the spritesheet)
 				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1, 0, 32*1)
 				.AddComponent<AnimationComponent>(chopper, 2, 15, true)
-				.AddComponent<KeyboardControlledComponent>(chopper, glm::vec2{0, -80}, glm::vec2{80, 0}, glm::vec2{0, 80}, glm::vec2{-80, 0});
+				.AddComponent<KeyboardControlledComponent>(chopper, glm::vec2{0, -Speed}, glm::vec2{Speed, 0}, glm::vec2{0, Speed}, glm::vec2{-Speed, 0})
+				.AddComponent<CameraFollowComponent>(chopper);
 
 			auto radar = Entity{ self.registry.CreateEntity() };
 			self.registry
@@ -200,6 +207,7 @@ export namespace Engine
 			self.registry.GetSystem<CollisionSystem>().Update(self.eventBus);
 			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
 			self.registry.GetSystem<KeyboardControlSystem>().Update(deltaTime);
+			self.registry.GetSystem<CameraMovementSystem>().Update(self.camera, WindowWidth, WindowHeight, MapWidth, MapHeight);
 		}
 
 		void Render(this Game& self)
@@ -210,7 +218,7 @@ export namespace Engine
 
 			SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(self.renderer.get());
-			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore);
+			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore, self.camera);
 			self.registry.GetSystem<DebugRenderSystem>().Update(self.renderer.get());
 			SDL::SDL_RenderPresent(self.renderer.get());
 
@@ -246,5 +254,6 @@ export namespace Engine
 		Registry registry;
 		AssetStore assetStore;
 		EventBus eventBus;
+		SDL::SDL_Rect camera{ .x = 0, .y = 0, .w = WindowWidth, .h = WindowHeight };
 	};
 }
