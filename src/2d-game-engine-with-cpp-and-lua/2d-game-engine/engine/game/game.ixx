@@ -65,7 +65,8 @@ export namespace Engine
 				.AddSystem<DamageSystem>(self.registry)
 				.AddSystem<DebugRenderSystem>(self.registry)
 				.AddSystem<KeyboardControlSystem>(self.registry)
-				.AddSystem<CameraMovementSystem>(self.registry);
+				.AddSystem<CameraMovementSystem>(self.registry)
+				.AddSystem<ProjectileEmitSystem>();
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -73,6 +74,7 @@ export namespace Engine
 			self.assetStore.AddTexture(self.renderer.get(), "radar-image", "./assets/images/radar.png");
 			// parse tileset, there are 30 tiles in 3 rows of 10 columns, each tile is 32x32 pixels, index is 0-29
 			self.assetStore.AddTexture(self.renderer.get(), "tilemap-image", "./assets/tilemaps/jungle.png");
+			self.assetStore.AddTexture(self.renderer.get(), "bullet-image", "./assets/images/bullet.png");
 			auto tileSize = 32;
 			auto tileScale = 3.0;
 			auto mapNumCols = 25;
@@ -119,9 +121,10 @@ export namespace Engine
 			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(tank, glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidBodyComponent>(tank, glm::vec2{ -500, 0.0f }, 1.0f)
+				.AddComponent<RigidBodyComponent>(tank, glm::vec2{ -0, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(tank, 32, 32)
+				.AddComponent<ProjectileEmitterComponent>(tank, glm::vec2{ 500.0f, 0.0f }, 5000, 10000, 0)
 				;
 
 			auto truck = Entity{ self.registry.CreateEntity() };
@@ -130,6 +133,7 @@ export namespace Engine
 				.AddComponent<RigidBodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(truck, 32, 32)
+				.AddComponent<ProjectileEmitterComponent>(truck, glm::vec2{ 0, 500.0f }, 3000, 10000, 0)
 				;
 		}
 
@@ -207,6 +211,7 @@ export namespace Engine
 			self.registry.GetSystem<CollisionSystem>().Update(self.eventBus);
 			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
 			self.registry.GetSystem<KeyboardControlSystem>().Update(deltaTime);
+			self.registry.GetSystem<ProjectileEmitSystem>().Update(deltaTime, self.registry);
 			self.registry.GetSystem<CameraMovementSystem>().Update(self.camera, WindowWidth, WindowHeight, MapWidth, MapHeight);
 		}
 

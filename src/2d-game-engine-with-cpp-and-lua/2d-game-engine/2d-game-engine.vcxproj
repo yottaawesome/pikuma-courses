@@ -158,6 +158,7 @@
     <ClCompile Include="engine\components\camerafollowcomponent.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
     <ClCompile Include="engine\components\keyboardcontrolledcomponent.ixx" />
+    <ClCompile Include="engine\components\projectileemittercomponent.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />
     <ClCompile Include="engine\components\spritecomponent.ixx" />
     <ClCompile Include="engine\components\transformcomponent.ixx" />
@@ -184,6 +185,7 @@
     <ClCompile Include="engine\systems\damagesystem.ixx" />
     <ClCompile Include="engine\systems\debugrendersystem.ixx" />
     <ClCompile Include="engine\systems\keyboardcontrolsystem.ixx" />
+    <ClCompile Include="engine\systems\projectileemitsystem.ixx" />
     <ClCompile Include="engine\systems\rendersystem.ixx" />
     <ClCompile Include="engine\events\collisionevent.ixx" />
     <ClCompile Include="engine\events\events.ixx" />

@@ -7,3 +7,4 @@ export import :systems.debugrendersystem;
 export import :systems.damagesystem;
 export import :systems.cameramovementsystem;
 export import :systems.keyboardcontrolsystem;
+export import :systems.projectileemitsystem;
