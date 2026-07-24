@@ -10,7 +10,7 @@ You'll need Visual Studio 2026 with the _Desktop development with C++_ workload 
 
 ## Changes
 
-The coursework is implemented in C on Pikuma, whereas I've chosen to implement my coursework in C++23, as I find C is too cumbersome, error-prone and primitive to work with. I work on Windows and don't have easy access to a Linux or Mac device, so I haven't bothered making anything cross-platform. I use Visual Studio 2026, with `vcpkg` to manage dependencies such as sdl, and I've used newer versions of said dependencies.
+The coursework for the 3D Graphics Programming course is implemented in C on Pikuma, whereas I've chosen to implement my coursework in C++23, as C is cumbersome, error-prone and primitive to work with. The 2D Game Engine course is done in C++17, but I've likewise elected to use C++23, mainly for use of C++ modules, aggregate initialisation, and other convenient features. I work on Windows and don't have easy access to a Linux or Mac device, so I haven't bothered making anything cross-platform. I use Visual Studio 2026, with `vcpkg` to manage dependencies such as sdl (this means I don't package any of the dependencies), and I've used newer versions of said dependencies. This required updating some of the course code that worked with the dated dependencies. 
 
 ## Additional resources
 
