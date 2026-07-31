@@ -4,7 +4,7 @@ module;
 
 export module engine:glm.exports;
 
-export namespace SDL
+export namespace glm
 {
 	using
 		::glm::vec2,
