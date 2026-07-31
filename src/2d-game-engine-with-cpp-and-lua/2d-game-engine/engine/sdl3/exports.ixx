@@ -23,6 +23,9 @@ export namespace SDL
 		::SDL_InitFlags,
 		::SDL_FlipMode,
 		::SDL_WindowFlags,
+		::SDL_Scancode,
+		::SDL_KeyboardEvent,
+		::SDL_GetKeyName,
 		::SDL_RenderRect,
 		::SDL_Delay,
 		::SDL_GetTicks,
@@ -81,7 +84,14 @@ export namespace SDL
 	enum Scancode
 	{
 		Escape = SDL_SCANCODE_ESCAPE,
+		W = SDL_SCANCODE_W,
+		A = SDL_SCANCODE_A,
+		S = SDL_SCANCODE_S,
 		D = SDL_SCANCODE_D,
+		Up = SDL_SCANCODE_UP,
+		Down = SDL_SCANCODE_DOWN,
+		Left = SDL_SCANCODE_LEFT,
+		Right = SDL_SCANCODE_RIGHT,
 	};
 
 	[[deprecated("SDL_TICKS_PASSED macro was removed in SDL3, see migration guide at https://github.com/c-smile/SDL3/blob/main/docs/README-migration.md")]]

@@ -9,6 +9,7 @@ import :eventbus;
 import :components;
 import :systems;
 import :assetstore;
+import :events;
 
 export namespace Engine
 {
@@ -16,6 +17,8 @@ export namespace Engine
 	constexpr auto MillisPerFrame = 1000 / FPS;
 	constexpr auto WindowWidth = 800;
 	constexpr auto WindowHeight = 600;
+	auto MapWidth = 800;
+	auto MapHeight = 600;
 
 	class Game
 	{
@@ -61,22 +64,25 @@ export namespace Engine
 				.AddSystem<CollisionSystem>(self.registry)
 				.AddSystem<DamageSystem>(self.registry)
 				.AddSystem<DebugRenderSystem>(self.registry)
-				.AddSystem<KeyboardMovementSystem>(self.registry);
+				.AddSystem<KeyboardControlSystem>(self.registry)
+				.AddSystem<CameraMovementSystem>(self.registry)
+				.AddSystem<ProjectileEmitSystem>();
 
-			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper.png");
+			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
 			self.assetStore.AddTexture(self.renderer.get(), "truck-image", "./assets/images/truck-ford-right.png");
 			self.assetStore.AddTexture(self.renderer.get(), "radar-image", "./assets/images/radar.png");
 			// parse tileset, there are 30 tiles in 3 rows of 10 columns, each tile is 32x32 pixels, index is 0-29
 			self.assetStore.AddTexture(self.renderer.get(), "tilemap-image", "./assets/tilemaps/jungle.png");
+			self.assetStore.AddTexture(self.renderer.get(), "bullet-image", "./assets/images/bullet.png");
 			auto tileSize = 32;
 			auto tileScale = 3.0;
 			auto mapNumCols = 25;
 			auto mapNumRows = 20;
 			auto mapFile = std::fstream{ "./assets/tilemaps/jungle.map" };
-			for (int y = 0; y < mapNumRows; y++) 
+			for (int y = 0; y < mapNumRows; y++)
 			{
-				for (int x = 0; x < mapNumCols; x++) 
+				for (int x = 0; x < mapNumCols; x++)
 				{
 					auto ch = char{};
 					mapFile.get(ch);
@@ -85,41 +91,49 @@ export namespace Engine
 					auto srcRectX = std::atoi(&ch) * tileSize;
 					mapFile.ignore();
 
-					auto tile = Entity{self.registry.CreateEntity()};
+					auto tile = Entity{ self.registry.CreateEntity() };
 					self.registry
-						.AddComponent<TransformComponent>(tile, glm::vec2{x * (tileScale * tileSize), y * (tileScale * tileSize)}, glm::vec2{tileScale, tileScale}, 0.0)
+						.AddComponent<TransformComponent>(tile, glm::vec2{ x * (tileScale * tileSize), y * (tileScale * tileSize) }, glm::vec2{ tileScale, tileScale }, 0.0)
 						.AddComponent<SpriteComponent>(tile, "tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
 				}
 			}
+			MapWidth = mapNumCols * tileSize * tileScale;
+			MapHeight = mapNumRows * tileSize * tileScale;
 
 			auto chopper = Entity{ self.registry.CreateEntity() };
+			constexpr auto Speed = 1500.f;
 			self.registry
 				.AddComponent<TransformComponent>(chopper, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1)
-				.AddComponent<AnimationComponent>(chopper, 2, 15, true);
+				.AddComponent<RigidBodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				// Since the initial velocity is to the right, the initial srcRect.y should be 32 * 1 (the second row of the spritesheet)
+				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1, 0, 32*1)
+				.AddComponent<AnimationComponent>(chopper, 2, 15, true)
+				.AddComponent<KeyboardControlledComponent>(chopper, glm::vec2{0, -Speed}, glm::vec2{Speed, 0}, glm::vec2{0, Speed}, glm::vec2{-Speed, 0})
+				.AddComponent<CameraFollowComponent>(chopper);
 
 			auto radar = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(radar, glm::vec2{ WindowWidth* tileScale - 74, 10 }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2)
+				.AddComponent<RigidBodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
+				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2, 0, 0, true)
 				.AddComponent<AnimationComponent>(radar, 8, 5, true);
 
 			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(tank, glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(tank, glm::vec2{ -500, 0.0f }, 1.0f)
+				.AddComponent<RigidBodyComponent>(tank, glm::vec2{ -0, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(tank, 32, 32)
+				.AddComponent<ProjectileEmitterComponent>(tank, glm::vec2{ 500.0f, 0.0f }, 5000, 10000, 0)
 				;
 
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry
 				.AddComponent<TransformComponent>(truck, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidbodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
+				.AddComponent<RigidBodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
 				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1)
 				.AddComponent<BoxColliderComponent>(truck, 32, 32)
+				.AddComponent<ProjectileEmitterComponent>(truck, glm::vec2{ 0, 500.0f }, 3000, 10000, 0)
 				;
 		}
 
@@ -163,6 +177,7 @@ export namespace Engine
 							auto& debugRenderSystem = self.registry.GetSystem<DebugRenderSystem>();
 							self.debugMode = debugRenderSystem.ToggleDebugRendering();
 						}
+						self.eventBus.EmitEvent<KeyPressedEvent>(sdlEvent.key);
 						break;
 					}
 				}
@@ -185,6 +200,7 @@ export namespace Engine
 
 			// Perform the subscription of the events for all systems.
 			self.registry.GetSystem<DamageSystem>().SubscribeToEvents(self.eventBus);
+			self.registry.GetSystem<KeyboardControlSystem>().SubscribeToEvents(self.eventBus);
 
 			// Add or remove entities from systems after the update loop
 			self.registry.Update(); 
@@ -194,6 +210,9 @@ export namespace Engine
 			self.registry.GetSystem<AnimationSystem>().Update();
 			self.registry.GetSystem<CollisionSystem>().Update(self.eventBus);
 			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
+			self.registry.GetSystem<KeyboardControlSystem>().Update(deltaTime);
+			self.registry.GetSystem<ProjectileEmitSystem>().Update(deltaTime, self.registry);
+			self.registry.GetSystem<CameraMovementSystem>().Update(self.camera, WindowWidth, WindowHeight, MapWidth, MapHeight);
 		}
 
 		void Render(this Game& self)
@@ -204,8 +223,8 @@ export namespace Engine
 
 			SDL::SDL_SetRenderDrawColor(self.renderer.get(), clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 			SDL::SDL_RenderClear(self.renderer.get());
-			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore);
-			self.registry.GetSystem<DebugRenderSystem>().Update(self.renderer.get());
+			self.registry.GetSystem<RenderSystem>().Update(self.renderer.get(), self.assetStore, self.camera);
+			self.registry.GetSystem<DebugRenderSystem>().Update(self.renderer.get(), self.camera);
 			SDL::SDL_RenderPresent(self.renderer.get());
 
 
@@ -240,5 +259,6 @@ export namespace Engine
 		Registry registry;
 		AssetStore assetStore;
 		EventBus eventBus;
+		SDL::SDL_Rect camera{ .x = 0, .y = 0, .w = WindowWidth, .h = WindowHeight };
 	};
 }

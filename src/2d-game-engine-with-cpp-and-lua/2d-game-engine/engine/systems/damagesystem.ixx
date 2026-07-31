@@ -29,8 +29,8 @@ export namespace Engine
 		void OnCollision(const CollisionEvent& event)
 		{
 			Log::Info("DamageSystem received collision event between entities {} and {}", event.entityA.GetId(), event.entityB.GetId());
-			registry.KillEntity(event.entityA);
-			registry.KillEntity(event.entityB);
+			//registry.KillEntity(event.entityA);
+			//registry.KillEntity(event.entityB);
 		}
 		Registry& registry;
 	};
