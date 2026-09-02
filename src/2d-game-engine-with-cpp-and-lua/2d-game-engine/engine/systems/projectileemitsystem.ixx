@@ -32,10 +32,11 @@ export namespace Engine
 						projectilePosition.y += (transform.scale.y * sprite.height) / 2.0f;
 					}
 
-					registry.AddComponent<TransformComponent>(projectile, projectilePosition, glm::vec2{ 1.0f, 1.0f }, 0.0f)
-						.AddComponent<RigidBodyComponent>(projectile, projectileEmitter.ProjectileVelocity, 1.0f)
-						.AddComponent<SpriteComponent>(projectile, "bullet-image", 4, 4, 4)
-						.AddComponent<BoxColliderComponent>(projectile, 4, 4);
+					registry
+						.AddComponent(projectile, TransformComponent{projectilePosition, glm::vec2{ 1.0f, 1.0f }, 0.0f})
+						.AddComponent(projectile, RigidBodyComponent{projectileEmitter.ProjectileVelocity, 1.0f})
+						.AddComponent(projectile, SpriteComponent{"bullet-image", 4, 4, 4})
+						.AddComponent(projectile, BoxColliderComponent{4, 4});
 					projectileEmitter.LastEmissionTime = SDL::SDL_GetTicks();
 				}
 			}

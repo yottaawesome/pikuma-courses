@@ -157,6 +157,7 @@
     <ClCompile Include="engine\components\boxcollidercomponent.ixx" />
     <ClCompile Include="engine\components\camerafollowcomponent.ixx" />
     <ClCompile Include="engine\components\components.ixx" />
+    <ClCompile Include="engine\components\healthcomponent.ixx" />
     <ClCompile Include="engine\components\keyboardcontrolledcomponent.ixx" />
     <ClCompile Include="engine\components\projectileemittercomponent.ixx" />
     <ClCompile Include="engine\components\rigidbodycomponent.ixx" />

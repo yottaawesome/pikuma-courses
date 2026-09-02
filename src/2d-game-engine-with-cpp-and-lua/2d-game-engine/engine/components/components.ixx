@@ -7,3 +7,4 @@ export import :components.boxcollidercomponent;
 export import :components.keyboardcontrolledcomponent;
 export import :components.camerafollowcomponent;
 export import :components.projectileemittercomponent;
+export import :components.healthcomponent;

@@ -58,15 +58,15 @@ export namespace Engine
 		void LoadLevel(this Game& self, int level)
 		{
 			self.registry
-				.AddSystem<MovementSystem>(self.registry)
-				.AddSystem<RenderSystem>(self.registry)
-				.AddSystem<AnimationSystem>(self.registry)
-				.AddSystem<CollisionSystem>(self.registry)
-				.AddSystem<DamageSystem>(self.registry)
-				.AddSystem<DebugRenderSystem>(self.registry)
-				.AddSystem<KeyboardControlSystem>(self.registry)
-				.AddSystem<CameraMovementSystem>(self.registry)
-				.AddSystem<ProjectileEmitSystem>();
+				.AddSystem(MovementSystem{self.registry})
+				.AddSystem(RenderSystem{ self.registry })
+				.AddSystem(AnimationSystem{self.registry})
+				.AddSystem(CollisionSystem{self.registry})
+				.AddSystem(DamageSystem{self.registry})
+				.AddSystem(DebugRenderSystem{self.registry})
+				.AddSystem(KeyboardControlSystem{self.registry})
+				.AddSystem(CameraMovementSystem{self.registry})
+				.AddSystem(ProjectileEmitSystem{});
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -93,8 +93,8 @@ export namespace Engine
 
 					auto tile = Entity{ self.registry.CreateEntity() };
 					self.registry
-						.AddComponent<TransformComponent>(tile, glm::vec2{ x * (tileScale * tileSize), y * (tileScale * tileSize) }, glm::vec2{ tileScale, tileScale }, 0.0)
-						.AddComponent<SpriteComponent>(tile, "tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY);
+						.AddComponent(tile, TransformComponent{glm::vec2{ x * (tileScale * tileSize), y * (tileScale * tileSize) }, glm::vec2{ tileScale, tileScale }, 0.0})
+						.AddComponent(tile, SpriteComponent{"tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY});
 				}
 			}
 			MapWidth = mapNumCols * tileSize * tileScale;
@@ -103,37 +103,37 @@ export namespace Engine
 			auto chopper = Entity{ self.registry.CreateEntity() };
 			constexpr auto Speed = 1500.f;
 			self.registry
-				.AddComponent<TransformComponent>(chopper, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidBodyComponent>(chopper, glm::vec2{ 100.0f, 0.0f }, 1.0f)
+				.AddComponent(chopper, TransformComponent{glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0})
+				.AddComponent(chopper, RigidBodyComponent{glm::vec2{ 100.0f, 0.0f }, 1.0f})
 				// Since the initial velocity is to the right, the initial srcRect.y should be 32 * 1 (the second row of the spritesheet)
-				.AddComponent<SpriteComponent>(chopper, "chopper-image", 32, 32, 1, 0, 32*1)
-				.AddComponent<AnimationComponent>(chopper, 2, 15, true)
-				.AddComponent<KeyboardControlledComponent>(chopper, glm::vec2{0, -Speed}, glm::vec2{Speed, 0}, glm::vec2{0, Speed}, glm::vec2{-Speed, 0})
-				.AddComponent<CameraFollowComponent>(chopper);
+				.AddComponent(chopper, SpriteComponent{"chopper-image", 32, 32, 1, 0, 32*1})
+				.AddComponent(chopper, AnimationComponent{2, 15, true})
+				.AddComponent(chopper, KeyboardControlledComponent{glm::vec2{0, -Speed}, glm::vec2{Speed, 0}, glm::vec2{0, Speed}, glm::vec2{-Speed, 0}})
+				.AddComponent(chopper, CameraFollowComponent{});
 
 			auto radar = Entity{ self.registry.CreateEntity() };
 			self.registry
-				.AddComponent<TransformComponent>(radar, glm::vec2{ WindowWidth* tileScale - 74, 10 }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidBodyComponent>(radar, glm::vec2{ 0, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(radar, "radar-image", 64, 64, 2, 0, 0, true)
-				.AddComponent<AnimationComponent>(radar, 8, 5, true);
+				.AddComponent(radar, TransformComponent{glm::vec2{ WindowWidth* tileScale - 74, 10 }, glm::vec2{ 1.0f, 1.0f }, 0.0})
+				.AddComponent(radar, RigidBodyComponent{glm::vec2{ 0, 0.0f }, 1.0f})
+				.AddComponent(radar, SpriteComponent{"radar-image", 64, 64, 2, 0, 0, true})
+				.AddComponent(radar, AnimationComponent{8, 5, true});
 
 			auto tank = Entity{ self.registry.CreateEntity() };
 			self.registry
-				.AddComponent<TransformComponent>(tank, glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidBodyComponent>(tank, glm::vec2{ -0, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(tank, "tank-image", 32, 32, 1)
-				.AddComponent<BoxColliderComponent>(tank, 32, 32)
-				.AddComponent<ProjectileEmitterComponent>(tank, glm::vec2{ 500.0f, 0.0f }, 5000, 10000, 0)
+				.AddComponent(tank, TransformComponent{glm::vec2{ 500.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0})
+				.AddComponent(tank, RigidBodyComponent{glm::vec2{ -0, 0.0f }, 1.0f})
+				.AddComponent(tank, SpriteComponent{"tank-image", 32, 32, 1})
+				.AddComponent(tank, BoxColliderComponent{32, 32})
+				.AddComponent(tank, ProjectileEmitterComponent{glm::vec2{ 500.0f, 0.0f }, 5000, 10000, 0})
 				;
 
 			auto truck = Entity{ self.registry.CreateEntity() };
 			self.registry
-				.AddComponent<TransformComponent>(truck, glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0)
-				.AddComponent<RigidBodyComponent>(truck, glm::vec2{ 200.0f, 0.0f }, 1.0f)
-				.AddComponent<SpriteComponent>(truck, "truck-image", 32, 32, 1)
-				.AddComponent<BoxColliderComponent>(truck, 32, 32)
-				.AddComponent<ProjectileEmitterComponent>(truck, glm::vec2{ 0, 500.0f }, 3000, 10000, 0)
+				.AddComponent(truck, TransformComponent{glm::vec2{ 10.0f, 10.0f }, glm::vec2{ 1.0f, 1.0f }, 0.0})
+				.AddComponent(truck, RigidBodyComponent{glm::vec2{ 200.0f, 0.0f }, 1.0f})
+				.AddComponent(truck, SpriteComponent{"truck-image", 32, 32, 1})
+				.AddComponent(truck, BoxColliderComponent{32, 32})
+				.AddComponent(truck, ProjectileEmitterComponent{glm::vec2{ 0, 500.0f }, 3000, 10000, 0})
 				;
 		}
 

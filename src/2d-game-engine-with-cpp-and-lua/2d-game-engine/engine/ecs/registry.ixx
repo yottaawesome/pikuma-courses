@@ -63,21 +63,21 @@ export namespace Engine
 			entitiesToBeKilled.clear();
 		}
 
-		template<typename TComponent, typename...TArgs>
-		auto AddComponent(Entity entity, TArgs&&... args) -> Registry&
+		auto AddComponent(Entity entity, auto&& component) -> Registry&
 		{
+			using TComponent = std::remove_cvref_t<decltype(component)>;
 			auto componentId = Component<TComponent>::GetId();
 			if (componentId >= componentPools.size())
 				componentPools.resize(componentId + 1, nullptr);
 			if (not componentPools[componentId])
 				componentPools[componentId] = std::make_shared<Pool<TComponent>>();
-				
+
 			auto componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
 			auto entityId = entity.GetId();
 			if (entityId >= componentPool->GetSize())
 				componentPool->Resize(numEntities);
 
-			componentPool->Set(entityId, TComponent{ std::forward<TArgs>(args)... });
+			componentPool->Set(entityId, std::forward<decltype(component)>(component));
 			entityComponentSignatures[entityId].set(componentId);
 			return *this;
 		}
@@ -106,10 +106,10 @@ export namespace Engine
 			return std::static_pointer_cast<Pool<T>>(componentPools[componentId])->Get(entityId);
 		}
 
-		template<typename TSystem, typename...TArgs>
-		auto AddSystem(TArgs&&... args) -> Registry&
+		auto AddSystem(auto&& system) -> Registry&
 		{
-			systems[typeid(TSystem)] = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
+			using TSystem = std::remove_cvref_t<decltype(system)>;
+			systems[typeid(TSystem)] = std::make_shared<TSystem>(std::forward<decltype(system)>(system));
 			// Course code uses an unnecessarily verbose way
 			//systems.insert(std::make_pair(typeid(TSystem), newSystem));
 			return *this;
