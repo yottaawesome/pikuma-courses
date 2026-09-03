@@ -97,8 +97,8 @@ export namespace Engine
 						.AddComponent(tile, SpriteComponent{"tilemap-image", tileSize, tileSize, 0, srcRectX, srcRectY});
 				}
 			}
-			MapWidth = mapNumCols * tileSize * tileScale;
-			MapHeight = mapNumRows * tileSize * tileScale;
+			MapWidth = static_cast<int>(mapNumCols * tileSize * tileScale);
+			MapHeight = static_cast<int>(mapNumRows * tileSize * tileScale);
 
 			auto chopper = Entity{ self.registry.CreateEntity() };
 			constexpr auto Speed = 1500.f;
@@ -210,8 +210,8 @@ export namespace Engine
 			self.registry.GetSystem<AnimationSystem>().Update();
 			self.registry.GetSystem<CollisionSystem>().Update(self.eventBus);
 			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
-			self.registry.GetSystem<KeyboardControlSystem>().Update(deltaTime);
-			self.registry.GetSystem<ProjectileEmitSystem>().Update(deltaTime, self.registry);
+			self.registry.GetSystem<KeyboardControlSystem>().Update(static_cast<float>(deltaTime));
+			self.registry.GetSystem<ProjectileEmitSystem>().Update(static_cast<float>(deltaTime), self.registry);
 			self.registry.GetSystem<CameraMovementSystem>().Update(self.camera, WindowWidth, WindowHeight, MapWidth, MapHeight);
 		}
 
