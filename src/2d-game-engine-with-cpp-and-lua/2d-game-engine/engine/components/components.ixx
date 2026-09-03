@@ -8,3 +8,4 @@ export import :components.keyboardcontrolledcomponent;
 export import :components.camerafollowcomponent;
 export import :components.projectileemittercomponent;
 export import :components.healthcomponent;
+export import :components.projectilecomponent;

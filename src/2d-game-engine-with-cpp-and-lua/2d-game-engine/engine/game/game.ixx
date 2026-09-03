@@ -66,7 +66,9 @@ export namespace Engine
 				.AddSystem(DebugRenderSystem{self.registry})
 				.AddSystem(KeyboardControlSystem{self.registry})
 				.AddSystem(CameraMovementSystem{self.registry})
-				.AddSystem(ProjectileEmitSystem{});
+				.AddSystem(ProjectileLifecycleSystem{self.registry})
+				.AddSystem(ProjectileEmitSystem{})
+				;
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
 			self.assetStore.AddTexture(self.renderer.get(), "tank-image", "./assets/images/tank-panther-right.png");
@@ -124,7 +126,7 @@ export namespace Engine
 				.AddComponent(tank, RigidBodyComponent{glm::vec2{ -0, 0.0f }, 1.0f})
 				.AddComponent(tank, SpriteComponent{"tank-image", 32, 32, 1})
 				.AddComponent(tank, BoxColliderComponent{32, 32})
-				.AddComponent(tank, ProjectileEmitterComponent{glm::vec2{ 500.0f, 0.0f }, 5000, 10000, 0})
+				.AddComponent(tank, ProjectileEmitterComponent{glm::vec2{ 500.0f, 0.0f }, 5000, 3000, 0})
 				;
 
 			auto truck = Entity{ self.registry.CreateEntity() };
@@ -133,7 +135,7 @@ export namespace Engine
 				.AddComponent(truck, RigidBodyComponent{glm::vec2{ 200.0f, 0.0f }, 1.0f})
 				.AddComponent(truck, SpriteComponent{"truck-image", 32, 32, 1})
 				.AddComponent(truck, BoxColliderComponent{32, 32})
-				.AddComponent(truck, ProjectileEmitterComponent{glm::vec2{ 0, 500.0f }, 3000, 10000, 0})
+				.AddComponent(truck, ProjectileEmitterComponent{glm::vec2{ 0, 500.0f }, 3000, 3000, 0})
 				;
 		}
 
@@ -212,6 +214,7 @@ export namespace Engine
 			self.registry.GetSystem<DamageSystem>().Update(self.eventBus);
 			self.registry.GetSystem<KeyboardControlSystem>().Update(static_cast<float>(deltaTime));
 			self.registry.GetSystem<ProjectileEmitSystem>().Update(static_cast<float>(deltaTime), self.registry);
+			self.registry.GetSystem<ProjectileLifecycleSystem>().Update();
 			self.registry.GetSystem<CameraMovementSystem>().Update(self.camera, WindowWidth, WindowHeight, MapWidth, MapHeight);
 		}
 

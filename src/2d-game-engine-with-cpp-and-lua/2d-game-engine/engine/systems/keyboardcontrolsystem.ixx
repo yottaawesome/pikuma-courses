@@ -39,22 +39,22 @@ export namespace Engine
 				case SDL::Scancode::Up:
 					// Move up
 					rigidBody.velocity = keyboardControl.UpVelocity;
-					sprite.srcRect.y = sprite.height * 0;
+					sprite.srcRect.y = static_cast<float>(sprite.height * 0);
 					break;
 				case SDL::Scancode::Right:
 					// Move right
 					rigidBody.velocity = keyboardControl.RightVelocity;
-					sprite.srcRect.y = sprite.height * 1;
+					sprite.srcRect.y = static_cast<float>(sprite.height * 1);
 					break;
 				case SDL::Scancode::Down:
 					// Move down
 					rigidBody.velocity = keyboardControl.DownVelocity;
-					sprite.srcRect.y = sprite.height * 2;
+					sprite.srcRect.y = static_cast<float>(sprite.height * 2);
 					break;
 				case SDL::Scancode::Left:
 					// Move left
 					rigidBody.velocity = keyboardControl.LeftVelocity;
-					sprite.srcRect.y = sprite.height * 3;
+					sprite.srcRect.y = static_cast<float>(sprite.height * 3);
 					break;
 				default:
 					break;

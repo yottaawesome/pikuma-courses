@@ -36,7 +36,12 @@ export namespace Engine
 						.AddComponent(projectile, TransformComponent{projectilePosition, glm::vec2{ 1.0f, 1.0f }, 0.0f})
 						.AddComponent(projectile, RigidBodyComponent{projectileEmitter.ProjectileVelocity, 1.0f})
 						.AddComponent(projectile, SpriteComponent{"bullet-image", 4, 4, 4})
-						.AddComponent(projectile, BoxColliderComponent{4, 4});
+						.AddComponent(projectile, BoxColliderComponent{4, 4})
+						.AddComponent(projectile, ProjectileComponent{
+							.IsFriendly = projectileEmitter.IsFriendly, 
+							.HitPercentDamage = projectileEmitter.HitPercentDamage, 
+							.Duration = projectileEmitter.ProjectileDuration
+						});
 					projectileEmitter.LastEmissionTime = SDL::SDL_GetTicks();
 				}
 			}
