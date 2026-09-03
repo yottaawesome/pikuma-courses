@@ -67,7 +67,7 @@ export namespace Engine
 				.AddSystem(KeyboardControlSystem{self.registry})
 				.AddSystem(CameraMovementSystem{self.registry})
 				.AddSystem(ProjectileLifecycleSystem{self.registry})
-				.AddSystem(ProjectileEmitSystem{})
+				.AddSystem(ProjectileEmitSystem{self.registry})
 				;
 
 			self.assetStore.AddTexture(self.renderer.get(), "chopper-image", "./assets/images/chopper-spritesheet.png");
@@ -111,6 +111,12 @@ export namespace Engine
 				.AddComponent(chopper, SpriteComponent{"chopper-image", 32, 32, 1, 0, 32*1})
 				.AddComponent(chopper, AnimationComponent{2, 15, true})
 				.AddComponent(chopper, KeyboardControlledComponent{glm::vec2{0, -Speed}, glm::vec2{Speed, 0}, glm::vec2{0, Speed}, glm::vec2{-Speed, 0}})
+				.AddComponent(chopper, ProjectileEmitterComponent{ 
+					.ProjectileVelocity = glm::vec2{ 2500, 2500.0f }, 
+					.RepeatFrequency = 0, 
+					.HitPercentDamage = 10,
+					.IsFriendly = true,
+				})
 				.AddComponent(chopper, CameraFollowComponent{});
 
 			auto radar = Entity{ self.registry.CreateEntity() };
@@ -203,6 +209,7 @@ export namespace Engine
 			// Perform the subscription of the events for all systems.
 			self.registry.GetSystem<DamageSystem>().SubscribeToEvents(self.eventBus);
 			self.registry.GetSystem<KeyboardControlSystem>().SubscribeToEvents(self.eventBus);
+			self.registry.GetSystem<ProjectileEmitSystem>().SubscribeToEvents(self.eventBus);
 
 			// Add or remove entities from systems after the update loop
 			self.registry.Update(); 

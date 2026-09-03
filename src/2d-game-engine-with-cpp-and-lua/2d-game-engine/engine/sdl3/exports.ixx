@@ -92,6 +92,7 @@ export namespace SDL
 		Down = SDL_SCANCODE_DOWN,
 		Left = SDL_SCANCODE_LEFT,
 		Right = SDL_SCANCODE_RIGHT,
+		Space = SDL_SCANCODE_SPACE,
 	};
 
 	[[deprecated("SDL_TICKS_PASSED macro was removed in SDL3, see migration guide at https://github.com/c-smile/SDL3/blob/main/docs/README-migration.md")]]
