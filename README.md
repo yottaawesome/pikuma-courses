@@ -8,7 +8,7 @@ My code and exercises as part of doing [Pikuma's](https://pikuma.com/) 3D graphi
 
 You'll need Visual Studio 2026 with the _Desktop development with C++_ workload and you'll also need to have [vcpkg](https://github.com/microsoft/vcpkg) installed on your system. Once set up, you only need to build the project and the dependencies will be downloaded and installed (the initial build may fail so just build again).
 
-By the way, I have a super ultrawide monitor, so the 2D game engine code will zoomed in if you have a smaller monitor.
+By the way, I have a super ultrawide monitor, so for the 2D game engine course, I've zoomed things in so they're visible to me. This will mean lower resolution monitors may display the sprites at unusually large sizes.
 
 ## Changes
 
